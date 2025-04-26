@@ -1,166 +1,97 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../Youtube/Youtube.css";
-// import like from "../../assets/like.png";
-// import dislike from "../../assets/dislike.png";
-// import share from "../../assets/share.png";
-// import save from "../../assets/save.png";
-// import { API_KEY, Contexapi, value_converter } from "../../Contex";
-// import moment from "moment/moment";
 
 const HtmlCssJs = () => {
-  //   const { setCataId,setCatagoryIdPlay } = useContext(Contexapi);
-  //   const [apiData, setApiData] = useState('');
-  //   const [channelData, setChannelData] = useState(null);
-  //   const [comments, setComments] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState({
+    videoId: "8cVkLeCqUHk",
+    title: "Default Title",
+    description: "Default Description",
+  });
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  //   useEffect(() => {
-  //     if (videoId) {
-  //       setApiData(null);
-  //       setChannelData(null);
-  //       setComments(null);
-  //       setCataId(null);
-  //       fetchVideoData();
-  //     }
-  //   }, [videoId]);
+  const playlistId = "PLuoKHxXYY-ueLt0K_tbBHtfMAV91uQudW"; // ✅ Tumhara Playlist ID
+  const apiKey = "AIzaSyAYs4Z_-AVB7n9v1TYVDgiS7NdnjUoYIw0"; // ✅ Tumhara API Key
 
-  //   const fetchVideoData = async () => {
-  //     try {
-  //       const VideoDetails_url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${API_KEY}`;
-  //       const res = await fetch(VideoDetails_url);
-  //       const data = await res.json();
+  useEffect(() => {
+    const fetchPlaylistItems = async () => {
+      try {
+        const response = await fetch(
+          `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=20&key=${apiKey}`
+        );
+        const data = await response.json();
+        console.log(data); // Debugging ke liye
+        setVideos(data.items || []);
+        setLoading(false);
 
-  //       if (data.items && data.items.length > 0) {
-  //         setCatagoryIdPlay((data.items[0].snippet.categoryId));
-  //         const timer = setTimeout(() => {
-  //           setApiData(data.items[0]);
-  //           clearTimeout(timer);
-  //         }, 3000);
-  //       } else {
-  //         console.warn("⚠ No video data found!");
-  //       }
-  //     } catch (error) {
-  //       console.error("❌ Error fetching video data:", error);
-  //     }
-  //   };
+        // ✅ Default first video set kar do
+        if (data.items && data.items.length > 0) {
+          const firstVideo = data.items[0].snippet;
+          setSelectedVideo({
+            videoId: firstVideo.resourceId.videoId,
+            title: firstVideo.title,
+            description: firstVideo.description,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching playlist items:", error);
+        setLoading(false);
+      }
+    };
 
-  //   useEffect(() => {
-  //     if (apiData) {
-  //       fetchOtherData();
-  //       fetchCommentData();
+    fetchPlaylistItems();
+  }, []);
 
-  //       console.log("📌 Setting categoryId:", apiData.snippet.categoryId);
-  //       setCataId(apiData.snippet.categoryId);
-  //     }
-  //   }, [apiData]);
-
-  //   const fetchOtherData = async () => {
-  //     try {
-  //       const channelData_url = `https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&id=${apiData?.snippet.channelId}&key=${API_KEY}`;
-  //       const res = await fetch(channelData_url);
-  //       const data = await res.json();
-  //       setChannelData(data.items[0]);
-  //     } catch (error) {
-  //       console.error("❌ Error fetching channel data:", error);
-  //     }
-  //   };
-
-  //   const fetchCommentData = async () => {
-  //     try {
-  //       const commentData_url = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=50&videoId=${videoId}&key=${API_KEY}`;
-  //       const res = await fetch(commentData_url);
-  //       const data = await res.json();
-  //       setComments(data.items);
-  //     } catch (error) {
-  //       console.error("❌ Error fetching comments:", error);
-  //     }
-  //   };
+  if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="playvideo">
-      <iframe
-        src={`https://www.youtube.com/embed/8cVkLeCqUHk?autoplay=1`}
-        title="YouTube Video"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-      ></iframe>
-      <div className="playvideo-info">
-        <h3>title</h3>
-        <div className="video-sub-content">
-          <div className="views-time">
-            <span>views &bull; now</span>
-          </div>
-          <div className="video-other-task">
-            <span className="other-task">
-              {/* <img src={like} alt="like" /> */}
-              <p> "0"</p>
-            </span>
-            <span className="other-task">
-              {/* <img src={dislike} alt="dislike" /> */}
-              <p>1</p>
-            </span>
-            <span className="other-task">
-              {/* <img src={share} alt="share" /> */}
-              <p>Share</p>
-            </span>
-            <span className="other-task">
-              {/* <img src={save} alt="save" /> */}
-              <p>Save</p>
-            </span>
-          </div>
-        </div>
-        <hr />
-        <div className="creator-detail">
-          <div className="about-creator">
-            <div className="userprofile">
-              {/* <img
-                src={channelData ? channelData.snippet.thumbnails.medium.url : ""}
-                alt="channel"
-              /> */}
-            </div>
-            <div className="about-channel">
-              <h3>channel name</h3>
-              <p>Subscribers</p>
-            </div>
-          </div>
-          <div className="subscribe-btn">
-            <button>Subscribe</button>
-          </div>
-        </div>
-        <div className="description">
-          <p>desc</p>
+    <>
+      <div className="playvideo">
+        <iframe
+          src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1`}
+          title={selectedVideo.title}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        ></iframe>
+
+        <div className="playvideo-info">
+          <h3>{selectedVideo.title}</h3>
           <hr />
-        </div>
-        <div className="comments">
-          <h3>Comments</h3>
-          <div className="comment-1">
-            <div className="user-pic">
-              {/* <img src={item.snippet.topLevelComment.snippet.authorProfileImageUrl} alt="user" /> */}
-            </div>
-            <div className="user-detail">
-              <div className="user-name-time">
-                <h3>namw</h3> &bull;
-                <p>date</p>
-              </div>
-              <div className="comment-content">
-                <p>text</p>
-              </div>
-              <div className="like-dislike-icons">
-                <span className="like-icon">
-                  {/* <img src={like} alt="like" /> */}
-                  <p>like</p>
-                </span>
-                <span className="dislike-icon">
-                  {/* <img src={dislike} alt="dislike" /> */}
-                  <p>2</p>
-                </span>
-              </div>
-            </div>
+          <div className="description">
+            <p>{selectedVideo.description}</p>
+            <hr />
           </div>
         </div>
       </div>
-    </div>
+
+      <div>
+        <h1>Playlist Videos</h1>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+          {videos.map((video) => (
+            <div
+              onClick={() =>
+                setSelectedVideo({
+                  videoId: video.snippet.resourceId.videoId,
+                  title: video.snippet.title,
+                  description: video.snippet.description,
+                })
+              }
+              key={video.snippet.resourceId.videoId}
+              style={{ cursor: "pointer" }}
+            >
+              <img
+                src={video.snippet.thumbnails.medium.url}
+                alt={video.snippet.title}
+                style={{ width: "300px" }}
+              />
+              <h3>{video.snippet.title}</h3>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 

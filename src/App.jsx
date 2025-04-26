@@ -52,6 +52,7 @@ function App() {
           <Route path="/react79" element={<Reactjs />} />
           <Route path="/pythondjango90" element={<PythonDjango />} />
           <Route path="/pythondjango" element={<PythonDjango />} />
+          {/* <Route path="/playlist" element={<PlaylistFetcher />} /> */}
         </Routes>
       </Context.Provider>
     </BrowserRouter>

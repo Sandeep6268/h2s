@@ -24,6 +24,9 @@
     align-items: center;
     gap: 5px;
 }
+.playvideo .playvideo-info{
+    padding: 20px;
+}
 .playvideo .playvideo-info hr{
     margin-block: 15px;
     height: 1px;
@@ -61,7 +64,7 @@
 .playvideo .playvideo-info .description{
     margin-block: 20px;
     font-size: 14px;
-    padding-left: 40px;
+    /* padding-left: 40px; */
 }
 .playvideo .playvideo-info .comments{
     padding-left: 40px;
