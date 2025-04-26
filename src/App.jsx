@@ -7,6 +7,7 @@ import HtmlCssJs from "./Component/Courses/Courses Page/HTML CSS JS/HtmlCssJs";
 import PythonDjango from "./Component/Courses/Courses Page/PYTHON AND DJANGO/PythonDjango";
 import Reactjs from "./Component/Courses/Courses Page/REACT/Reactjs";
 import Python from "./Component/Courses/Courses Page/Python/Python";
+import PlayVideo from "./Component/Youtube/Youtube";
 
 function App() {
   const handlePayment = (price, redirectUrl) => {
@@ -51,6 +52,7 @@ function App() {
           <Route path="/react79" element={<Reactjs />} />
           <Route path="/pythondjango90" element={<PythonDjango />} />
           <Route path="/pythondjango" element={<PythonDjango />} />
+          <Route path="/videos" element={<PlayVideo/>}/>
         </Routes>
       </Context.Provider>
     </BrowserRouter>

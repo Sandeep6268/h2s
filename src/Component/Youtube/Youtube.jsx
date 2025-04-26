@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import "../../../Youtube/Youtube.css";
+import "./youtube.css";
 // import like from "../../assets/like.png";
 // import dislike from "../../assets/dislike.png";
 // import share from "../../assets/share.png";
@@ -7,7 +7,7 @@ import "../../../Youtube/Youtube.css";
 // import { API_KEY, Contexapi, value_converter } from "../../Contex";
 // import moment from "moment/moment";
 
-const Python = () => {
+const PlayVideo = () => {
   //   const { setCataId,setCatagoryIdPlay } = useContext(Contexapi);
   //   const [apiData, setApiData] = useState('');
   //   const [channelData, setChannelData] = useState(null);
@@ -164,4 +164,4 @@ const Python = () => {
   );
 };
 
-export default Python;
+export default PlayVideo;
