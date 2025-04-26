@@ -1,0 +1,33 @@
+
+
+
+.banner{
+    background: url(../../images/banner\ bg.jpg) no-repeat center;
+    background-size: cover;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 100vh;
+}
+.banner h1{
+    font-size: 60px;
+}
+.heroimg{
+    width: 35%;
+}
+.hero-container{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.hero-content{
+    width: 30%;
+    text-align: center;
+}
+
+.banner h2{
+    font-size: 40px;
+    line-height: 50px;
+}

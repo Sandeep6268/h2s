@@ -1,0 +1,23 @@
+.logo-div{
+    width: 100px;
+}
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 4px 8px black;
+    /* position: fixed;
+    width: 100%; */
+}
+header .links{
+    width: 60%;
+}
+header .links ul{
+    display: flex;
+    justify-content: space-between;
+}
+header .links ul li a{
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+}

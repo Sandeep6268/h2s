@@ -1,0 +1,16 @@
+.footer-img{
+    width: 150px;
+}
+.footer{
+    justify-content: space-between;
+}
+.footer-logo{
+    width: 60%;
+    gap: 40px;
+}
+.quick-links{
+    width: 15%;
+}
+.more-links{
+    width: 15%;
+}
