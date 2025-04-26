@@ -48,7 +48,7 @@ const HtmlCssJs = () => {
     <>
       <div className="playvideo">
         <iframe
-          src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1`}
+          src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1&rel=0`}
           title={selectedVideo.title}
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -67,7 +67,7 @@ const HtmlCssJs = () => {
       </div>
 
       <div>
-        <h1>Playlist Videos</h1>
+        <h1>Modules</h1>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
           {videos.map((video) => (
             <div
