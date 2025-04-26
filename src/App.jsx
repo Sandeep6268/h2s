@@ -42,7 +42,7 @@ function App() {
     rzp.open();
   };
   return (
-    <BrowserRouter basename="/h2s">
+    <BrowserRouter>
       <Context.Provider value={{ handlePayment: handlePayment }}>
         <Routes>
           <Route path="/" element={<Home />} />
