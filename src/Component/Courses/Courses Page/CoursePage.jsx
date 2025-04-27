@@ -31,7 +31,7 @@ const CoursePage = () => {
             <div className="comp-heading">
               <h1>Lorem ipsum dolor sit amet.</h1>
             </div>
-            <div className="comp-img m-4 w-50">
+            <div className="comp-img comp-img-1 m-4 w-50">
               <div className="paybtn d-flex justify-content-center">
                 <button
                   className="btn btn-primary"
@@ -72,6 +72,7 @@ const CoursePage = () => {
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </>

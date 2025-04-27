@@ -16,7 +16,7 @@ const Python = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const playlistId = "PLuoKHxXYY-ufOxC0egfCIH2pNExge8lyD"; // ✅ Tumhara Playlist ID
+  const playlistId = "PLuoKHxXYY-ucS5BNqSteFoEjhJdd5esB3"; // ✅ Tumhara Playlist ID
   const apiKey = "AIzaSyAYs4Z_-AVB7n9v1TYVDgiS7NdnjUoYIw0"; // ✅ Tumhara API Key
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const Python = () => {
                 })
               }
               key={video.snippet.resourceId.videoId}
-              style={{ cursor: "pointer",boxShadow:"0px 0px 5px white" }}
+              style={{ cursor: "pointer", boxShadow: "0px 0px 5px white" }}
             >
               <img
                 src={video.snippet.thumbnails.medium.url}
