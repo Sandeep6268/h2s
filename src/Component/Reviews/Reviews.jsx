@@ -88,7 +88,7 @@ const Reviews = () => {
         )}
         <div className="review-item">
           <div className="review-header">
-            <h4 className="review-name">Sneha</h4>
+            <h4 className="review-name">Anamika</h4>
           </div>
           <p className="review-text">
             I loved the Python course! It was super easy to follow, and I
@@ -98,7 +98,7 @@ const Reviews = () => {
         </div>
         <div className="review-item">
           <div className="review-header">
-            <h4 className="review-name">Sandeep Singh</h4>
+            <h4 className="review-name">Tahir </h4>
           </div>
           <p className="review-text">
             Bought the HTML and CSS combo. Great content, explained very
@@ -108,7 +108,7 @@ const Reviews = () => {
         </div>
         <div className="review-item">
           <div className="review-header">
-            <h4 className="review-name">Muskan</h4>
+            <h4 className="review-name">Munim</h4>
           </div>
           <p className="review-text">
             The JavaScript course was well-structured. I enjoyed the assignments
@@ -118,7 +118,7 @@ const Reviews = () => {
         </div>
         <div className="review-item">
           <div className="review-header">
-            <h4 className="review-name"> Hariom Chouhan</h4>
+            <h4 className="review-name"> Harish</h4>
           </div>
           <p className="review-text">
             I joined the React course and it exceeded my expectations. Clean UI,

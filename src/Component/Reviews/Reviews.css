@@ -21,6 +21,8 @@
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
+  overflow: auto;
+  height: 400px;
 }
 
 .review-item {
@@ -32,15 +34,15 @@
   margin-bottom: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   position: relative;
-  height: 170px;
-  overflow-y: auto;
+  height: 220px;
+  
 }
 
-.review-item::-webkit-scrollbar {
+.review-list::-webkit-scrollbar,::-webkit-scrollbar {
   width: 6px;
 }
 
-.review-item::-webkit-scrollbar-thumb {
+.review-list::-webkit-scrollbar-thumb,::-webkit-scrollbar-thumb {
   background-color: #444;
   border-radius: 10px;
 }
