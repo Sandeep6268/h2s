@@ -8,6 +8,7 @@ import PythonDjango from "./Component/Courses/Courses Page/PYTHON AND DJANGO/Pyt
 import Reactjs from "./Component/Courses/Courses Page/REACT/Reactjs";
 import Python from "./Component/Courses/Courses Page/Python/Python";
 import PlayVideo from "./Component/Youtube/Youtube";
+import NotificationPopup from "./Component/Notification/NotificationPopup";
 
 function App() {
   const handlePayment = (price, redirectUrl) => {
@@ -24,7 +25,6 @@ function App() {
         // Save or show message (optional)
         // Redirect to dynamic page
         window.location.replace(`${redirectUrl}`);
-
       },
       prefill: {
         name: "Test User",
@@ -45,6 +45,7 @@ function App() {
   return (
     <BrowserRouter>
       <Context.Provider value={{ handlePayment: handlePayment }}>
+        <NotificationPopup />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/htmlcssjs62" element={<HtmlCssJs />} />
