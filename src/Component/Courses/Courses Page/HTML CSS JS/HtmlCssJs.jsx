@@ -45,7 +45,7 @@ const HtmlCssJs = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <>
+    <div className="player-container d-flex gap-5 flex-wrap">
       <div className="playvideo">
         <iframe
           src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1&rel=0`}
@@ -66,9 +66,9 @@ const HtmlCssJs = () => {
         </div>
       </div>
 
-      <div>
-        <h1>Modules</h1>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+      <div className="playlist w-25">
+        <h1 className="text-primary">Modules</h1>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "15px" }}>
           {videos.map((video) => (
             <div
               onClick={() =>
@@ -79,19 +79,19 @@ const HtmlCssJs = () => {
                 })
               }
               key={video.snippet.resourceId.videoId}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", boxShadow: "0px 0px 5px white" }}
             >
               <img
                 src={video.snippet.thumbnails.medium.url}
                 alt={video.snippet.title}
-                style={{ width: "300px" }}
+                style={{ width: "100%" }}
               />
-              <h3>{video.snippet.title}</h3>
+              <p className="p-2">{video.snippet.title}</p>
             </div>
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

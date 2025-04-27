@@ -6,7 +6,7 @@ const Hero = () => {
   return (
     <>
       <section className="banner">
-        <h1 className="text-center">CODE | CREATE | CONQUER</h1>
+        <h1 className="text-center">CODE | <span className="text-primary">CREATE</span> | CONQUER</h1>
         <div className="hero-container p-2">
           <div className="heroimg">
             <img src={heroimg} className="w-100" alt="" />

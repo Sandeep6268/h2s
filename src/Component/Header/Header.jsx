@@ -10,7 +10,7 @@ const Header = () => {
             <img src={logo} className="w-100" alt="" />
         </div>
         <div className="links">
-            <ul className="" type='none'>
+            <ul className="menu align-center expanded text-center SMN_effect-63" type='none'>
                 <li><a href="">Home</a></li>
                 <li><a href="">About</a></li>
                 <li><a href="">Courses</a></li>
