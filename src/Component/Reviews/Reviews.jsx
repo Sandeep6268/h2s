@@ -39,7 +39,7 @@ const Reviews = () => {
 
   return (
     <>
-      <h2 className="review-heading text-primary">Share Your Experience</h2>
+      <h2 className="review-heading py-2 text-primary container-fluid">Share Your Experience</h2>
       <div className="review-container">
         <form onSubmit={handleSubmit} className="review-form">
           <input
@@ -66,7 +66,7 @@ const Reviews = () => {
           </button>
         </form>
       </div>
-      <h2 className="text-center p-3 my-5 bg-black text-primary">
+      <h2 className="text-center py-3 my-5 container-fluid bg-black text-primary">
         Users Reviews
       </h2>
       <div className="review-list">

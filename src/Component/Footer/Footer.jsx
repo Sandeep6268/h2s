@@ -4,8 +4,8 @@ import logo from "../../images/logo-removebg-preview.png";
 const Footer = () => {
   return (
     <>
-      <section className="footer bg-black p-5 d-flex">
-        <div className="footer-logo p-2 d-flex flex-column">
+      <section className="footer bg-black p-5  row" style={{marginRight:'1px'}}>
+        <div className=" col-md-6">
           <div className="footer-img">
             <img src={logo} alt="" className="w-100" />
           </div>
@@ -15,8 +15,8 @@ const Footer = () => {
             school and home.
           </h5>
         </div>
-        <div className="quick-links">
-          <h3>Quick Links</h3>
+        <div className="offset-md-2 mt-sm-5 my-md-0 col-md-2">
+          <h3 className="text-primary">Quick Links</h3>
           <ul type='none' className="p-0">
             <li className="my-3">
               <h5>About</h5>
@@ -29,7 +29,7 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        <div className="more-links my-4 py-2">
+        <div className=" col-md-2 my-md-4 my-sm-0 py-2">
           <ul type='none' className="p-0">
             <li className="my-3">
               <h5>Contact Us</h5>

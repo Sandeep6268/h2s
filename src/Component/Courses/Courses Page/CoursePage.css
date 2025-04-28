@@ -16,8 +16,9 @@ h1{
 }
 .comp{
     width: 100%;
+    display: flex;
     background: black;
-    height: 500px;
+    /* height: 500px; */
 
 }
 .comp-img{

@@ -22,10 +22,12 @@ function App() {
 
       handler: function (response) {
         console.log("Payment Success:", response.razorpay_payment_id);
-        // Save or show message (optional)
         // Redirect to dynamic page
         window.location.replace(`${redirectUrl}`);
       },
+
+      
+      
       prefill: {
         name: "Test User",
         email: "test@example.com",
@@ -37,6 +39,7 @@ function App() {
       theme: {
         color: "#3399cc",
       },
+
     };
 
     const rzp = new window.Razorpay(options);

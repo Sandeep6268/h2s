@@ -51,16 +51,20 @@ const Python = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="player-container d-flex gap-5 flex-wrap">
-      <div className="playvideo">
-        <iframe
-          src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1&rel=0`}
-          title={selectedVideo.title}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
-        ></iframe>
+    // <div className="player-container  d-flex gap-5 flex-wrap">
+    <div className="container-fluid main-yt-div row align-content-center">
+      <div className="col-md-9 yt-video-div">
+        <div className="iframe-div w-100" style={{ height: "400px" }}>
+          <iframe
+            className="w-100 h-100"
+            src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1&rel=0`}
+            title={selectedVideo.title}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          ></iframe>
+        </div>
 
         <div className="playvideo-info">
           <h3>{selectedVideo.title}</h3>
@@ -72,7 +76,7 @@ const Python = () => {
         </div>
       </div>
 
-      <div className="playlist w-25">
+      <div className="col-md-3">
         <h1 className="text-primary">Modules</h1>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "15px" }}>
           {videos.map((video) => (

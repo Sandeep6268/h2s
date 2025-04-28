@@ -115,3 +115,9 @@ header .links ul li a {
   text-decoration: none;
   transition: all 0.2s ease-in-out;
 }
+
+@media (max-width:465px) {
+  .logo-div{
+    width: 75px;
+  }
+}
