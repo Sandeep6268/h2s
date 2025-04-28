@@ -6,8 +6,8 @@ const Hero = () => {
   return (
     <>
       <section className="banner container-fluid d-sm-none d-md-block">
-        <h1 className="text-center ">CODE | <span className="text-primary">CREATE</span> | CONQUER</h1>
-        <div className="hero-container row w-100 p-2">
+        <h1 className="text-center py-3">CODE | <span className="text-primary">CREATE</span> | CONQUER</h1>
+        <div className="hero-container row w-100 p-2 py-md-5">
           <div className=" col-md-3 offset-md-1">
             <img src={heroimg} className="w-100" alt="" />
           </div>

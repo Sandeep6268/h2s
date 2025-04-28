@@ -16,6 +16,14 @@ const CoursePage = () => {
           <div className="comp row w-100 d-flex">
             <div className="comp-heading col-md-7">
               <h1>Lorem ipsum dolor sit amet.</h1>
+              <div className="paybtn d-flex justify-content-center">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handlePayment(29, "/htmlcssjs62")}
+                >
+                  Pay 29
+                </button>
+              </div>
             </div>
             <div className="comp-img p-0 col-md-5 ">
               <img
@@ -24,14 +32,6 @@ const CoursePage = () => {
                 style={{ height: "300px" }}
                 alt=""
               />
-              {/* <div className="paybtn d-flex justify-content-center">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handlePayment(29,'/htmlcssjs62')}
-                >
-                  Pay 29
-                </button>
-              </div> */}
             </div>
           </div>
           <div className="comp row w-100">
@@ -42,22 +42,30 @@ const CoursePage = () => {
                 style={{ height: "300px" }}
                 alt=""
               />
-              {/* <div className="paybtn d-flex justify-content-center">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handlePayment(144,'/python24')}
-                >
-                  Pay 144
-                </button>
-              </div> */}
             </div>
             <div className="comp-heading col-md-7">
               <h1>Lorem ipsum dolor sit amet.</h1>
+              <div className="paybtn d-flex justify-content-center">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handlePayment(144, "/python24")}
+                >
+                  Pay 144
+                </button>
+              </div>
             </div>
           </div>
           <div className="comp row w-100 d-flex">
             <div className="comp-heading col-md-7">
               <h1>Lorem ipsum dolor sit amet.</h1>
+              <div className="paybtn d-flex justify-content-center">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handlePayment(129, "/pythondjango90")}
+                >
+                  Pay 129
+                </button>
+              </div>
             </div>
             <div className="comp-img p-0 col-md-5">
               <img
@@ -66,14 +74,6 @@ const CoursePage = () => {
                 style={{ height: "300px" }}
                 alt=""
               />
-              {/* <div className="paybtn d-flex justify-content-center">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handlePayment(129, "/pythondjango90")}
-                >
-                  Pay 129
-                </button>
-              </div> */}
             </div>
           </div>
           <div className="comp row w-100 ">
@@ -84,17 +84,17 @@ const CoursePage = () => {
                 style={{ height: "300px" }}
                 alt=""
               />
-              {/* <div className="paybtn d-flex justify-content-center">
+            </div>
+            <div className="comp-heading col-md-7">
+              <h1>Lorem ipsum dolor sit amet.</h1>
+              <div className="paybtn d-flex justify-content-center">
                 <button
                   className="btn btn-primary"
                   onClick={() => handlePayment(499, "/react79")}
                 >
                   Pay 499
                 </button>
-              </div> */}
-            </div>
-            <div className="comp-heading col-md-7">
-              <h1>Lorem ipsum dolor sit amet.</h1>
+              </div>
             </div>
           </div>
         </div>
