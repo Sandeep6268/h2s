@@ -52,7 +52,7 @@ const Python = () => {
 
   return (
     // <div className="player-container  d-flex gap-5 flex-wrap">
-    <div className="container-fluid main-yt-div row align-content-center">
+    <div className="container-fluid main-yt-div row align-items-center w-100 justify-content-center">
       <div className="col-md-9 yt-video-div">
         <div className="iframe-div w-100" style={{ height: "400px" }}>
           <iframe
@@ -78,7 +78,7 @@ const Python = () => {
 
       <div className="col-md-3">
         <h1 className="text-primary">Modules</h1>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "15px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "40px",alignItems:'center',justifyContent:'center' }}>
           {videos.map((video) => (
             <div
               onClick={() =>
@@ -89,7 +89,7 @@ const Python = () => {
                 })
               }
               key={video.snippet.resourceId.videoId}
-              style={{ cursor: "pointer", boxShadow: "0px 0px 5px white" }}
+              style={{ cursor: "pointer", boxShadow: "0px 0px 5px white",width:'100%' }}
             >
               <img
                 src={video.snippet.thumbnails.medium.url}
