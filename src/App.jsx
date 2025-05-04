@@ -10,7 +10,7 @@ import Python from "./Component/Courses/Courses Page/Python/Python";
 import PlayVideo from "./Component/Youtube/Youtube";
 import NotificationPopup from "./Component/Notification/NotificationPopup";
 import HtmlCss from "./Component/Courses/Courses Page/HTML CSS/HtmlCss";
-import ReactandJs from "./Component/Courses/Courses Page/REACT/REACT + JS/ReactandJs";
+import ReactandJs from "./Component/Courses/Courses Page/REACT/REACT AND JS/ReactandJs";
 
 function App() {
   const handlePayment = (price, redirectUrl) => {
