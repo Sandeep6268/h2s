@@ -9,6 +9,8 @@ import Reactjs from "./Component/Courses/Courses Page/REACT/Reactjs";
 import Python from "./Component/Courses/Courses Page/Python/Python";
 import PlayVideo from "./Component/Youtube/Youtube";
 import NotificationPopup from "./Component/Notification/NotificationPopup";
+import HtmlCss from "./Component/Courses/Courses Page/HTML CSS/HtmlCss";
+import ReactandJs from "./Component/Courses/Courses Page/REACT/REACT + JS/ReactandJs";
 
 function App() {
   const handlePayment = (price, redirectUrl) => {
@@ -51,9 +53,11 @@ function App() {
         <NotificationPopup />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/htmlcss89" element={<HtmlCss />} />
           <Route path="/htmlcssjs62" element={<HtmlCssJs />} />
           <Route path="/python24" element={<Python />} />
           <Route path="/react79" element={<Reactjs />} />
+          <Route path="/reactandjs43" element={<ReactandJs />} />
           <Route path="/pythondjango90" element={<PythonDjango />} />
         </Routes>
       </Context.Provider>

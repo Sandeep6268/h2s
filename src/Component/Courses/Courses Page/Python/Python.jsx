@@ -1,11 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../../Youtube/Youtube.css";
-// import like from "../../assets/like.png";
-// import dislike from "../../assets/dislike.png";
-// import share from "../../assets/share.png";
-// import save from "../../assets/save.png";
-// import { API_KEY, Contexapi, value_converter } from "../../Contex";
-// import moment from "moment/moment";
 
 const Python = () => {
   const [selectedVideo, setSelectedVideo] = useState({
@@ -52,8 +46,8 @@ const Python = () => {
 
   return (
     // <div className="player-container  d-flex gap-5 flex-wrap">
-    <div className="container-fluid main-yt-div row align-items-center w-100 justify-content-center">
-      <div className="col-md-9 yt-video-div">
+    <div className="container-fluid mx-auto main-yt-div row align-items-center w-100 justify-content-center">
+      <div className="col-md-9 yt-video-div pe-sm-0">
         <div className="iframe-div w-100" style={{ height: "400px" }}>
           <iframe
             className="w-100 h-100"
@@ -76,7 +70,7 @@ const Python = () => {
         </div>
       </div>
 
-      <div className="col-md-3">
+      <div className="col-md-3 ">
         <h1 className="text-primary">Modules</h1>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "40px",alignItems:'center',justifyContent:'center' }}>
           {videos.map((video) => (

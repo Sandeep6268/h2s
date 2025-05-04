@@ -42,7 +42,7 @@ const CoursePage = () => {
               <div className="paybtn m-3 d-flex ">
                 <button
                   className="button-85"
-                  onClick={() => handlePayment(49, "/python24")}
+                  onClick={() => handlePayment(49, "/htmlcss89")}
                 >
                   Pay ₹49
                 </button>
@@ -186,7 +186,7 @@ const CoursePage = () => {
               <div className="paybtn m-3 d-flex">
                 <button
                   className="button-85"
-                  onClick={() => handlePayment(199, "/htmlcssjs62")}
+                  onClick={() => handlePayment(199, "/reactandjs43")}
                 >
                   Pay ₹199
                 </button>
