@@ -11,6 +11,7 @@ import PlayVideo from "./Component/Youtube/Youtube";
 import NotificationPopup from "./Component/Notification/NotificationPopup";
 import HtmlCss from "./Component/Courses/Courses Page/HTML CSS/HtmlCss";
 import ReactandJs from "./Component/Courses/Courses Page/REACT AND JS/ReactandJs";
+import Contact from "./Pages/Contact Page/Contact";
 
 function App() {
   const handlePayment = (price, redirectUrl) => {
@@ -53,6 +54,7 @@ function App() {
         <NotificationPopup />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/contactus" element={<Contact />} />
           <Route path="/htmlcss89" element={<HtmlCss />} />
           <Route path="/htmlcssjs62" element={<HtmlCssJs />} />
           <Route path="/python24" element={<Python />} />

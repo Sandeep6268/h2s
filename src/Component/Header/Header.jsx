@@ -1,16 +1,17 @@
 import React from "react";
 import "./Header.css";
 import logo from "../../images/logo-removebg-preview.png";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
     <>
       <header className="p-3 navbar row navbar-expand-lg px-5" style={{marginRight:'1px'}}>
-        <div className="col-md-3 col-2">
+        <Link to={'/'} className="col-md-3 col-2">
           <div className="logo-div ">
             <img src={logo} className="w-100" alt="" />
           </div>
-        </div>
+        </Link>
 
         <button
           class="navbar-toggler"
@@ -28,9 +29,9 @@ const Header = () => {
           <div class="collapse navbar-collapse mx-auto" id="navbarNav">
             <ul class="navbar-nav w-100 justify-content-around align-items-center ">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <Link to={'/'} class="nav-link active" aria-current="page" href="#">
                   Home
-                </a>
+                </Link>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
@@ -43,9 +44,9 @@ const Header = () => {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">
-                  Disabled
-                </a>
+                <Link to={'/contactus'} class="nav-link">
+                  ContactUs
+                </Link>
               </li>
               <li class="nav-item btn btn-outline-primary">Register</li>
             </ul>

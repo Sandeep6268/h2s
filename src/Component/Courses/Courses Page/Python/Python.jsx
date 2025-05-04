@@ -72,7 +72,15 @@ const Python = () => {
 
       <div className="col-md-3 ">
         <h1 className="text-primary">Modules</h1>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "40px",alignItems:'center',justifyContent:'center' }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "40px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           {videos.map((video) => (
             <div
               onClick={() =>
@@ -83,7 +91,11 @@ const Python = () => {
                 })
               }
               key={video.snippet.resourceId.videoId}
-              style={{ cursor: "pointer", boxShadow: "0px 0px 5px white",width:'100%' }}
+              style={{
+                cursor: "pointer",
+                boxShadow: "0px 0px 5px white",
+                width: "100%",
+              }}
             >
               <img
                 src={video.snippet.thumbnails.medium.url}

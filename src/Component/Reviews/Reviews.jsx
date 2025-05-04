@@ -39,7 +39,9 @@ const Reviews = () => {
 
   return (
     <>
-      <h2 className="review-heading py-2 text-primary container-fluid">Share Your Experience</h2>
+      <h2 className="review-heading py-2 text-primary container-fluid">
+        Share Your Experience
+      </h2>
       <div className="review-container">
         <form onSubmit={handleSubmit} className="review-form">
           <input
@@ -70,22 +72,20 @@ const Reviews = () => {
         Users Reviews
       </h2>
       <div className="review-list">
-        
-          {reviews.map((r) => (
-            <div key={r.id} className="review-item">
-              <div className="review-header">
-                <h4 className="review-name">{r.name}</h4>
-                <button
-                  className="delete-button"
-                  onClick={() => handleDelete(r.id)}
-                >
-                  Delete
-                </button>
-              </div>
-              <p className="review-text">{r.review}</p>
+        {reviews.map((r) => (
+          <div key={r.id} className="review-item">
+            <div className="review-header">
+              <h4 className="review-name">{r.name}</h4>
+              <button
+                className="delete-button"
+                onClick={() => handleDelete(r.id)}
+              >
+                Delete
+              </button>
             </div>
-          )
-        )}
+            <p className="review-text">{r.review}</p>
+          </div>
+        ))}
         <div className="review-item">
           <div className="review-header">
             <h4 className="review-name">Anamika</h4>
