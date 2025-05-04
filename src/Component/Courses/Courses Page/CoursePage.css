@@ -29,3 +29,17 @@ h1{
     background: url(../../../images/thumb1.jpeg) no-repeat center;
     background-size: cover;
 }
+.comp-heading h1{
+    font-size: 35px;
+    
+}
+.comp-heading p{
+    line-height: 40px;
+    
+}
+
+@media (max-width:500px) {
+    .com-img-height{
+        height: 100% !important;
+    }
+}
