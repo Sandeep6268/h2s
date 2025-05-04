@@ -41,7 +41,7 @@ const CoursePage = () => {
               </p>
               <div className="paybtn m-3 d-flex ">
                 <button
-                  className="btn btn-primary"
+                  className="button-85"
                   onClick={() => handlePayment(49, "/python24")}
                 >
                   Pay ₹49
@@ -61,7 +61,7 @@ const CoursePage = () => {
               </p>
               <div className="paybtn m-3 d-flex">
                 <button
-                  className="btn btn-primary"
+                  className="button-85"
                   onClick={() => handlePayment(99, "/htmlcssjs62")}
                 >
                   Pay ₹99
@@ -103,7 +103,7 @@ const CoursePage = () => {
               </p>
               <div className="paybtn m-3 d-flex ">
                 <button
-                  className="btn btn-primary"
+                  className="button-85"
                   onClick={() => handlePayment(129, "/python24")}
                 >
                   Pay ₹129
@@ -124,7 +124,7 @@ const CoursePage = () => {
               </p>
               <div className="paybtn m-3 d-flex">
                 <button
-                  className="btn btn-primary"
+                  className="button-85"
                   onClick={() => handlePayment(179, "/pythondjango90")}
                 >
                   Pay ₹179
@@ -166,7 +166,7 @@ const CoursePage = () => {
               </p>
               <div className="paybtn m-3 d-flex">
                 <button
-                  className="btn btn-primary"
+                  className="button-85"
                   onClick={() => handlePayment(149, "/react79")}
                 >
                   Pay ₹149
@@ -185,7 +185,7 @@ const CoursePage = () => {
               </p>
               <div className="paybtn m-3 d-flex">
                 <button
-                  className="btn btn-primary"
+                  className="button-85"
                   onClick={() => handlePayment(199, "/htmlcssjs62")}
                 >
                   Pay ₹199
