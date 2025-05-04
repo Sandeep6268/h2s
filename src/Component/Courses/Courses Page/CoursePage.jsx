@@ -39,7 +39,7 @@ const CoursePage = () => {
                 ⏱️ Flexible Duration – learn at your own pace <br />
                 💼 Portfolio Ready designs to showcase your skills
               </p>
-              <div className="paybtn m-3 d-flex ">
+              <div className="paybtn m-3 d-flex center-below-md ">
                 <button
                   className="button-85"
                   onClick={() => handlePayment(49, "/htmlcss89")}
@@ -49,7 +49,7 @@ const CoursePage = () => {
               </div>
             </div>
           </div>
-          <div className="comp row w-100 my-3 p-md-5 d-flex justify-content-around">
+          <div className="comp row w-100 my-3 p-md-5 d-flex reverse-column justify-content-around">
             <div className="comp-heading col-md-7">
               <h1>HTML, CSS & JavaScript Internship</h1>
               <p className="p-3">
@@ -59,7 +59,7 @@ const CoursePage = () => {
                 Boost with frontend dev skills <br /> 💻 GitHub Integration to
                 showcase your code
               </p>
-              <div className="paybtn m-3 d-flex">
+              <div className="paybtn m-3 center-below-md d-flex">
                 <button
                   className="button-85"
                   onClick={() => handlePayment(99, "/htmlcssjs62")}
@@ -80,7 +80,7 @@ const CoursePage = () => {
               />
             </div>
           </div>
-          <div className="comp row w-100 my-3 p-md-5 d-flex justify-content-around">
+          <div className="comp row w-100 my-3 p-md-5 d-flex  justify-content-around">
             <div
               className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
@@ -101,7 +101,7 @@ const CoursePage = () => {
                 📊 Data Handling & Logic Building focused <br />
                 🔄 Version Control (Git) usage in projects
               </p>
-              <div className="paybtn m-3 d-flex ">
+              <div className="paybtn m-3 center-below-md d-flex ">
                 <button
                   className="button-85"
                   onClick={() => handlePayment(129, "/python24")}
@@ -111,7 +111,7 @@ const CoursePage = () => {
               </div>
             </div>
           </div>
-          <div className="comp row w-100 my-3 p-md-5 d-flex justify-content-around">
+          <div className="comp row w-100 my-3 p-md-5 d-flex reverse-column justify-content-around">
             <div className="comp-heading col-md-7 ">
               <h1>Django + Python Internship</h1>
               <p className="p-3">
@@ -122,7 +122,7 @@ const CoursePage = () => {
                 <br />
                 🌐 Live Project Deployment & GitHub showcase
               </p>
-              <div className="paybtn m-3 d-flex">
+              <div className="paybtn center-below-md m-3 d-flex">
                 <button
                   className="button-85"
                   onClick={() => handlePayment(179, "/pythondjango90")}
@@ -164,7 +164,7 @@ const CoursePage = () => {
                 🧠 State Management using Hooks & Context <br />
                 🌐 Deployable Web Apps hosted on GitHub/Netlify
               </p>
-              <div className="paybtn m-3 d-flex">
+              <div className="paybtn m-3 center-below-md d-flex">
                 <button
                   className="button-85"
                   onClick={() => handlePayment(149, "/react79")}
@@ -174,7 +174,7 @@ const CoursePage = () => {
               </div>
             </div>
           </div>
-          <div className="comp row w-100 my-3 p-md-5 d-flex justify-content-around">
+          <div className="comp row w-100 my-3 p-md-5 d-flex reverse-column justify-content-around">
             <div className="comp-heading col-md-7">
               <h1>React JS + JavaScript Internship</h1>
               <p className="p-3">
@@ -183,7 +183,7 @@ const CoursePage = () => {
                 Projects with deployment <br/>⚙️ Modern Tools – ES6, Hooks, JSX &
                 more <br/>📁 Professional GitHub Portfolio for job readiness
               </p>
-              <div className="paybtn m-3 d-flex">
+              <div className="paybtn m-3 center-below-md d-flex">
                 <button
                   className="button-85"
                   onClick={() => handlePayment(199, "/reactandjs43")}
