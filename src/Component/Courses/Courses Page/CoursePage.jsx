@@ -7,6 +7,7 @@ import htmlcssjs from "../../../images/htmlcssjs.jpg";
 import python from "../../../images/python.jpg";
 import django from "../../../images/django.jpg";
 import reactimg from "../../../images/react.jpg";
+import reactandjs from "../../../images/reactandjs.jpg";
 
 const CoursePage = () => {
   const { handlePayment } = useContext(Context);
@@ -197,7 +198,7 @@ const CoursePage = () => {
               style={{ marginBlock: "30px" }}
             >
               <img
-                src={htmlcssjs}
+                src={reactandjs}
                 className="w-100 com-img-height"
                 style={{ height: "370px" }}
                 alt=""
