@@ -1,3 +1,8 @@
-*{
+* {
   color: white;
+}
+.text-primary {
+  background: linear-gradient(0deg, #1e3cf3, #9b1de0, #ff4ae0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
