@@ -44,7 +44,7 @@ const CoursePage = () => {
                   className="btn btn-primary"
                   onClick={() => handlePayment(49, "/python24")}
                 >
-                  Pay 49
+                  Pay ₹49
                 </button>
               </div>
             </div>
@@ -64,7 +64,7 @@ const CoursePage = () => {
                   className="btn btn-primary"
                   onClick={() => handlePayment(99, "/htmlcssjs62")}
                 >
-                  Pay 99
+                  Pay ₹99
                 </button>
               </div>
             </div>
@@ -106,7 +106,7 @@ const CoursePage = () => {
                   className="btn btn-primary"
                   onClick={() => handlePayment(129, "/python24")}
                 >
-                  Pay 129
+                  Pay ₹129
                 </button>
               </div>
             </div>
@@ -127,7 +127,7 @@ const CoursePage = () => {
                   className="btn btn-primary"
                   onClick={() => handlePayment(179, "/pythondjango90")}
                 >
-                  Pay 179
+                  Pay ₹179
                 </button>
               </div>
             </div>
@@ -169,7 +169,7 @@ const CoursePage = () => {
                   className="btn btn-primary"
                   onClick={() => handlePayment(149, "/react79")}
                 >
-                  Pay 149
+                  Pay ₹149
                 </button>
               </div>
             </div>
@@ -188,7 +188,7 @@ const CoursePage = () => {
                   className="btn btn-primary"
                   onClick={() => handlePayment(199, "/htmlcssjs62")}
                 >
-                  Pay 199
+                  Pay ₹199
                 </button>
               </div>
             </div>
