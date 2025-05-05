@@ -13,10 +13,14 @@ const Footer = () => {
             <img src={logo} alt="" className="w-100" />
           </div>
           <h5 className="pe-5">
-            At <small className="text-primary">H2S Skills Hub</small>, you can
-            gain practical knowledge and learn real-world skills that will help
-            you transform your life at work, school and home.
+            At <small className="text-primary">H2S Skills Academy</small>, you
+            can gain practical knowledge and learn real-world skills that will
+            help you transform your life at work, school and home.
           </h5>
+          <p>
+            <span className="text-primary">Address:-</span><br/>91Springboard, 4th Floor, Salarpuria Tower-I,<br/> No.
+            22, Hosur Road, Koramangala, <br/>Bengaluru, Karnataka – 560095
+          </p>
         </div>
         <div className="offset-md-2 mt-sm-5 my-md-0 col-md-2">
           <h3 className="text-primary">Quick Links</h3>
