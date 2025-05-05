@@ -82,12 +82,17 @@ const HtmlCssJs = () => {
                 })
               }
               key={video.snippet.resourceId.videoId}
-              style={{ cursor: "pointer", boxShadow: "0px 0px 5px white" }}
+              style={{
+                cursor: "pointer",
+                boxShadow: "0px 0px 5px white",
+                width: "100%",
+              }}
+              className="button-85 no-padding"
             >
               <img
                 src={video.snippet.thumbnails.medium.url}
                 alt={video.snippet.title}
-                style={{ width: "100%" }}
+                style={{ width: "100%",borderRadius:'10px'}}
               />
               <p className="p-2">{video.snippet.title}</p>
             </div>

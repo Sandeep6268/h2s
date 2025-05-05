@@ -77,7 +77,14 @@ const PythonDjango = () => {
 
       <div className="col-md-3">
         <h1 className="text-primary">Modules</h1>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "50px",marginBlock:'10px' }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "50px",
+            marginBlock: "10px",
+          }}
+        >
           {videos.map((video) => (
             <div
               onClick={() =>
@@ -88,12 +95,17 @@ const PythonDjango = () => {
                 })
               }
               key={video.snippet.resourceId.videoId}
-              style={{ cursor: "pointer", boxShadow: "0px 0px 5px white" }}
+              style={{
+                cursor: "pointer",
+                boxShadow: "0px 0px 5px white",
+                width: "100%",
+              }}
+              className="button-85 no-padding"
             >
               <img
                 src={video.snippet.thumbnails.medium.url}
                 alt={video.snippet.title}
-                style={{ width: "100%" }}
+                style={{ width: "100%", borderRadius: "10px" }}
               />
               <p className="p-2">{video.snippet.title}</p>
             </div>

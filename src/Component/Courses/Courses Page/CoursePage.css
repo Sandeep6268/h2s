@@ -99,6 +99,9 @@ h1 {
   top: 0;
   border-radius: 10px;
 }
+.no-padding{
+  padding: 0 !important;
+}
 
 @media (max-width: 767.98px) {
   .center-below-md {
