@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../../Youtube/Youtube.css";
+import Footer from '../../../Footer/Footer'
+import Header from '../../../Header/Header'
 // import like from "../../assets/like.png";
 // import dislike from "../../assets/dislike.png";
 // import share from "../../assets/share.png";
@@ -51,68 +53,77 @@ const PythonDjango = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="container-fluid my-2 main-yt-div row align-content-center">
-      <div className="col-md-9 yt-video-div">
-        <div className="iframe-div w-100" style={{ height: "400px" }}>
-          <iframe
-            className="w-100 h-100"
-            src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1&rel=0`}
-            title={selectedVideo.title}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          ></iframe>
+    <>
+      <Header />
+      <div className="container-fluid my-2 main-yt-div row align-content-center">
+        <div className="col-md-9 yt-video-div">
+          <div className="iframe-div w-100" style={{ height: "400px" }}>
+            <iframe
+              className="w-100 h-100"
+              src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1&rel=0`}
+              title={selectedVideo.title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            ></iframe>
+          </div>
+
+          <div className="playvideo-info">
+            <h3>{selectedVideo.title}</h3>
+            <hr />
+            <div className="description">
+              <p>{selectedVideo.description}</p>
+              <hr />
+            </div>
+          </div>
         </div>
 
-        <div className="playvideo-info">
-          <h3>{selectedVideo.title}</h3>
-          <hr />
-          <div className="description">
-            <p>{selectedVideo.description}</p>
-            <hr />
+        <div className="col-md-3 h-100">
+          <h1 className="text-primary">Modules</h1>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: "50px",
+              marginBlock: "10px",
+              height: "700px",
+              overflowY: "scroll",
+              width: "100%",
+              paddingBlock: "20px",
+            }}
+          >
+            {videos.map((video) => (
+              <div
+                onClick={() =>
+                  setSelectedVideo({
+                    videoId: video.snippet.resourceId.videoId,
+                    title: video.snippet.title,
+                    description: video.snippet.description,
+                  })
+                }
+                key={video.snippet.resourceId.videoId}
+                style={{
+                  cursor: "pointer",
+                  boxShadow: "0px 0px 5px white",
+                  width: "90%",
+                }}
+                className="button-85 no-padding"
+              >
+                <img
+                  src={video.snippet.thumbnails.medium.url}
+                  alt={video.snippet.title}
+                  style={{ width: "100%", borderRadius: "10px" }}
+                />
+                <p className="p-2">{video.snippet.title}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-
-      <div className="col-md-3">
-        <h1 className="text-primary">Modules</h1>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "50px",
-            marginBlock: "10px",
-          }}
-        >
-          {videos.map((video) => (
-            <div
-              onClick={() =>
-                setSelectedVideo({
-                  videoId: video.snippet.resourceId.videoId,
-                  title: video.snippet.title,
-                  description: video.snippet.description,
-                })
-              }
-              key={video.snippet.resourceId.videoId}
-              style={{
-                cursor: "pointer",
-                boxShadow: "0px 0px 5px white",
-                width: "100%",
-              }}
-              className="button-85 no-padding"
-            >
-              <img
-                src={video.snippet.thumbnails.medium.url}
-                alt={video.snippet.title}
-                style={{ width: "100%", borderRadius: "10px" }}
-              />
-              <p className="p-2">{video.snippet.title}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

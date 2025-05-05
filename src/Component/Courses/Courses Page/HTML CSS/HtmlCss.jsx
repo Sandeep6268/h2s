@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../../Youtube/Youtube.css";
-
+import Footer from '../../../Footer/Footer'
+import Header from '../../../Header/Header'
 const HtmlCss = () => {
   const [selectedVideo, setSelectedVideo] = useState({
     videoId: "8cVkLeCqUHk",
@@ -46,8 +47,10 @@ const HtmlCss = () => {
 
   return (
     // <div className="player-container  d-flex gap-5 flex-wrap">
-    <div className="container-fluid my-2 mx-auto main-yt-div row align-items-center w-100 justify-content-center">
-      <div className="col-md-9 yt-video-div pe-sm-0">
+    <>
+    <Header/>
+    <div className="container-fluid my-2 main-yt-div row align-content-center">
+      <div className="col-md-9 yt-video-div">
         <div className="iframe-div w-100" style={{ height: "400px" }}>
           <iframe
             className="w-100 h-100"
@@ -70,18 +73,9 @@ const HtmlCss = () => {
         </div>
       </div>
 
-      <div className="col-md-3 ">
+      <div className="col-md-3 h-100">
         <h1 className="text-primary">Modules</h1>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "50px",
-            marginBlock: "10px",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+        <div style={{ display: "flex", flexWrap: "wrap",justifyContent:'center', gap: "50px",marginBlock:'10px',height:'700px', overflowY:'scroll',width:'100%',paddingBlock:'20px'}}>
           {videos.map((video) => (
             <div
               onClick={() =>
@@ -95,14 +89,14 @@ const HtmlCss = () => {
               style={{
                 cursor: "pointer",
                 boxShadow: "0px 0px 5px white",
-                width: "100%",
+                width: "90%",
               }}
               className="button-85 no-padding"
             >
               <img
                 src={video.snippet.thumbnails.medium.url}
                 alt={video.snippet.title}
-                style={{ width: "100%", borderRadius: "10px" }}
+                style={{ width: "100%",borderRadius:'10px'}}
               />
               <p className="p-2">{video.snippet.title}</p>
             </div>
@@ -110,6 +104,8 @@ const HtmlCss = () => {
         </div>
       </div>
     </div>
+      <Footer/>
+    </>
   );
 };
 
