@@ -19,7 +19,7 @@ const CoursePage = () => {
           <h1 className="text-center w-100">BECOME SKILLED AT WHAT MATTERS</h1>
         </div>
         <div className="course-component text-dark d-flex align-items-center">
-          <div className="comp row w-100 my-3 p-md-5 d-flex justify-content-around">
+          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex justify-content-around">
             <div
               className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
@@ -50,7 +50,7 @@ const CoursePage = () => {
               </div>
             </div>
           </div>
-          <div className="comp row w-100 my-3 p-md-5 d-flex reverse-column justify-content-around">
+          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around">
             <div className="comp-heading col-md-7">
               <h1>HTML, CSS & JavaScript Internship</h1>
               <p className="p-3">
@@ -81,7 +81,7 @@ const CoursePage = () => {
               />
             </div>
           </div>
-          <div className="comp row w-100 my-3 p-md-5 d-flex  justify-content-around">
+          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex  justify-content-around">
             <div
               className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
@@ -112,7 +112,7 @@ const CoursePage = () => {
               </div>
             </div>
           </div>
-          <div className="comp row w-100 my-3 p-md-5 d-flex reverse-column justify-content-around">
+          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around">
             <div className="comp-heading col-md-7 ">
               <h1>Django + Python Internship</h1>
               <p className="p-3">
@@ -144,7 +144,7 @@ const CoursePage = () => {
               />
             </div>
           </div>
-          <div className="comp row w-100 my-3 p-md-5 d-flex justify-content-around">
+          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex justify-content-around">
             <div
               className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
@@ -175,7 +175,7 @@ const CoursePage = () => {
               </div>
             </div>
           </div>
-          <div className="comp row w-100 my-3 p-md-5 d-flex reverse-column justify-content-around">
+          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around">
             <div className="comp-heading col-md-7">
               <h1>React JS + JavaScript Internship</h1>
               <p className="p-3">
