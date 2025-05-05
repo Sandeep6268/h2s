@@ -45,7 +45,7 @@ const HtmlCssJs = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="container-fluid main-yt-div row align-content-center">
+    <div className="container-fluid my-2 main-yt-div row align-content-center">
       <div className="col-md-9 yt-video-div">
         <div className="iframe-div w-100" style={{ height: "400px" }}>
           <iframe
@@ -71,7 +71,7 @@ const HtmlCssJs = () => {
 
       <div className="col-md-3">
         <h1 className="text-primary">Modules</h1>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "15px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "50px",marginBlock:'10px' }}>
           {videos.map((video) => (
             <div
               onClick={() =>

@@ -46,7 +46,7 @@ const HtmlCss = () => {
 
   return (
     // <div className="player-container  d-flex gap-5 flex-wrap">
-    <div className="container-fluid mx-auto main-yt-div row align-items-center w-100 justify-content-center">
+    <div className="container-fluid my-2 mx-auto main-yt-div row align-items-center w-100 justify-content-center">
       <div className="col-md-9 yt-video-div pe-sm-0">
         <div className="iframe-div w-100" style={{ height: "400px" }}>
           <iframe
@@ -76,7 +76,7 @@ const HtmlCss = () => {
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "40px",
+            gap: "50px",marginBlock:'10px',
             alignItems: "center",
             justifyContent: "center",
           }}
