@@ -27,7 +27,7 @@ const Header = () => {
         </button>
         <div className="navbar-content offset-md-1 col-md-8">
           <div class="collapse navbar-collapse mx-auto" id="navbarNav">
-            <ul class="navbar-nav w-100 justify-content-around align-items-center ">
+            <ul class="navbar-nav w-100 justify-content-around align-items-center menu align-center expanded text-center SMN_effect-63">
               <li class="nav-item">
                 <Link to={'/'} class="nav-link active" aria-current="page" href="#">
                   Home

@@ -59,7 +59,7 @@ const Contact = () => {
                 <div class="container-block form-wrapper">
                   <p class="text-blk contactus-head">
                     <a class="link" href=""></a>
-                    Get a quote
+                    Get In Touch
                   </p>
                   <p class="text-blk contactus-subhead">
                     We will get back to you in 24 hours
