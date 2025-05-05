@@ -1,6 +1,7 @@
 import React from "react";
 import "./Footer.css";
 import logo from "../../images/logo-removebg-preview.png";
+import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <>
@@ -18,7 +19,7 @@ const Footer = () => {
             help you transform your life at work, school and home.
           </h5>
           <p>
-            <span className="text-primary">Address:-</span><br/>91Springboard, 4th Floor, Salarpuria Tower-I,<br/> No.
+            <span className="text-primary">Head Quarter At :-</span><br/>91Springboard, 4th Floor, Salarpuria Tower-I,<br/> No.
             22, Hosur Road, Koramangala, <br/>Bengaluru, Karnataka – 560095
           </p>
         </div>
@@ -39,7 +40,7 @@ const Footer = () => {
         <div className=" col-md-2 my-md-4 my-sm-0 py-2">
           <ul type="none" className="p-0">
             <li className="my-3">
-              <h5>Contact Us</h5>
+              <h5><Link to={'/contactus'} className="text-decoration-none text-white">Contact Us</Link></h5>
             </li>
             <li className="my-3">
               <h5>Testimonials</h5>
