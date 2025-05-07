@@ -8,6 +8,9 @@
 .playvideo img{
     width: 20px;
 }
+.margin-top{
+    margin-top: 115px !important;
+}
 .playvideo .video-sub-content{
     display: flex;
     justify-content: space-between;

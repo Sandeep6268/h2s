@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../../Youtube/Youtube.css";
-import Footer from '../../../Footer/Footer'
-import Header from '../../../Header/Header'
+import Footer from "../../../Footer/Footer";
+import Header from "../../../Header/Header";
 
 const Python = () => {
   const [selectedVideo, setSelectedVideo] = useState({
@@ -50,7 +50,7 @@ const Python = () => {
     // <div className="player-container  d-flex gap-5 flex-wrap">
     <>
       <Header />
-      <div className="container-fluid my-2 main-yt-div row align-content-center" style={{marginTop:'115px'}}>
+      <div className="container-fluid my-2 main-yt-div row align-content-center margin-top">
         <div className="col-md-9 yt-video-div">
           <div className="iframe-div w-100" style={{ height: "400px" }}>
             <iframe

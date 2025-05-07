@@ -49,7 +49,7 @@ const HtmlCssJs = () => {
   return (
     <>
       <Header />
-      <div className="container-fluid my-2 main-yt-div row align-content-center" style={{marginTop:'115px'}}>
+      <div className="container-fluid my-2 main-yt-div row align-content-center margin-top">
         <div className="col-md-9 yt-video-div">
           <div className="iframe-div w-100" style={{ height: "400px" }}>
             <iframe

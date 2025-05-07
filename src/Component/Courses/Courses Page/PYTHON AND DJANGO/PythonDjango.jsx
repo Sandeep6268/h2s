@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../../Youtube/Youtube.css";
-import Footer from '../../../Footer/Footer'
-import Header from '../../../Header/Header'
+import Footer from "../../../Footer/Footer";
+import Header from "../../../Header/Header";
 // import like from "../../assets/like.png";
 // import dislike from "../../assets/dislike.png";
 // import share from "../../assets/share.png";
@@ -55,7 +55,7 @@ const PythonDjango = () => {
   return (
     <>
       <Header />
-      <div className="container-fluid my-2 main-yt-div row align-content-center" style={{marginTop:'115px'}}>
+      <div className="container-fluid my-2 main-yt-div row align-content-center margin-top">
         <div className="col-md-9 yt-video-div">
           <div className="iframe-div w-100" style={{ height: "400px" }}>
             <iframe
