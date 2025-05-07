@@ -263,24 +263,45 @@ const notifications = [
   { name: "Shaurya Raj", course: "html css", action: "completed the course" },
   { name: "Myra Sethi", course: "python django", action: "started learning" },
 ];
-
 const NotificationPopup = () => {
   const [currentNotification, setCurrentNotification] = useState(null);
+  const [shuffledNotifications, setShuffledNotifications] = useState([...notifications]);
+  const [shownNotifications, setShownNotifications] = useState(new Set());
+
+  useEffect(() => {
+    shuffleNotifications(); // Shuffle initially
+  }, []);
+
+  const shuffleNotifications = () => {
+    let shuffled = [...notifications];
+    shuffled.sort(() => Math.random() - 0.5); // Random shuffle
+    setShuffledNotifications(shuffled);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const randomIndex = Math.floor(Math.random() * notifications.length);
-      setCurrentNotification(notifications[randomIndex]);
-    }, 30000); // every 30 seconds
+      if (shuffledNotifications.length === 0) {
+        setShownNotifications(new Set()); // Reset shown notifications
+        shuffleNotifications(); // Shuffle again when all are shown
+      }
 
-    return () => clearInterval(interval); // cleanup
-  }, []);
+      const nextNotificationIndex = Math.floor(Math.random() * shuffledNotifications.length);
+      const nextNotification = shuffledNotifications[nextNotificationIndex];
+
+      if (!shownNotifications.has(nextNotification)) {
+        setCurrentNotification(nextNotification);
+        setShownNotifications(new Set(shownNotifications).add(nextNotification));
+      }
+    }, 30000); // Every 30 seconds
+
+    return () => clearInterval(interval); // Cleanup
+  }, [shuffledNotifications, shownNotifications]);
 
   useEffect(() => {
     if (currentNotification) {
       const timer = setTimeout(() => {
         setCurrentNotification(null);
-      }, 4000); // hide after 4 seconds
+      }, 4000); // Hide after 4 seconds
       return () => clearTimeout(timer);
     }
   }, [currentNotification]);
