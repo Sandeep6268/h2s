@@ -7,7 +7,7 @@ const Contact = () => {
   return (
     <>
       <Header />
-      <div class="landing_page">
+      <div class="landing_page"  style={{marginTop:'115px'}}>
         <div class="responsive-container-block big-container">
           <img
             class="bg-img"
