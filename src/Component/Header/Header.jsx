@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Header.css"; // Ensure to import the corresponding CSS for styles
-import logo from '../../images/logo-removebg-preview.png'
+import logo from "../../images/logo-removebg-preview.png";
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -48,7 +48,7 @@ const Header = () => {
                   Home
                 </a>
               </li>
-              
+
               <li className="nav-item">
                 <a href="#" className="nav-link">
                   Portfolio
@@ -60,9 +60,9 @@ const Header = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link">
-                  Contact
-                </a>
+                <Link to={"/contactus"} class="nav-link">
+                  ContactUs
+                </Link>
               </li>
             </ul>
           </div>
