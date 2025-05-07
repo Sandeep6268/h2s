@@ -1,12 +1,74 @@
-import React from "react";
-import "./Header.css";
-import logo from "../../images/logo-removebg-preview.png";
+import React, { useState } from "react";
+import "./Header.css"; // Ensure to import the corresponding CSS for styles
+import logo from '../../images/logo-removebg-preview.png'
 import { Link } from "react-router-dom";
 
 const Header = () => {
+  const [navActive, setNavActive] = useState(false);
+  const [dropdownActive, setDropdownActive] = useState({
+    products: false,
+    services: false,
+  });
+
+  const toggleNav = () => {
+    setNavActive(!navActive);
+  };
+
+  const toggleDropdown = (menu) => {
+    setDropdownActive({
+      ...dropdownActive,
+      [menu]: !dropdownActive[menu],
+    });
+  };
+
   return (
     <>
-      <header className="p-3 navbar row navbar-expand-lg px-5" style={{marginRight:'1px'}}>
+      <header className="header">
+        <nav className={`navbar ${navActive ? "nav-active" : ""}`}>
+          <div className="nav-brand">
+            <Link to={"/"} className="col-md-3 col-2">
+              <div className="logo-div ">
+                <img src={logo} className="w-100" alt="" />
+              </div>
+            </Link>
+          </div>
+
+          <div className="nav-toggle" onClick={toggleNav}>
+            <div className="hamburger">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <div className={`nav-menu ${navActive ? "nav-active" : ""}`}>
+            <ul className="nav-list">
+              <li className="nav-item">
+                <a href="#" className="nav-link active">
+                  Home
+                </a>
+              </li>
+              
+              <li className="nav-item">
+                <a href="#" className="nav-link">
+                  Portfolio
+                </a>
+              </li>
+              <li className="nav-item">
+                <a href="#" className="nav-link">
+                  About
+                </a>
+              </li>
+              <li className="nav-item">
+                <a href="#" className="nav-link">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      {/* <header className="p-3 navbar row navbar-expand-lg px-5" style={{marginRight:'1px'}}>
         <Link to={'/'} className="col-md-3 col-2">
           <div className="logo-div ">
             <img src={logo} className="w-100" alt="" />
@@ -52,7 +114,7 @@ const Header = () => {
             </ul>
           </div>
         </div>
-      </header>
+      </header> */}
       {/* <div className="links">
             <ul className="menu align-center expanded text-center SMN_effect-63" type='none'>
                 <li><a href="">Home</a></li>

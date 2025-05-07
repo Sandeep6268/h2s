@@ -293,7 +293,7 @@ const NotificationPopup = () => {
     const interval = setInterval(() => {
       const randomIndex = Math.floor(Math.random() * notifications.length);
       setCurrentNotification(notifications[randomIndex]);
-    }, 8000); // every 5 seconds
+    }, 30000); // every 30 seconds
 
     return () => clearInterval(interval); // cleanup
   }, []);

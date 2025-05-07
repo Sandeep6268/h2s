@@ -5,10 +5,10 @@ import video from "../../images/video.mp4";
 const Hero = () => {
   return (
     <>
-      <section className="container d-sm-block d-md-none">
+      <section className="container d-sm-block d-md-none" style={{marginTop:'115px'}}>
         <video src={video} className="w-100" autoPlay loop muted></video>
       </section>
-      <section className="banner container-fluid d-sm-none d-md-block">
+      <section className="banner container-fluid d-sm-none d-md-block" style={{marginTop:'115px'}}>
         <h1 className="text-center py-3">
           CODE | <span className="text-primary">CREATE</span> | CONQUER
         </h1>

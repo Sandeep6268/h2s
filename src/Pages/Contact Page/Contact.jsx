@@ -6,7 +6,7 @@ import Header from "../../Component/Header/Header";
 const Contact = () => {
   return (
     <>
-    <Header/>
+      <Header />
       <div class="landing_page">
         <div class="responsive-container-block big-container">
           <img
@@ -17,14 +17,15 @@ const Contact = () => {
           <div class="responsive-container-block container">
             <div class="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12 left-one">
               <div class="content-box">
-                <p class="text-blk section-head">Lorem ipsum amet dolor</p>
-                <p class="text-blk section-subhead">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis volupta
+                <p class="text-blk section-head">H2S Tech Support</p>
+                <p class="text-light section-subhead">
+                  We’re here to help! Whether you have a question, feedback, or
+                  need support, feel free to reach out to us using any of the
+                  methods below. We aim to respond within 24 hours.
                 </p>
                 <div class="icons-container">
-                  <a class="share-icon">
+                  <a  href="https://x.com/h2s_tech_77?t=0ZEToDRrgK7j8YJZA3CCfw&s=08" target="_blank"
+                   class="share-icon">
                     <img
                       class="img"
                       src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-twitter.png"
@@ -36,19 +37,34 @@ const Contact = () => {
                       src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-facebook.png"
                     />
                   </a>
-                  <a class="share-icon">
+                  <a
+                    class="share-icon"
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=h2stechsolutions@gmail.com"
+                    target="_blank"
+                  >
                     <img
                       class="img"
                       src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-google.png"
                     />
                   </a>
-                  <a class="share-icon">
+                  <a
+                    href="https://www.instagram.com/h2stechsolutions?igsh=d3BkOTMxYWxpNjN5"
+                    target="_blank"
+                    class="share-icon"
+                  >
                     <img
                       class="img"
                       src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-instagram.png"
                     />
                   </a>
                 </div>
+                <p className="mt-4 text-light">
+                  <span className="fw-bolder fs-4 text-white">Head Quarter At :-</span>
+                  <br />
+                  91Springboard, 4th Floor, Salarpuria Tower-I,
+                  <br /> No. 22, Hosur Road, Koramangala, <br />
+                  Bengaluru, Karnataka – 560095
+                </p>
               </div>
             </div>
             <div
@@ -125,7 +141,7 @@ const Contact = () => {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };
