@@ -5,6 +5,421 @@ const Reviews = () => {
   const [name, setName] = useState("");
   const [review, setReview] = useState("");
   const [reviews, setReviews] = useState([]);
+  const reviews_content = [
+    {
+      name: "Harish",
+      message:
+        "I joined the React course and it exceeded my expectations. Clean UI, smooth learning, and the certificate really boosts confidence. Highly recommended!",
+    },
+    {
+      name: "Mohit Reddy",
+      message:
+        "Great platform to learn Django! Everything was simple yet powerful. Got my certificate within minutes after finishing the final project.",
+    },
+    {
+      name: "Anjali Verma",
+      message:
+        "The Python course was a game-changer. I finally understand the basics clearly. Super satisfied!",
+    },
+    {
+      name: "Rahul Singh",
+      message:
+        "Excellent support and clear instructions. The JavaScript content is very well curated.",
+    },
+    {
+      name: "Priya Sharma",
+      message:
+        "Loved the real-world projects. Helped me build a strong portfolio. Highly recommended!",
+    },
+    {
+      name: "Amit Das",
+      message:
+        "React course was super smooth. The explanations and examples were on point.",
+    },
+    {
+      name: "Sneha Patel",
+      message:
+        "Great value for money. Learned full-stack development in one place.",
+    },
+    {
+      name: "Vikram Roy",
+      message:
+        "Django deployment was so easy with their guidance. Appreciate the effort!",
+    },
+    {
+      name: "Divya Menon",
+      message:
+        "I loved how interactive the quizzes and assignments were. Helped me stay engaged.",
+    },
+    {
+      name: "Karan Mehta",
+      message:
+        "Highly practical and to the point. Got a certificate that added real value to my CV.",
+    },
+    {
+      name: "Neha Joshi",
+      message:
+        "Fantastic course content! Really appreciated the explanations and structure.",
+    },
+    {
+      name: "Ravi Kumar",
+      message:
+        "Great learning experience with clear explanations. Helped me get a strong foundation in React.",
+    },
+    {
+      name: "Swati Jain",
+      message:
+        "Loved the hands-on approach in the full-stack course. Highly recommend this platform.",
+    },
+    {
+      name: "Nikhil Rao",
+      message:
+        "Detailed and organized content. It’s perfect for beginners and advanced learners alike.",
+    },
+    {
+      name: "Pooja Nair",
+      message:
+        "The assignments were very practical and helped me understand the concepts better.",
+    },
+    {
+      name: "Aditya Bhatt",
+      message:
+        "Amazing learning experience. The projects really helped me build real-world skills.",
+    },
+    {
+      name: "Meera Kulkarni",
+      message:
+        "I enjoyed learning from the experts. The course was engaging and well-paced.",
+    },
+    {
+      name: "Sameer Khan",
+      message:
+        "Django was made so easy! Excellent course material and clear instructions.",
+    },
+    {
+      name: "Tanvi Desai",
+      message:
+        "I loved the community support. The feedback on my projects was very valuable.",
+    },
+    {
+      name: "Rajiv Menon",
+      message:
+        "The certificate helped me get a job interview. Thanks for all the help and great resources.",
+    },
+    {
+      name: "Rohit Kapoor",
+      message:
+        "Fantastic learning platform. Clear explanations, and the course content is up-to-date.",
+    },
+    {
+      name: "Sonia Yadav",
+      message:
+        "Loved the assignments and challenges that helped me apply the theory in real-time.",
+    },
+    {
+      name: "Sandeep Singh",
+      message:
+        "The Python content was really helpful and provided solid foundational knowledge.",
+    },
+    {
+      name: "Simran Kaur",
+      message:
+        "I was able to learn at my own pace and apply everything to build a project.",
+    },
+    {
+      name: "Prashant Shah",
+      message:
+        "The full-stack course was very detailed. I feel much more confident in my skills.",
+    },
+    {
+      name: "Ankur Gupta",
+      message:
+        "Amazing experience! The course helped me solidify my understanding of both front-end and back-end.",
+    },
+    {
+      name: "Alok Yadav",
+      message:
+        "Clear, concise, and well-structured courses. Loved the practical examples.",
+    },
+    {
+      name: "Ritika Arora",
+      message:
+        "The course materials were very comprehensive, and I had fun learning Django.",
+    },
+    {
+      name: "Aman Mehta",
+      message:
+        "I appreciate the easy-to-follow approach in the React course. Learned a lot.",
+    },
+    {
+      name: "Shweta Agarwal",
+      message:
+        "The course was beginner-friendly, and I loved how interactive everything was.",
+    },
+    {
+      name: "Ravi Verma",
+      message:
+        "Highly recommend the platform. I can now confidently work on Django projects.",
+    },
+    {
+      name: "Tarun Gupta",
+      message:
+        "Amazing course, very detailed with practical examples. The instructors were excellent.",
+    },
+    {
+      name: "Madhavi Sharma",
+      message:
+        "Great course structure and easily understandable. I learned at my own pace.",
+    },
+    {
+      name: "Nitin Patel",
+      message:
+        "Had a wonderful experience learning React. The course exceeded my expectations!",
+    },
+    {
+      name: "Jaya Kumari",
+      message:
+        "Enjoyed every bit of the full-stack course. It really helped me grow my skill set.",
+    },
+    {
+      name: "Vikas Joshi",
+      message:
+        "The Django course helped me grasp advanced concepts more easily. Great learning experience.",
+    },
+    {
+      name: "Sahil Kumar",
+      message:
+        "Great platform! Helped me land a job interview by improving my coding skills.",
+    },
+    {
+      name: "Simran Singh",
+      message:
+        "Excellent course! The content was well-structured, and the explanations were clear.",
+    },
+    {
+      name: "Suman Yadav",
+      message:
+        "Loved learning full-stack development from scratch. Everything was perfectly explained.",
+    },
+    {
+      name: "Kishore Babu",
+      message:
+        "Great course materials and assignments! I’m now more confident in building web apps.",
+    },
+    {
+      name: "Lalit Sharma",
+      message:
+        "The course helped me understand the core concepts deeply and build my skills.",
+    },
+    {
+      name: "Nisha Agarwal",
+      message: "Fantastic content and a structured approach to learning React.",
+    },
+    {
+      name: "Anil Verma",
+      message:
+        "I learned so much from the practical exercises in the course. Thanks for the opportunity!",
+    },
+    {
+      name: "Vikash Reddy",
+      message:
+        "Highly recommend! The courses are detailed and the community support is amazing.",
+    },
+    {
+      name: "Geeta Kumari",
+      message:
+        "The content was easy to follow, and I could work on my project without any issues.",
+    },
+    {
+      name: "Arvind Patel",
+      message:
+        "Learning Django was an absolute pleasure. The lessons were very clear and informative.",
+    },
+    {
+      name: "Manju Agarwal",
+      message:
+        "The course was really engaging, and I loved the hands-on approach to learning.",
+    },
+    {
+      name: "Krishna Yadav",
+      message:
+        "React course is awesome! Helped me understand both the fundamentals and advanced topics.",
+    },
+    {
+      name: "Monika Kaur",
+      message:
+        "Great course for beginners. The assignments helped solidify my understanding.",
+    },
+    {
+      name: "Rajesh Singh",
+      message:
+        "Fantastic course and materials. I felt supported the entire way through my learning.",
+    },
+    {
+      name: "Snehal Patil",
+      message:
+        "Great place to learn full-stack development. Loved the entire journey.",
+    },
+    {
+      name: "Arvind Kumar",
+      message:
+        "Really informative! I now feel more confident working with React and Django.",
+    },
+    {
+      name: "Divya Singh",
+      message:
+        "The course is well-structured, and the projects helped me build a solid portfolio.",
+    },
+    {
+      name: "Vijay Mehta",
+      message:
+        "Wonderful learning experience. The instructors were really helpful in answering queries.",
+    },
+    {
+      name: "Ravi Patel",
+      message:
+        "Fantastic learning journey! The tutorials were clear and practical.",
+    },
+    {
+      name: "Pankaj Kumar",
+      message:
+        "I’m now comfortable working with both front-end and back-end technologies.",
+    },
+    {
+      name: "Neelam Verma",
+      message:
+        "Loved how easy it was to follow the lessons and learn step by step.",
+    },
+    {
+      name: "Umesh Reddy",
+      message:
+        "I feel ready to work on real-world projects after completing this course!",
+    },
+    {
+      name: "Simran Bhat",
+      message:
+        "The course structure is great for both beginners and advanced learners.",
+    },
+    {
+      name: "Manoj Gupta",
+      message:
+        "I can now confidently build React applications. The course was very insightful.",
+    },
+    {
+      name: "Deepika Sharma",
+      message:
+        "The hands-on projects were fun and helped me develop my skills faster.",
+    },
+    {
+      name: "Kiran Mehta",
+      message:
+        "Very comprehensive course. Everything was explained well from the basics to advanced topics.",
+    },
+    {
+      name: "Ajay Yadav",
+      message:
+        "Perfect platform for anyone looking to learn full-stack web development.",
+    },
+    {
+      name: "Harpreet Kaur",
+      message:
+        "The interactive quizzes and assignments helped me retain knowledge much better.",
+    },
+    {
+      name: "Chandan Singh",
+      message:
+        "I enjoyed learning with this platform. The courses were engaging and educational.",
+    },
+    {
+      name: "Aarti Jain",
+      message:
+        "I gained a lot of confidence in web development after taking this course.",
+    },
+    {
+      name: "Yogesh Kumar",
+      message:
+        "Really enjoyed the structure of the course. Clear and concise learning material.",
+    },
+    {
+      name: "Ranjan Patel",
+      message:
+        "The course covered everything I needed to know and more. Great experience!",
+    },
+    {
+      name: "Nidhi Agarwal",
+      message:
+        "I’m confident in my full-stack skills now. The course was very detailed and well-paced.",
+    },
+    {
+      name: "Shivani Mehta",
+      message:
+        "Amazing content, excellent projects, and clear explanations. Very helpful!",
+    },
+    {
+      name: "Kunal Reddy",
+      message: "The resources and support were amazing. I learned a lot!",
+    },
+    {
+      name: "Amit Kumar",
+      message:
+        "Very detailed and well-structured course. The assignments were perfect for hands-on learning.",
+    },
+    {
+      name: "Preeti Verma",
+      message:
+        "Great course for beginners! Everything is explained in simple terms, and I loved it.",
+    },
+    {
+      name: "Rohit Yadav",
+      message:
+        "The full-stack web development course helped me feel prepared for real job opportunities.",
+    },
+    {
+      name: "Ashwin Singh",
+      message:
+        "I learned everything I needed to build my own web applications. Great experience!",
+    },
+    {
+      name: "Kriti Agarwal",
+      message:
+        "Perfect course if you want to dive into full-stack development. A wonderful learning experience.",
+    },
+    {
+      name: "Amit Gupta",
+      message:
+        "I feel more confident with React after completing the course. Highly recommend it!",
+    },
+    {
+      name: "Manju Reddy",
+      message:
+        "The course was excellent. I really appreciate how hands-on everything was.",
+    },
+    {
+      name: "Vijay Kumar",
+      message:
+        "This platform is perfect for anyone who wants to learn full-stack development.",
+    },
+    {
+      name: "Neelam Joshi",
+      message:
+        "I highly recommend this course to anyone looking to boost their web development skills.",
+    },
+    {
+      name: "Satish Patil",
+      message:
+        "The content was superb, and the assignments made the learning process easier.",
+    },
+    {
+      name: "Renu Sharma",
+      message:
+        "I’m very satisfied with how the course was designed. Everything was explained in-depth.",
+    },
+    {
+      name: "Sushma Yadav",
+      message:
+        "Fantastic! It was exactly what I needed to take my coding skills to the next level.",
+    },
+  ];
 
   // Load reviews from localStorage
   useEffect(() => {
@@ -86,153 +501,14 @@ const Reviews = () => {
             <p className="review-text">{r.review}</p>
           </div>
         ))}
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Anamika</h4>
+        {reviews_content.map((review, index) => (
+          <div className="review-item" key={index}>
+            <div className="review-header">
+              <h4 className="review-name">{review.name}</h4>
+            </div>
+            <p className="review-text">{review.message}</p>
           </div>
-          <p className="review-text">
-            I loved the Python course! It was super easy to follow, and I
-            received my certificate quickly after completing it. Highly
-            recommend it for beginners!
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Tahir </h4>
-          </div>
-          <p className="review-text">
-            Bought the HTML and CSS combo. Great content, explained very
-            clearly. The certificate adds a lot of value to my resume. Thank you
-            team!
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Munim</h4>
-          </div>
-          <p className="review-text">
-            The JavaScript course was well-structured. I enjoyed the assignments
-            and projects. Receiving the certificate after completion was a nice
-            bonus.
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name"> Harish</h4>
-          </div>
-          <p className="review-text">
-            I joined the React course and it exceeded my expectations. Clean UI,
-            smooth learning, and the certificate really boosts confidence.
-            Highly recommended!
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Mohit Redy</h4>
-          </div>
-          <p className="review-text">
-            Great platform to learn Django! Everything was simple yet powerful.
-            Got my certificate within minutes after finishing the final project.
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Kavya Desai</h4>
-          </div>
-          <p className="review-text">
-            The courses are affordable and rich in quality. Loved the Python +
-            Django full-stack course. Also, the certificate looks very
-            professional!
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name"> Ankit Sharma</h4>
-          </div>
-          <p className="review-text">
-            I completed the HTML, CSS, and JavaScript course in just 2 weeks.
-            The certificate helped me during my internship interviews. Thank
-            you!
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Ishita Jain</h4>
-          </div>
-          <p className="review-text">
-            The Python course is beginner-friendly. I started from scratch and
-            now I can build small projects. The certificate was a cherry on top!
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Rohan Kapoor</h4>
-          </div>
-          <p className="review-text">
-            Completed my React course today! Best part? Certificate is instantly
-            available after completion. Very motivating platform for new
-            learners!
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Tanya Malhotra</h4>
-          </div>
-          <p className="review-text">
-            Django course was amazing. Step-by-step guidance with hands-on
-            projects. Loved the way they reward certificates at the end of the
-            journey.
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name"> Yash Patel</h4>
-          </div>
-          <p className="review-text">
-            I learned so much from the JavaScript course. The mini-projects were
-            fun! I proudly added the certificate to my LinkedIn profile.
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Mitali Sen</h4>
-          </div>
-          <p className="review-text">
-            Fantastic platform! Enrolled for Python + Django course and
-            completed it easily. Certification process was smooth. Worth every
-            rupee!
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Harshita Rawat</h4>
-          </div>
-          <p className="review-text">
-            Courses are beginner to intermediate level friendly. Completed HTML
-            & CSS with ease. Certificate issued immediately after final test.
-            5/5 stars!
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Pooja Singh</h4>
-          </div>
-          <p className="review-text">
-            After completing React course, I feel much more confident. Website
-            experience is smooth and the certificate looks premium quality.
-            Thank you!
-          </p>
-        </div>
-        <div className="review-item">
-          <div className="review-header">
-            <h4 className="review-name">Aditya Nair</h4>
-          </div>
-          <p className="review-text">
-            I wasn't sure at first but after completing Python course, I am
-            super happy! Practical learning and a genuine certificate at the
-            end.
-          </p>
-        </div>
+        ))}
       </div>
     </>
   );
