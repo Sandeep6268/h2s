@@ -10,9 +10,8 @@ import reactimg from "../../../images/react.jpg";
 import reactandjs from "../../../images/reactandjs.jpg";
 import { useNavigate } from "react-router-dom";
 
-
 const CoursePage = () => {
-  const {user} = useContext(Context)
+  const { user } = useContext(Context);
   const { handlePayment } = useContext(Context);
   const navigate = useNavigate();
   return (
@@ -79,7 +78,13 @@ const CoursePage = () => {
               <div className="paybtn m-3 center-below-md d-flex">
                 <button
                   className="button-85"
-                  onClick={() => handlePayment(99, "/htmlcssjs62")}
+                  onClick={() => {
+                    if (!user) {
+                      navigate("/login");
+                    } else {
+                      handlePayment(99, "/htmlcssjs62");
+                    }
+                  }}
                 >
                   Pay ₹99
                 </button>
@@ -124,7 +129,13 @@ const CoursePage = () => {
               <div className="paybtn m-3 center-below-md d-flex ">
                 <button
                   className="button-85"
-                  onClick={() => handlePayment(129, "/python24")}
+                  onClick={() => {
+                    if (!user) {
+                      navigate("/login");
+                    } else {
+                      handlePayment(129, "/python24");
+                    }
+                  }}
                 >
                   Pay ₹129
                 </button>
@@ -148,7 +159,13 @@ const CoursePage = () => {
               <div className="paybtn center-below-md m-3 d-flex">
                 <button
                   className="button-85"
-                  onClick={() => handlePayment(179, "/pythondjango90")}
+                  onClick={() => {
+                    if (!user) {
+                      navigate("/login");
+                    } else {
+                      handlePayment(179, "/pythondjango90");
+                    }
+                  }}
                 >
                   Pay ₹179
                 </button>
@@ -193,7 +210,13 @@ const CoursePage = () => {
               <div className="paybtn m-3 center-below-md d-flex">
                 <button
                   className="button-85"
-                  onClick={() => handlePayment(149, "/react79")}
+                  onClick={() => {
+                    if (!user) {
+                      navigate("/login");
+                    } else {
+                      handlePayment(149, "/react79");
+                    }
+                  }}
                 >
                   Pay ₹149
                 </button>
@@ -216,7 +239,13 @@ const CoursePage = () => {
               <div className="paybtn m-3 center-below-md d-flex">
                 <button
                   className="button-85"
-                  onClick={() => handlePayment(199, "/reactandjs43")}
+                  onClick={() => {
+                    if (!user) {
+                      navigate("/login");
+                    } else {
+                      handlePayment(199, "/reactandjs43");
+                    }
+                  }}
                 >
                   Pay ₹199
                 </button>
