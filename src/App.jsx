@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import { Context } from "./Context";
 import Home from "./Pages/Home Page/Home";
@@ -57,9 +57,10 @@ function App() {
     const rzp = new window.Razorpay(options);
     rzp.open();
   };
+  const [user, setUser] = useState(null); 
   return (
     <BrowserRouter>
-      <Context.Provider value={{ handlePayment: handlePayment }}>
+      <Context.Provider value={{ handlePayment: handlePayment,user:user,setUser:setUser }}>
         <NotificationPopup />
         <Routes>
           <Route path="/" element={<Home />} />

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../../api";
 
 const Login = () => {
@@ -34,6 +34,7 @@ const Login = () => {
         onChange={handleChange}
       />
       <button onClick={handleLogin}>Login</button>
+      <Link to={'/register'}>Don't having account?</Link>
     </div>
   );
 };

@@ -8,9 +8,13 @@ import python from "../../../images/python.jpg";
 import django from "../../../images/django.jpg";
 import reactimg from "../../../images/react.jpg";
 import reactandjs from "../../../images/reactandjs.jpg";
+import { useNavigate } from "react-router-dom";
+
 
 const CoursePage = () => {
+  const {user} = useContext(Context)
   const { handlePayment } = useContext(Context);
+  const navigate = useNavigate();
   return (
     <>
       <div className="course-section">
@@ -19,7 +23,10 @@ const CoursePage = () => {
           <h1 className="text-center w-100">BECOME SKILLED AT WHAT MATTERS</h1>
         </div>
         <div className="course-component text-dark d-flex align-items-center">
-          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex justify-content-around">
+          <div
+            style={{ width: "98%" }}
+            className="comp button-85 row my-3 p-md-5 d-flex justify-content-around"
+          >
             <div
               className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
@@ -43,14 +50,23 @@ const CoursePage = () => {
               <div className="paybtn m-3 d-flex center-below-md ">
                 <button
                   className="button-85"
-                  onClick={() => handlePayment(49, "/htmlcss89")}
+                  onClick={() => {
+                    if (!user) {
+                      navigate("/login");
+                    } else {
+                      handlePayment(49, "/htmlcss89");
+                    }
+                  }}
                 >
                   Pay ₹49
                 </button>
               </div>
             </div>
           </div>
-          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around">
+          <div
+            style={{ width: "98%" }}
+            className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around"
+          >
             <div className="comp-heading col-md-7">
               <h1>HTML, CSS & JavaScript Internship</h1>
               <p className="p-3">
@@ -81,7 +97,10 @@ const CoursePage = () => {
               />
             </div>
           </div>
-          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex  justify-content-around">
+          <div
+            style={{ width: "98%" }}
+            className="comp button-85 row my-3 p-md-5 d-flex  justify-content-around"
+          >
             <div
               className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
@@ -112,7 +131,10 @@ const CoursePage = () => {
               </div>
             </div>
           </div>
-          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around">
+          <div
+            style={{ width: "98%" }}
+            className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around"
+          >
             <div className="comp-heading col-md-7 ">
               <h1>Django + Python Internship</h1>
               <p className="p-3">
@@ -144,7 +166,10 @@ const CoursePage = () => {
               />
             </div>
           </div>
-          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex justify-content-around">
+          <div
+            style={{ width: "98%" }}
+            className="comp button-85 row my-3 p-md-5 d-flex justify-content-around"
+          >
             <div
               className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
@@ -175,14 +200,18 @@ const CoursePage = () => {
               </div>
             </div>
           </div>
-          <div style={{width:'98%'}} className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around">
+          <div
+            style={{ width: "98%" }}
+            className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around"
+          >
             <div className="comp-heading col-md-7">
               <h1>React JS + JavaScript Internship</h1>
               <p className="p-3">
-                🎓 Dual-Skill Certification by H2S Tech Solutions <br/>💡 JavaScript
-                Logic + React UI – complete frontend stack <br/>🔗 Real APIs & Live
-                Projects with deployment <br/>⚙️ Modern Tools – ES6, Hooks, JSX &
-                more <br/>📁 Professional GitHub Portfolio for job readiness
+                🎓 Dual-Skill Certification by H2S Tech Solutions <br />
+                💡 JavaScript Logic + React UI – complete frontend stack <br />
+                🔗 Real APIs & Live Projects with deployment <br />
+                ⚙️ Modern Tools – ES6, Hooks, JSX & more <br />
+                📁 Professional GitHub Portfolio for job readiness
               </p>
               <div className="paybtn m-3 center-below-md d-flex">
                 <button

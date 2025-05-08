@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 import "./Header.css";
 import logo from "../../images/logo-removebg-preview.png";
+import { Context } from "../../Context";
 
 const Header = () => {
   const [navActive, setNavActive] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null); // ⬅️ Store user data here
+  const {user,setUser} = useContext(Context)// ⬅️ Store user data here
 
   const navigate = useNavigate();
 
