@@ -23,7 +23,7 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <div className='container'>
       <h2>Register</h2>
       <form action=""><input name="email" className='form-control' placeholder="Email" onChange={handleChange} />
       <input name="username" className='form-control' placeholder="Username" onChange={handleChange} />
