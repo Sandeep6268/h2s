@@ -12,6 +12,10 @@ import NotificationPopup from "./Component/Notification/NotificationPopup";
 import HtmlCss from "./Component/Courses/Courses Page/HTML CSS/HtmlCss";
 import ReactandJs from "./Component/Courses/Courses Page/REACT AND JS/ReactandJs";
 import Contact from "./Pages/Contact Page/Contact";
+import LoginForm from "./Pages/Login Page/Login";
+import RegisterForm from "./Pages/Login Page/Register";
+import Login from "./Pages/Login Page/Login";
+import Register from "./Pages/Login Page/Register";
 
 function App() {
   const handlePayment = (price, redirectUrl) => {
@@ -29,8 +33,6 @@ function App() {
         window.location.replace(`${redirectUrl}`);
       },
 
-      
-      
       prefill: {
         name: "Test User",
         email: "test@example.com",
@@ -42,7 +44,14 @@ function App() {
       theme: {
         color: "#3399cc",
       },
-
+    };
+    const getUser = async () => {
+      const res = await API.get("users/me/", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      });
+      // console.log(res.data);
     };
 
     const rzp = new window.Razorpay(options);
@@ -54,6 +63,7 @@ function App() {
         <NotificationPopup />
         <Routes>
           <Route path="/" element={<Home />} />
+
           <Route path="/contactus" element={<Contact />} />
           <Route path="/htmlcss89" element={<HtmlCss />} />
           <Route path="/htmlcssjs62" element={<HtmlCssJs />} />
@@ -61,6 +71,8 @@ function App() {
           <Route path="/react79" element={<Reactjs />} />
           <Route path="/reactandjs43" element={<ReactandJs />} />
           <Route path="/pythondjango90" element={<PythonDjango />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </Context.Provider>
     </BrowserRouter>
@@ -68,3 +80,7 @@ function App() {
 }
 
 export default App;
+{
+  /* <Route path="/login" element={<LoginForm />} />
+<Route path="/register" element={<RegisterForm />} /> */
+}
