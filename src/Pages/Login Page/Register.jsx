@@ -23,11 +23,13 @@ const Register = () => {
   };
 
   return (
-    <div className='container'>
+    <div className='container d-flex flex-column '>
       <h2 className='text-center'>Register</h2>
       <input name="email" className='form-control' placeholder="Email" onChange={handleChange} />
       <input name="username" className='form-control' placeholder="Username" onChange={handleChange} />
+      <small className='my-2'><span className='text-danger'>Note:- </span>Don't use space in username</small>
       <input name="password" className='form-control' placeholder="Password" type="password" onChange={handleChange} />
+      <small className='my-2'><span className='text-danger'>Note:- </span>Password must contain '@ 1 A' and it should be strong</small>
       <button className='form-control bg-primary w-25 mx-auto' onClick={handleRegister}>Register</button>
       
     </div>
