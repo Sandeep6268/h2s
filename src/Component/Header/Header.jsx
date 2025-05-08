@@ -17,7 +17,7 @@ const Header = () => {
     if (token) {
       try {
         const decoded = jwtDecode(token); // Decode the token
-        console.log(decoded); // Log the decoded token to inspect its structure
+        // console.log(decoded); // Log the decoded token to inspect its structure
         setIsAuthenticated(true);
         setUser(decoded);
       } catch (err) {

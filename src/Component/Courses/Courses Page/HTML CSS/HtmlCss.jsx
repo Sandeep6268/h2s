@@ -21,7 +21,7 @@ const HtmlCss = () => {
           `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=20&key=${apiKey}`
         );
         const data = await response.json();
-        console.log(data); // Debugging ke liye
+        // console.log(data); // Debugging ke liye
         setVideos(data.items || []);
         setLoading(false);
 

@@ -28,7 +28,7 @@ function App() {
       image: "https://your-logo-url.com/logo.png", // optional
 
       handler: function (response) {
-        console.log("Payment Success:", response.razorpay_payment_id);
+        // console.log("Payment Success:", response.razorpay_payment_id);
         // Redirect to dynamic page
         window.location.replace(`${redirectUrl}`);
       },
