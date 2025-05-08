@@ -58,6 +58,7 @@ function App() {
     rzp.open();
   };
   const [user, setUser] = useState(null); 
+  console.log(user)
   return (
     <BrowserRouter>
       <Context.Provider value={{ handlePayment: handlePayment,user:user,setUser:setUser }}>

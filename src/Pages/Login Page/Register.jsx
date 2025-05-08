@@ -18,7 +18,7 @@ const Register = () => {
       // console.log(res.data);
     } catch (err) {
       console.error(err.response.data);
-      alert('Registration failed');
+      alert('Registration failed or enter strong password');
     }
   };
 
