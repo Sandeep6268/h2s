@@ -25,7 +25,7 @@ const Register = () => {
   return (
     <div className='container'>
       <h2 className='text-center'>Register</h2>
-      <form action="" className='d-flex flex-column gap-4 w-75 mx-auto'><input name="email" className='form-control' placeholder="Email" onChange={handleChange} />
+      <form action="" method='post' className='d-flex flex-column gap-4 w-75 mx-auto'><input name="email" className='form-control' placeholder="Email" onChange={handleChange} />
       <input name="username" className='form-control' placeholder="Username" onChange={handleChange} />
       <input name="password" className='form-control' placeholder="Password" type="password" onChange={handleChange} />
       <button className='form-control bg-primary w-25 mx-auto' onClick={handleRegister}>Register</button></form>
