@@ -204,12 +204,12 @@ const HtmlCssJs = () => {
                   name="course"
                   onChange={handleFormChange}
                 >
-                  <option value="htmlcss">HTML + CSS</option>
+                  {/* <option value="htmlcss">HTML + CSS</option> */}
                   <option value="htmlcssjs">HTML + CSS + JS</option>
-                  <option value="python">Python</option>
+                  {/* <option value="python">Python</option>
                   <option value="python_django">Python + Django</option>
                   <option value="react">React</option>
-                  <option value="react_js">React + JavaScript</option>
+                  <option value="react_js">React + JavaScript</option> */}
                 </select>
               </div>
               <div className="modal-footer">
