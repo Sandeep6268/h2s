@@ -32,7 +32,7 @@ const HtmlCss = () => {
     try {
       // Correct URL without `/api/auth/`
       await axios.post(
-        "https://h2s-backend-urrt.onrender.com/certificate/", // Correct backend URL
+        "https://h2s-backend-urrt.onrender.com/api/certificate/", // Correct backend URL
         formData
       );
       alert("Form submitted successfully!");
