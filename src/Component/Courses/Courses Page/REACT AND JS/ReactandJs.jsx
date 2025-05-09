@@ -12,6 +12,10 @@ const ReactandJs = () => {
     email: "",
     course: "reactjs",
   });
+  const [isLoading, setIsLoading] = useState(false); // For loader visibility
+  const [showModal, setShowModal] = useState(false); // For modal visibility
+  const [modalType, setModalType] = useState(""); // To switch between success and error modal
+  const [modalMessage, setModalMessage] = useState(""); // For dynamic modal message
 
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,19 +33,27 @@ const ReactandJs = () => {
       return;
     }
 
+    setIsLoading(true); // Show loader
+
     try {
       // Correct URL without `/api/auth/`
       await axios.post(
         "https://h2s-backend-urrt.onrender.com/api/certificate-request/", // Correct backend URL
         formData
       );
-      alert(
+      setModalType("success"); // Show success modal
+      setModalMessage(
         "Form submitted successfully! You will get your certificate within 24 hours at your gmail"
       );
+      setShowModal(true);
       setShowForm(false); // Hide the form after submission
     } catch (err) {
       console.error(err);
-      alert("Submission failed.");
+      setModalType("error"); // Show error modal
+      setModalMessage("Submission failed. Please try again.");
+      setShowModal(true);
+    } finally {
+      setIsLoading(false); // Hide loader after submission attempt
     }
   };
 
@@ -88,7 +100,6 @@ const ReactandJs = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    // <div className="player-container  d-flex gap-5 flex-wrap">
     <>
       <Header />
       <div className="container-fluid my-2 main-yt-div row align-content-center margin-top">
@@ -200,17 +211,15 @@ const ReactandJs = () => {
                   placeholder="Email"
                   onChange={handleFormChange}
                 />
-                <small><span className="text-danger">Note:-</span>Enter your register gmail only</small>
+                <small>
+                  <span className="text-danger">Note:-</span>Enter your register
+                  gmail only
+                </small>
                 <select
                   className="form-control my-2"
                   name="course"
                   onChange={handleFormChange}
                 >
-                  {/* <option value="htmlcss">HTML + CSS</option>
-                  <option value="htmlcssjs">HTML + CSS + JS</option>
-                  <option value="python">Python</option>
-                  <option value="python_django">Python + Django</option>
-                  <option value="react">React</option> */}
                   <option value="react_js">React + JavaScript</option>
                 </select>
               </div>
@@ -229,6 +238,70 @@ const ReactandJs = () => {
           </div>
         </div>
       )}
+
+      {/* Loading Spinner */}
+      {isLoading && (
+        <div className="loader-container">
+          <div className="loader">
+            <div className="face">
+              <div className="circle"></div>
+            </div>
+            <div className="face">
+              <div className="circle"></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success/Error Modal */}
+      {showModal && (
+        <div id="modal-container">
+          {modalType === "success" ? (
+            <div id="success-box">
+              <div className="dot"></div>
+              <div className="dot two"></div>
+              <div className="face">
+                <div className="eye"></div>
+                <div className="eye right"></div>
+                <div className="mouth happy"></div>
+              </div>
+              <div className="shadow scale"></div>
+              <div className="message">
+                <h1 className="alert">Success!</h1>
+                <p>{modalMessage}</p>
+              </div>
+              <button
+                className="button-box"
+                onClick={() => setShowModal(false)}
+              >
+                <p className="green">Continue</p>
+              </button>
+            </div>
+          ) : (
+            <div id="error-box">
+              <div className="dot"></div>
+              <div className="dot two"></div>
+              <div className="face2">
+                <div className="eye"></div>
+                <div className="eye right"></div>
+                <div className="mouth sad"></div>
+              </div>
+              <div className="shadow move"></div>
+              <div className="message">
+                <h1 className="alert">Error!</h1>
+                <p>{modalMessage}</p>
+              </div>
+              <button
+                className="button-box"
+                onClick={() => setShowModal(false)}
+              >
+                <p className="red">Try Again</p>
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
       <Footer />
     </>
   );

@@ -1,3 +1,4 @@
+/* Register Page Styles */
 .register-container {
   font-family: "Poppins", sans-serif;
   color: #ffffff;
@@ -42,89 +43,67 @@
   width: 400px;
   background-color: rgba(255, 255, 255, 0.13);
   border-radius: 10px;
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
-  padding: 50px 35px;
+  padding: 40px 30px;
   z-index: 1;
-}
-
-.register-container form * {
-  color: #ffffff;
-  outline: none;
-  border: none;
+  position: relative;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 
 .register-container form h3 {
-  font-size: 32px;
-  font-weight: 500;
-  line-height: 42px;
   text-align: center;
+  font-size: 24px;
+  color: #fff;
   margin-bottom: 20px;
 }
 
-.register-container label {
-  display: block;
-  margin-top: 20px;
+.register-container form label {
   font-size: 16px;
-  font-weight: 500;
-}
-
-.register-container input {
+  color: #fff;
   display: block;
-  height: 50px;
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0.07);
-  border-radius: 3px;
-  padding: 0 10px;
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 300;
+  margin-bottom: 5px;
 }
 
-.register-container ::placeholder {
-  color: #e5e5e5;
-}
-
-.register-container button {
-  margin-top: 30px;
+.register-container form input {
   width: 100%;
-  background-color: #ffffff;
-  color: #080710;
-  padding: 15px 0;
-  font-size: 18px;
-  font-weight: 600;
+  padding: 10px;
+  margin: 10px 0;
   border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  color: #333;
 }
 
-.register-container button:hover {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.register-container .note-text {
+.register-container form small {
   display: block;
-  margin-top: 8px;
   font-size: 12px;
-  opacity: 0.8;
+  color: #bbb;
 }
 
-.register-container .note-warning {
-  color: #ff6b6b;
-  font-weight: 500;
+.register-container form button {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(to right, #ff512f, #f09819);
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.register-container form button:hover {
+  background: linear-gradient(to right, #ff512f, #f2bc77);
 }
 
 .register-container .login-link {
-  margin-top: 20px;
   text-align: center;
   font-size: 14px;
+  margin-top: 10px;
 }
 
 .register-container .login-link a {
-  color: #23a2f6;
+  color: blue;
   text-decoration: none;
-  font-weight: 500;
 }
 
 .register-container .login-link a:hover {

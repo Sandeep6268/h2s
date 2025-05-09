@@ -9,7 +9,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 10000;
 }
 
 #success-box,
@@ -196,7 +196,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 10000;
 }
 
 .loader {
@@ -303,7 +303,7 @@
   box-shadow: 0 0 36px 1px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   backdrop-filter: blur(20px);
-  z-index: 99;
+  z-index: 990;
   padding: 2rem;
 }
 

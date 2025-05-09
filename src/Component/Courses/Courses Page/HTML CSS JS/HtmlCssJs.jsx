@@ -12,6 +12,10 @@ const HtmlCssJs = () => {
     email: "",
     course: "htmlcssjs",
   });
+  const [isLoading, setIsLoading] = useState(false); // For loading spinner
+  const [showModal, setShowModal] = useState(false); // For success/error modal
+  const [modalType, setModalType] = useState(""); // Success or error modal type
+  const [modalMessage, setModalMessage] = useState(""); // Modal message
 
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,29 +23,29 @@ const HtmlCssJs = () => {
 
   const handleSubmit = async () => {
     // Validate the form before submission
-    if (
-      !formData.name ||
-      !formData.mobile ||
-      !formData.email ||
-      !formData.course
-    ) {
+    if (!formData.name || !formData.mobile || !formData.email || !formData.course) {
       alert("Please fill all fields.");
       return;
     }
 
+    setIsLoading(true); // Show loading spinner
     try {
       // Correct URL without `/api/auth/`
       await axios.post(
         "https://h2s-backend-urrt.onrender.com/api/certificate-request/", // Correct backend URL
         formData
       );
-      alert(
-        "Form submitted successfully! You will get your certificate within 24 hours at your gmail"
-      );
+      setModalType("success");
+      setModalMessage("Form submitted successfully! You will get your certificate within 24 hours at your gmail");
+      setShowModal(true);
       setShowForm(false); // Hide the form after submission
     } catch (err) {
       console.error(err);
-      alert("Submission failed.");
+      setModalType("error");
+      setModalMessage("Submission failed.");
+      setShowModal(true);
+    } finally {
+      setIsLoading(false); // Hide loading spinner
     }
   };
 
@@ -86,6 +90,10 @@ const HtmlCssJs = () => {
   }, []);
 
   if (loading) return <div>Loading...</div>;
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   return (
     <>
@@ -164,6 +172,63 @@ const HtmlCssJs = () => {
         </button>
       </div>
 
+      {/* Loading Spinner */}
+      {isLoading && (
+        <div className="loader-container">
+          <div className="loader">
+            <div className="face">
+              <div className="circle"></div>
+            </div>
+            <div className="face">
+              <div className="circle"></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success/Error Modal */}
+      {showModal && (
+        <div id="modal-container">
+          {modalType === "success" ? (
+            <div id="success-box">
+              <div className="dot"></div>
+              <div className="dot two"></div>
+              <div className="face">
+                <div className="eye"></div>
+                <div className="eye right"></div>
+                <div className="mouth happy"></div>
+              </div>
+              <div className="shadow scale"></div>
+              <div className="message">
+                <h1 className="alert">Success!</h1>
+                <p>{modalMessage}</p>
+              </div>
+              <button className="button-box" onClick={closeModal}>
+                <p className="green">Continue</p>
+              </button>
+            </div>
+          ) : (
+            <div id="error-box">
+              <div className="dot"></div>
+              <div className="dot two"></div>
+              <div className="face2">
+                <div className="eye"></div>
+                <div className="eye right"></div>
+                <div className="mouth sad"></div>
+              </div>
+              <div className="shadow move"></div>
+              <div className="message">
+                <h1 className="alert">Error!</h1>
+                <p>{modalMessage}</p>
+              </div>
+              <button className="button-box" onClick={closeModal}>
+                <p className="red">Try again</p>
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
       {showForm && (
         <div
           className="modal show d-block"
@@ -199,18 +264,15 @@ const HtmlCssJs = () => {
                   placeholder="Email"
                   onChange={handleFormChange}
                 />
-                <small><span className="text-danger">Note:-</span>Enter your register gmail only</small>
+                <small>
+                  <span className="text-danger">Note:-</span> Enter your register gmail only
+                </small>
                 <select
                   className="form-control my-2"
                   name="course"
                   onChange={handleFormChange}
                 >
-                  {/* <option value="htmlcss">HTML + CSS</option> */}
                   <option value="htmlcssjs">HTML + CSS + JS</option>
-                  {/* <option value="python">Python</option>
-                  <option value="python_django">Python + Django</option>
-                  <option value="react">React</option>
-                  <option value="react_js">React + JavaScript</option> */}
                 </select>
               </div>
               <div className="modal-footer">
