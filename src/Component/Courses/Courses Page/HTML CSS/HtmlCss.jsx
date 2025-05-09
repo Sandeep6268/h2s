@@ -35,7 +35,9 @@ const HtmlCss = () => {
         "https://h2s-backend-urrt.onrender.com/api/certificate-request/", // Correct backend URL
         formData
       );
-      alert("Form submitted successfully! You will get your certificate within 24 hours at you gmail");
+      alert(
+        "Form submitted successfully! You will get your certificate within 24 hours at your gmail"
+      );
       setShowForm(false); // Hide the form after submission
     } catch (err) {
       console.error(err);
@@ -196,6 +198,7 @@ const HtmlCss = () => {
                   placeholder="Email"
                   onChange={handleFormChange}
                 />
+                <small><span className="text-danger">Note:-</span>Enter your register gmail only</small>
                 <select
                   className="form-control my-2"
                   name="course"

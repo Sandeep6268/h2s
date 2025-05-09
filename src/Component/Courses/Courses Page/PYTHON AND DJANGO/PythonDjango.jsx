@@ -42,7 +42,7 @@ const PythonDjango = () => {
         formData
       );
       alert(
-        "Form submitted successfully! You will get your certificate within 24 hours at you gmail"
+        "Form submitted successfully! You will get your certificate within 24 hours at your gmail"
       );
       setShowForm(false); // Hide the form after submission
     } catch (err) {
@@ -205,6 +205,7 @@ const PythonDjango = () => {
                   placeholder="Email"
                   onChange={handleFormChange}
                 />
+                <small><span className="text-danger">Note:-</span>Enter your register gmail only</small>
                 <select
                   className="form-control my-2"
                   name="course"
