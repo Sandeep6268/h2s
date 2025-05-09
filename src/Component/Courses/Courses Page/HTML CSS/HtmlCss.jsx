@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../../Youtube/Youtube.css";
 import Footer from "../../../Footer/Footer";
 import Header from "../../../Header/Header";
 import axios from "axios";
+
 const HtmlCss = () => {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -17,18 +18,31 @@ const HtmlCss = () => {
   };
 
   const handleSubmit = async () => {
+    // Validate the form before submission
+    if (
+      !formData.name ||
+      !formData.mobile ||
+      !formData.email ||
+      !formData.course
+    ) {
+      alert("Please fill all fields.");
+      return;
+    }
+
     try {
+      // Correct URL without `/api/auth/`
       await axios.post(
-        "https://h2s-backend-urrt.onrender.com/api/auth/certificate/",
+        "https://h2s-backend-urrt.onrender.com/certificate/", // Correct backend URL
         formData
-      ); // adjust your backend URL
+      );
       alert("Form submitted successfully!");
-      setShowForm(false);
+      setShowForm(false); // Hide the form after submission
     } catch (err) {
       console.error(err);
       alert("Submission failed.");
     }
   };
+
   const [selectedVideo, setSelectedVideo] = useState({
     videoId: "8cVkLeCqUHk",
     title: "Default Title",
@@ -37,8 +51,8 @@ const HtmlCss = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const playlistId = "PLuoKHxXYY-ueLt0K_tbBHtfMAV91uQudW"; // ✅ Tumhara Playlist ID
-  const apiKey = "AIzaSyAYs4Z_-AVB7n9v1TYVDgiS7NdnjUoYIw0"; // ✅ Tumhara API Key
+  const playlistId = "PLuoKHxXYY-ueLt0K_tbBHtfMAV91uQudW"; // Your Playlist ID
+  const apiKey = "AIzaSyAYs4Z_-AVB7n9v1TYVDgiS7NdnjUoYIw0"; // Your API Key
 
   useEffect(() => {
     const fetchPlaylistItems = async () => {
@@ -47,11 +61,10 @@ const HtmlCss = () => {
           `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=20&key=${apiKey}`
         );
         const data = await response.json();
-        // console.log(data); // Debugging ke liye
         setVideos(data.items || []);
         setLoading(false);
 
-        // ✅ Default first video set kar do
+        // Set the first video as the selected video by default
         if (data.items && data.items.length > 0) {
           const firstVideo = data.items[0].snippet;
           setSelectedVideo({
@@ -72,7 +85,6 @@ const HtmlCss = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    // <div className="player-container  d-flex gap-5 flex-wrap">
     <>
       <Header />
       <div className="container-fluid my-2 main-yt-div row align-content-center margin-top">
@@ -148,6 +160,7 @@ const HtmlCss = () => {
           Get your certificate
         </button>
       </div>
+
       {showForm && (
         <div
           className="modal show d-block"
