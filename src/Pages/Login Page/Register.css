@@ -1,0 +1,132 @@
+.register-container {
+  font-family: "Poppins", sans-serif;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-container .background {
+  width: 430px;
+  height: 520px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+}
+
+.register-container .shape {
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.register-container .shape-first {
+  background: linear-gradient(#1845ad, #23a2f6);
+  left: -80px;
+  top: -80px;
+}
+
+.register-container .shape-last {
+  background: linear-gradient(to right, #ff512f, #f09819);
+  right: -30px;
+  bottom: -80px;
+}
+
+.register-container form {
+  width: 400px;
+  background-color: rgba(255, 255, 255, 0.13);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+  padding: 50px 35px;
+  z-index: 1;
+}
+
+.register-container form * {
+  color: #ffffff;
+  outline: none;
+  border: none;
+}
+
+.register-container form h3 {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 42px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.register-container label {
+  display: block;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.register-container input {
+  display: block;
+  height: 50px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 3px;
+  padding: 0 10px;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.register-container ::placeholder {
+  color: #e5e5e5;
+}
+
+.register-container button {
+  margin-top: 30px;
+  width: 100%;
+  background-color: #ffffff;
+  color: #080710;
+  padding: 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.register-container button:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.register-container .note-text {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.register-container .note-warning {
+  color: #ff6b6b;
+  font-weight: 500;
+}
+
+.register-container .login-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.register-container .login-link a {
+  color: #23a2f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-container .login-link a:hover {
+  text-decoration: underline;
+}

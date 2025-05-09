@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../../api";
-import { useNavigate } from "react-router-dom";
+import "./Register.css"; // Create this CSS file
 
 const Register = () => {
   const [data, setData] = useState({ email: "", username: "", password: "" });
@@ -10,7 +11,8 @@ const Register = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
     const sanitizedData = {
       ...data,
       username: data.username.replace(/\s/g, ""),
@@ -19,48 +21,64 @@ const Register = () => {
       const res = await API.post('users/', sanitizedData);
       alert("User registered successfully");
       navigate("/login");
-      // console.log(res.data);
     } catch (err) {
-      console.error(err.response.data);
+      console.error(err.response?.data || err);
       alert("Registration failed");
     }
   };
 
   return (
-    <div className="container d-flex flex-column ">
-      <h2 className="text-center">Register</h2>
-      <input
-        name="email"
-        className="form-control my-2"
-        placeholder="Email"
-        onChange={handleChange}
-      />
-      <input
-        name="username"
-        className="form-control my-2"
-        placeholder="Username"
-        onChange={handleChange}
-      />
-      <small className="my-2">
-        <span className="text-danger">Note:- </span>Don't use space in username
-      </small>
-      <input
-        name="password"
-        className="form-control my-2"
-        placeholder="Password"
-        type="password"
-        onChange={handleChange}
-      />
-      <small className="my-2">
-        <span className="text-danger">Note:- </span>Password must contain '@ 1
-        A' and it should be strong
-      </small>
-      <button
-        className="form-control bg-primary w-25 mx-auto"
-        onClick={handleRegister}
-      >
-        Register
-      </button>
+    <div className="register-container">
+      <div className="background">
+        <div className="shape shape-first"></div>
+        <div className="shape shape-last"></div>
+      </div>
+      <form onSubmit={handleRegister}>
+        <h3>Register Here</h3>
+
+        <label htmlFor="email">Email</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          id="email"
+          onChange={handleChange}
+          required
+        />
+
+        <label htmlFor="username">Username</label>
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          id="username"
+          onChange={handleChange}
+          required
+        />
+        <small className="note-text">
+          <span className="note-warning">Note: </span>Don't use spaces in username
+        </small>
+
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          id="password"
+          onChange={handleChange}
+          required
+        />
+        <small className="note-text">
+          <span className="note-warning">Note: </span>
+          Password must contain '@ 1 A' and it should be strong
+        </small>
+
+        <button type="submit">Register</button>
+
+        <div className="login-link">
+          Already have an account? <Link to="/login">Login here</Link>
+        </div>
+      </form>
     </div>
   );
 };
