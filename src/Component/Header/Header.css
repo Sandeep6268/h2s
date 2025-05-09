@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #2196f3;
+  --primary-colo: #0082ec;
   --primary-glow: rgba(33, 150, 243, 0.8);
   --secondary-color: #9c27b0;
   --text-color: #ffffff;
@@ -60,7 +60,7 @@ body {
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--primary-colo);
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -80,7 +80,7 @@ body {
   position: absolute;
   width: 100%;
   height: 2px;
-  background: var(--primary-color);
+  background: var(--primary-colo);
   bottom: -4px;
   left: 0;
   transform: scaleX(0);
@@ -125,7 +125,7 @@ body {
 
 .nav-link:hover,
 .nav-link.active {
-  color: var(--primary-color);
+  color: var(--primary-colo);
   text-shadow: var(--neon-glow);
   background: rgba(255, 255, 255, 0.05);
   transform: translateY(-2px);
@@ -139,7 +139,7 @@ body {
   transform: translateX(-50%);
   width: 5px;
   height: 5px;
-  background-color: var(--primary-color);
+  background-color: var(--primary-colo);
   border-radius: 50%;
   box-shadow: var(--neon-glow);
 }
@@ -223,7 +223,7 @@ body {
 
 .dropdown a:hover {
   background: rgba(33, 150, 243, 0.15);
-  color: var(--primary-color);
+  color: var(--primary-colo);
   transform: translateX(5px);
 }
 
@@ -274,7 +274,7 @@ body {
 }
 
 .search-btn:hover {
-  color: var(--primary-color);
+  color: var(--primary-colo);
   transform: scale(1.1);
 }
 
@@ -294,7 +294,7 @@ body {
 }
 
 .theme-toggle:hover {
-  color: var(--primary-color);
+  color: var(--primary-colo);
   text-shadow: var(--neon-glow);
   background: rgba(255, 255, 255, 0.15);
   transform: rotate(15deg);
@@ -381,7 +381,7 @@ body {
   margin-bottom: 1rem;
   background: linear-gradient(
     45deg,
-    var(--primary-color),
+    var(--primary-colo),
     var(--secondary-color)
   );
   -webkit-background-clip: text;
@@ -400,7 +400,7 @@ body {
 .cta-button {
   background: linear-gradient(
     45deg,
-    var(--primary-color),
+    var(--primary-colo),
     var(--secondary-color)
   );
   color: white;
@@ -427,7 +427,7 @@ body {
   text-align: center;
   margin-bottom: 3rem;
   font-size: 2.5rem;
-  color: var(--primary-color);
+  color: var(--primary-colo);
 }
 
 .features {
@@ -455,7 +455,7 @@ body {
 }
 
 .feature h3 {
-  color: var(--primary-color);
+  color: var(--primary-colo);
   margin-bottom: 1rem;
   font-size: 1.3rem;
 }
