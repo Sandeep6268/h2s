@@ -18,7 +18,10 @@ const HtmlCss = () => {
 
   const handleSubmit = async () => {
     try {
-      await axios.post("http://127.0.0.1:8000/certificate/", formData); // adjust your backend URL
+      await axios.post(
+        "https://h2s-backend-urrt.onrender.com/certificate/",
+        formData
+      ); // adjust your backend URL
       alert("Form submitted successfully!");
       setShowForm(false);
     } catch (err) {
