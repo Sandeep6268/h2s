@@ -1,5 +1,5 @@
 /* Modal Styles */
-.modal-overlay {
+#modal-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,87 +12,277 @@
   z-index: 1000;
 }
 
-.modal-popup {
+#success-box,
+#error-box {
+  position: relative;
   width: 350px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  animation: modalFadeIn 0.3s ease-out;
-}
-
-.modal-popup.success {
-  border-top: 4px solid #4caf50;
-}
-
-.modal-popup.error {
-  border-top: 4px solid #f44336;
-}
-
-.modal-header {
-  padding: 15px 20px;
-  background: #f8f9fa;
+  height: 250px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 20px rgba(203, 205, 211, 0.1);
+  perspective: 40px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#success-box {
+  background: linear-gradient(to bottom right, #b0db7d 40%, #99dbb4 100%);
+}
+
+#error-box {
+  background: linear-gradient(to bottom left, #ef8d9c 40%, #ffc39e 100%);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #fcfcfc;
+  border-radius: 50%;
+  position: absolute;
+  top: 4%;
+  right: 6%;
+  cursor: pointer;
+}
+
+.dot:hover {
+  background: #d8d8d8;
+}
+
+.dot.two {
+  right: 12%;
+  opacity: 0.5;
+}
+
+.face,
+.face2 {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: #fcfcfc;
+  border-radius: 50%;
+  border: 1px solid #777777;
+  top: 21%;
+  z-index: 2;
+}
+
+.face {
+  animation: bounce 1s ease-in infinite;
+}
+
+.face2 {
+  animation: roll 3s ease-in-out infinite;
+}
+
+.eye {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: #777777;
+  border-radius: 50%;
+  top: 40%;
+  left: 20%;
+}
+
+.eye.right {
+  left: 68%;
+}
+
+.mouth {
+  position: absolute;
+  top: 43%;
+  left: 41%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.happy {
+  border: 2px solid;
+  border-color: transparent #777777 #777777 transparent;
+  transform: rotate(45deg);
+}
+
+.sad {
+  top: 49%;
+  border: 2px solid;
+  border-color: #777777 transparent transparent #777777;
+  transform: rotate(45deg);
+}
+
+.shadow {
+  position: absolute;
+  width: 60px;
+  height: 5px;
+  opacity: 0.5;
+  background: #777777;
+  left: 40%;
+  top: 43%;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.scale {
+  animation: scale 1s ease-in infinite;
+}
+
+.move {
+  animation: move 3s ease-in-out infinite;
+}
+
+.message {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  height: 40%;
+  top: 47%;
+  color: white;
+}
+
+.alert {
+  font-weight: 700;
+  letter-spacing: 5px;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.message p {
+  margin-top: 5px;
+  font-size: 0.8em;
+  font-weight: 300;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.button-box {
+  position: absolute;
+  background: #fcfcfc;
+  width: 50%;
+  height: 15%;
+  border-radius: 20px;
+  bottom: 5px;
+
+  left: 25%;
+  outline: 0;
+  border: none;
+  box-shadow: 2px 2px 10px rgba(119, 119, 119, 0.5);
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.button-box:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+}
+
+.green {
+  color: #5a8f3d;
+}
+
+.red {
+  color: #d33f49;
+}
+
+/* Loader Styles */
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+}
+
+.loader .face {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #fcfcfc;
+  border: 1px solid #777777;
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
-.modal-header h3 {
-  margin: 0;
-  color: #333;
+.loader .face .circle {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #0f3460;
+  animation: pulse 1.5s linear infinite;
 }
 
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #777;
-}
-
-.modal-body {
-  padding: 20px;
-  color: #555;
-}
-
-.modal-footer {
-  padding: 15px 20px;
-  display: flex;
-  justify-content: flex-end;
-  background: #f8f9fa;
-}
-
-.modal-btn {
-  padding: 8px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.btn-success {
-  background-color: #4caf50;
-  color: white;
-}
-
-.btn-error {
-  background-color: #f44336;
-  color: white;
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
+@keyframes bounce {
+  50% {
+    transform: translateY(-10px);
   }
-  to {
+}
+
+@keyframes scale {
+  50% {
+    transform: scale(0.9);
+  }
+}
+
+@keyframes roll {
+  0% {
+    transform: rotate(0deg);
+    left: 25%;
+  }
+  50% {
+    left: 60%;
+    transform: rotate(168deg);
+  }
+  100% {
+    transform: rotate(0deg);
+    left: 25%;
+  }
+}
+
+@keyframes move {
+  0% {
+    left: 25%;
+  }
+  50% {
+    left: 60%;
+  }
+  100% {
+    left: 25%;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
     opacity: 1;
-    transform: translateY(0);
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
   }
 }
 
-/* Rest of your existing CSS remains the same */
-
+/* Rest of your existing styles */
 :root {
   --background: #1a1a2e;
   --color: #ffffff;

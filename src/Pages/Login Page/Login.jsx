@@ -6,11 +6,9 @@ import "./Login.css";
 const Login = () => {
   const [data, setData] = useState({ email: "", password: "" });
   const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState({
-    title: "",
-    message: "",
-    isSuccess: false,
-  });
+  const [modalType, setModalType] = useState("success");
+  const [modalMessage, setModalMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -19,58 +17,88 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    
     try {
       const res = await API.post("jwt/create/", data);
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
-      showCustomModal("Success", "Login successful!", true);
-      setTimeout(() => navigate("/"), 1500); // Redirect after 1.5 seconds
+      setIsLoading(false);
+      showCustomModal("success", "Login successful!");
+      setTimeout(() => navigate("/"), 2000);
     } catch (err) {
       console.error(err.response?.data || err);
-      showCustomModal(
-        "Error",
-        "Login failed. Please check your credentials.",
-        false
-      );
+      setIsLoading(false);
+      showCustomModal("error", "Login failed. Please check your credentials.");
     }
   };
 
-  const showCustomModal = (title, message, isSuccess) => {
-    setModalContent({ title, message, isSuccess });
+  const showCustomModal = (type, message) => {
+    setModalType(type);
+    setModalMessage(message);
     setShowModal(true);
-    setTimeout(() => setShowModal(false), 3000); // Auto-close after 3 seconds
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
     <section className="container pt-5">
-      {/* Beautiful Modal Popup */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div
-            className={`modal-popup ${
-              modalContent.isSuccess ? "success" : "error"
-            }`}
-          >
-            <div className="modal-header">
-              <h3>{modalContent.title}</h3>
-              <button onClick={() => setShowModal(false)} className="close-btn">
-                &times;
-              </button>
+      {/* Loading Spinner */}
+      {isLoading && (
+        <div className="loader-container">
+          <div className="loader">
+            <div className="face">
+              <div className="circle"></div>
             </div>
-            <div className="modal-body">
-              <p>{modalContent.message}</p>
-            </div>
-            <div className="modal-footer">
-              <button
-                onClick={() => setShowModal(false)}
-                className={`modal-btn ${
-                  modalContent.isSuccess ? "btn-success" : "btn-error"
-                }`}
-              >
-                OK
-              </button>
+            <div className="face">
+              <div className="circle"></div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Success/Error Modal */}
+      {showModal && (
+        <div id="modal-container">
+          {modalType === "success" ? (
+            <div id="success-box">
+              <div className="dot"></div>
+              <div className="dot two"></div>
+              <div className="face">
+                <div className="eye"></div>
+                <div className="eye right"></div>
+                <div className="mouth happy"></div>
+              </div>
+              <div className="shadow scale"></div>
+              <div className="message">
+                <h1 className="alert">Success!</h1>
+                <p>{modalMessage}</p>
+              </div>
+              <button className="button-box" onClick={closeModal}>
+                <h1 className="green">continue</h1>
+              </button>
+            </div>
+          ) : (
+            <div id="error-box">
+              <div className="dot"></div>
+              <div className="dot two"></div>
+              <div className="face2">
+                <div className="eye"></div>
+                <div className="eye right"></div>
+                <div className="mouth sad"></div>
+              </div>
+              <div className="shadow move"></div>
+              <div className="message">
+                <h1 className="alert">Error!</h1>
+                <p>{modalMessage}</p>
+              </div>
+              <button className="button-box" onClick={closeModal}>
+                <p className="red">try again</p>
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -100,8 +128,8 @@ const Login = () => {
               value={data.password}
               required
             />
-            <button type="submit" className="opacity">
-              SUBMIT
+            <button type="submit" className="opacity" disabled={isLoading}>
+              {isLoading ? "PROCESSING..." : "SUBMIT"}
             </button>
           </form>
           <div className="register-forget opacity">
