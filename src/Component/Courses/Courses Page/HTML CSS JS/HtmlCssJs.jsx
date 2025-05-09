@@ -1,9 +1,50 @@
 import React, { useEffect, useState } from "react";
 import "../../../Youtube/Youtube.css";
-import Footer from '../../../Footer/Footer'
-import Header from '../../../Header/Header'
+import Footer from "../../../Footer/Footer";
+import Header from "../../../Header/Header";
+import axios from "axios";
 
 const HtmlCssJs = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    mobile: "",
+    email: "",
+    course: "htmlcssjs",
+  });
+
+  const handleFormChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    // Validate the form before submission
+    if (
+      !formData.name ||
+      !formData.mobile ||
+      !formData.email ||
+      !formData.course
+    ) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    try {
+      // Correct URL without `/api/auth/`
+      await axios.post(
+        "https://h2s-backend-urrt.onrender.com/api/certificate-request/", // Correct backend URL
+        formData
+      );
+      alert(
+        "Form submitted successfully! You will get your certificate within 24 hours at you gmail"
+      );
+      setShowForm(false); // Hide the form after submission
+    } catch (err) {
+      console.error(err);
+      alert("Submission failed.");
+    }
+  };
+
   const [selectedVideo, setSelectedVideo] = useState({
     videoId: "8cVkLeCqUHk",
     title: "Default Title",
@@ -115,7 +156,77 @@ const HtmlCssJs = () => {
             ))}
           </div>
         </div>
+        <button
+          className="btn btn-info w-25 mx-auto"
+          onClick={() => setShowForm(true)}
+        >
+          Get your certificate
+        </button>
       </div>
+
+      {showForm && (
+        <div
+          className="modal show d-block"
+          tabIndex="-1"
+          style={{ background: "#00000088" }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Certificate Form</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowForm(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <input
+                  className="form-control my-2"
+                  name="name"
+                  placeholder="Name"
+                  onChange={handleFormChange}
+                />
+                <input
+                  className="form-control my-2"
+                  name="mobile"
+                  placeholder="Mobile"
+                  onChange={handleFormChange}
+                />
+                <input
+                  className="form-control my-2"
+                  name="email"
+                  placeholder="Email"
+                  onChange={handleFormChange}
+                />
+                <select
+                  className="form-control my-2"
+                  name="course"
+                  onChange={handleFormChange}
+                >
+                  <option value="htmlcss">HTML + CSS</option>
+                  <option value="htmlcssjs">HTML + CSS + JS</option>
+                  <option value="python">Python</option>
+                  <option value="python_django">Python + Django</option>
+                  <option value="react">React</option>
+                  <option value="react_js">React + JavaScript</option>
+                </select>
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowForm(false)}
+                >
+                  Close
+                </button>
+                <button className="btn btn-primary" onClick={handleSubmit}>
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <Footer />
     </>
   );
