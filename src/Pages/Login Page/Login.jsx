@@ -77,7 +77,7 @@ const Login = () => {
                 <p>{modalMessage}</p>
               </div>
               <button className="button-box" onClick={closeModal}>
-                <h1 className="green">continue</h1>
+                <p className="green">continue</p>
               </button>
             </div>
           ) : (
