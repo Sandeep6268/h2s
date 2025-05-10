@@ -75,6 +75,79 @@ h1 {
   transition: opacity 0.3s ease-in-out;
   border-radius: 10px;
 }
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Content */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Button Styles */
+.purchased-courses-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.purchased-courses-btn:hover {
+  background-color: #0056b3;
+}
+
+button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+/* List styling */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 10px 0;
+}
+
+li button {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+li button:hover {
+  text-decoration: underline;
+}
 
 @keyframes glowing-button-85 {
   0% {
@@ -99,7 +172,7 @@ h1 {
   top: 0;
   border-radius: 10px;
 }
-.no-padding{
+.no-padding {
   padding: 0 !important;
 }
 

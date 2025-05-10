@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../../../Youtube/Youtube.css";
 import Footer from "../../../Footer/Footer";
 import Header from "../../../Header/Header";
@@ -12,10 +12,6 @@ const Python = () => {
     email: "",
     course: "python",
   });
-  const [loading, setLoading] = useState(false); // Loading state for loader
-  const [showModal, setShowModal] = useState(false); // Modal visibility
-  const [modalMessage, setModalMessage] = useState(""); // Modal message
-  const [modalType, setModalType] = useState(""); // Success/Error modal type
 
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,26 +29,19 @@ const Python = () => {
       return;
     }
 
-    setLoading(true); // Start loading spinner
-
     try {
+      // Correct URL without `/api/auth/`
       await axios.post(
-        "https://h2s-backend-urrt.onrender.com/api/certificate-request/",
+        "https://h2s-backend-urrt.onrender.com/api/certificate-request/", // Correct backend URL
         formData
       );
-      setModalType("success");
-      setModalMessage(
-        "Form submitted successfully! You will get your certificate within 24 hours at your Gmail."
+      alert(
+        "Form submitted successfully! You will get your certificate within 24 hours at your gmail"
       );
-      setShowModal(true);
       setShowForm(false); // Hide the form after submission
     } catch (err) {
       console.error(err);
-      setModalType("error");
-      setModalMessage("Submission failed. Please try again.");
-      setShowModal(true);
-    } finally {
-      setLoading(false); // Stop loading spinner
+      alert("Submission failed.");
     }
   };
 
@@ -62,9 +51,10 @@ const Python = () => {
     description: "Default Description",
   });
   const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const playlistId = "PLuoKHxXYY-ucS5BNqSteFoEjhJdd5esB3"; // Playlist ID
-  const apiKey = "AIzaSyAYs4Z_-AVB7n9v1TYVDgiS7NdnjUoYIw0"; // API Key
+  const playlistId = "PLuoKHxXYY-ucS5BNqSteFoEjhJdd5esB3"; // ✅ Tumhara Playlist ID
+  const apiKey = "AIzaSyAYs4Z_-AVB7n9v1TYVDgiS7NdnjUoYIw0"; // ✅ Tumhara API Key
 
   useEffect(() => {
     const fetchPlaylistItems = async () => {
@@ -73,7 +63,11 @@ const Python = () => {
           `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=20&key=${apiKey}`
         );
         const data = await response.json();
+        // console.log(data); // Debugging ke liye
         setVideos(data.items || []);
+        setLoading(false);
+
+        // ✅ Default first video set kar do
         if (data.items && data.items.length > 0) {
           const firstVideo = data.items[0].snippet;
           setSelectedVideo({
@@ -84,28 +78,17 @@ const Python = () => {
         }
       } catch (error) {
         console.error("Error fetching playlist items:", error);
+        setLoading(false);
       }
     };
 
     fetchPlaylistItems();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="loader-container">
-        <div className="loader">
-          <div className="face">
-            <div className="circle"></div>
-          </div>
-          <div className="face">
-            <div className="circle"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <div>Loading...</div>;
 
   return (
+    // <div className="player-container  d-flex gap-5 flex-wrap">
     <>
       <Header />
       <div className="container-fluid my-2 main-yt-div row align-content-center margin-top">
@@ -217,16 +200,18 @@ const Python = () => {
                   placeholder="Email"
                   onChange={handleFormChange}
                 />
-                <small>
-                  <span className="text-danger">Note:-</span> Enter your
-                  registered Gmail only
-                </small>
+                <small><span className="text-danger">Note:-</span>Enter your register gmail only</small>
                 <select
                   className="form-control my-2"
                   name="course"
                   onChange={handleFormChange}
                 >
+                  {/* <option value="htmlcss">HTML + CSS</option>
+                  <option value="htmlcssjs">HTML + CSS + JS</option> */}
                   <option value="python">Python</option>
+                  {/* <option value="python_django">Python + Django</option>
+                  <option value="react">React</option>
+                  <option value="react_js">React + JavaScript</option> */}
                 </select>
               </div>
               <div className="modal-footer">
@@ -244,56 +229,6 @@ const Python = () => {
           </div>
         </div>
       )}
-
-      {/* Success/Error Modal */}
-      {showModal && (
-        <div id="modal-container">
-          {modalType === "success" ? (
-            <div id="success-box">
-              <div className="dot"></div>
-              <div className="dot two"></div>
-              <div className="face">
-                <div className="eye"></div>
-                <div className="eye right"></div>
-                <div className="mouth happy"></div>
-              </div>
-              <div className="shadow scale"></div>
-              <div className="message">
-                <h1 className="alert">Success!</h1>
-                <p>{modalMessage}</p>
-              </div>
-              <button
-                className="button-box"
-                onClick={() => setShowModal(false)}
-              >
-                <p className="green">continue</p>
-              </button>
-            </div>
-          ) : (
-            <div id="error-box">
-              <div className="dot"></div>
-              <div className="dot two"></div>
-              <div className="face2">
-                <div className="eye"></div>
-                <div className="eye right"></div>
-                <div className="mouth sad"></div>
-              </div>
-              <div className="shadow move"></div>
-              <div className="message">
-                <h1 className="alert">Error!</h1>
-                <p>{modalMessage}</p>
-              </div>
-              <button
-                className="button-box"
-                onClick={() => setShowModal(false)}
-              >
-                <p className="red">try again</p>
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
       <Footer />
     </>
   );
