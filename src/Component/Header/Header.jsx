@@ -223,13 +223,13 @@ const Header = () => {
                         </div>
                       </div>
                       <div className="dropdown-divider"></div>
-                      <Link
-                        to="/profile"
-                        className="dropdown-item"
-                        onClick={() => setShowProfileDropdown(false)}
-                      >
-                        Profile
-                      </Link>
+                      <button
+                      onClick={handleYourCoursesClick}
+                      className={`nav-link text-decoration-none ${isActive(
+                        "/dashboard"
+                      )}`}>
+                        Your purchased courses
+                      </button>
                       <button
                         className="dropdown-item logout-btn"
                         onClick={handleLogout}

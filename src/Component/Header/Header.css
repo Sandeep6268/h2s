@@ -63,7 +63,7 @@
   display: flex;
   align-items: center;
   padding: 15px;
-  background-color: #f8f9fa;
+  background-color: #0d6efc;
 }
 
 .dropdown-avatar {
@@ -73,7 +73,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #4a6bff;
+  background-color: #6dc7ff;
   color: white;
   font-weight: bold;
   font-size: 18px;
@@ -93,7 +93,7 @@
 
 .user-info .email {
   font-size: 12px;
-  color: #6c757d;
+  color: #fff;
 }
 
 .dropdown-divider {
