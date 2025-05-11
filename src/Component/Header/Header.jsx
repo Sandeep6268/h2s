@@ -140,10 +140,15 @@ const Header = () => {
                 Home
               </Link>
             </li>
-
+            
             <li className="nav-item">
               <Link to="/about" className={`nav-link ${isActive("/about")}`}>
                 About
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/about" className={`nav-link ${isActive("/about")}`}>
+                {user?.username}
               </Link>
             </li>
 
