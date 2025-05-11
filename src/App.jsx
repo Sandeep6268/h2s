@@ -16,41 +16,49 @@ import Register from "./Pages/Login Page/Register";
 import About from "./Pages/About Page/About";
 import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
 import axios from "axios";
-const API = axios.create({
-  baseURL: "https://h2s-backend-urrt.onrender.com/api/auth/",
-  withCredentials: true,
-});
-
 function App() {
-  const [user, setUser] = useState(() => {
-    try {
-      const saved = localStorage.getItem("user");
-      return saved ? JSON.parse(saved) : null;
-    } catch (error) {
-      console.error("Error parsing user data:", error);
-      return null;
-    }
-  });
-
   const [enrolledCourses, setEnrolledCourses] = useState(() => {
     try {
       const saved = localStorage.getItem("enrolledCourses");
       return saved ? JSON.parse(saved) : [];
-    } catch (error) {
-      console.error("Error parsing courses data:", error);
+    } catch {
       return [];
     }
   });
 
-  const stableSetUser = useCallback((newUser) => {
-    setUser((prev) => {
-      if (JSON.stringify(prev) !== JSON.stringify(newUser)) {
-        return newUser;
+  const [user, setUser] = useState(null); // Start with null instead of loading from localStorage
+
+  // Single source of truth for user state
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const token = localStorage.getItem("access");
+      if (!token) {
+        setUser(null);
+        return;
       }
-      return prev;
-    });
+
+      try {
+        // Verify token first
+        await API.post("jwt/verify/", { token });
+
+        const decoded = jwtDecode(token);
+        const userResponse = await axios.get(
+          `https://h2s-backend-urrt.onrender.com/api/user/${decoded.user_id}/`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        setUser(userResponse.data);
+      } catch (error) {
+        console.error("Auth initialization failed:", error);
+        localStorage.removeItem("access");
+        setUser(null);
+      }
+    };
+
+    initializeAuth();
   }, []);
 
+  // Persist user to localStorage when it changes
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -59,52 +67,28 @@ function App() {
     }
   }, [user]);
 
+  // Token refresh logic
   useEffect(() => {
-    localStorage.setItem("enrolledCourses", JSON.stringify(enrolledCourses));
-  }, [enrolledCourses]);
+    const refreshToken = async () => {
+      const refresh = localStorage.getItem("refresh");
+      if (!refresh || !user) return;
 
-  const refreshToken = useCallback(async () => {
-    const refresh = localStorage.getItem("refresh");
-    if (refresh) {
       try {
         const { data } = await API.post("jwt/refresh/", { refresh });
         localStorage.setItem("access", data.access);
-      } catch (err) {
-        console.log("Token refresh failed", err);
-        stableSetUser(null);
-      }
-    }
-  }, [stableSetUser]);
-
-  useEffect(() => {
-    const loadUser = async () => {
-      const token = localStorage.getItem("access");
-      if (!token) return;
-
-      try {
-        await API.post("jwt/verify/", { token });
-        const tokenPayload = JSON.parse(atob(token.split(".")[1]));
-        const userId = tokenPayload.user_id;
-
-        const response = await axios.get(
-          `https://h2s-backend-urrt.onrender.com/api/user/${userId}/`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        stableSetUser(response.data);
       } catch (error) {
-        console.error("Error loading user:", error);
-        localStorage.removeItem("access");
-        stableSetUser(null);
+        console.log("Token refresh failed - logging out", error);
+        setUser(null);
       }
     };
 
-    loadUser();
-    const refreshInterval = setInterval(refreshToken, 5 * 60 * 1000);
-    return () => clearInterval(refreshInterval);
-  }, [refreshToken, stableSetUser]);
+    const interval = setInterval(refreshToken, 5 * 60 * 1000); // 5 minutes
+    return () => clearInterval(interval);
+  }, [user]);
 
-
-  console.log(user?.username,'hai')
+  useEffect(() => {
+    console.log("User state updated:", user);
+  }, [user]);
   const handlePayment = (price, redirectUrl) => {
     const options = {
       key: "rzp_test_9laFgTaGBY10xm", // Your Key ID

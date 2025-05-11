@@ -25,7 +25,12 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // 1. Login with existing API
+      // Clear any existing state first
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      localStorage.removeItem("user");
+
+      // 1. Get new tokens
       const { data: tokens } = await API.post("jwt/create/", {
         email: data.email,
         password: data.password,
@@ -35,23 +40,15 @@ const Login = () => {
       localStorage.setItem("access", tokens.access);
       localStorage.setItem("refresh", tokens.refresh);
 
-      // 3. Get basic info from token
+      // 3. Get user data (single API call)
       const decoded = jwtDecode(tokens.access);
-      const minimalUser = {
-        id: decoded.user_id,
-        username: decoded.username || "",
-        email: decoded.email || "",
-      };
-      setUser(minimalUser);
+      const userResponse = await axios.get(
+        `https://h2s-backend-urrt.onrender.com/api/user/${decoded.user_id}/`,
+        { headers: { Authorization: `Bearer ${tokens.access}` } }
+      );
 
-      // 4. Fetch full user data (non-blocking)
-      fetchUserData(decoded.user_id)
-        .then((fullData) => {
-          setUser((prev) => ({ ...prev, ...fullData }));
-        })
-        .catch((err) => {
-          console.log("Using minimal user data", err);
-        });
+      // 4. Set complete user data at once
+      setUser(userResponse.data);
 
       navigate("/");
     } catch (err) {

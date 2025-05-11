@@ -38,12 +38,12 @@ const Header = () => {
       if (token) {
         try {
           // Verify token
-          await API.post('jwt/verify/', { token });
-  
+          await API.post("jwt/verify/", { token });
+
           // If user exists but missing data
           if (user && (!user.username || !user.email)) {
             const fullData = await fetchUserData(user.id);
-            setUser(prev => ({ ...prev, ...fullData }));
+            setUser((prev) => ({ ...prev, ...fullData }));
           }
         } catch (err) {
           console.log("Token invalid", err);
@@ -53,7 +53,7 @@ const Header = () => {
         }
       }
     };
-  
+
     checkAuth();
     const interval = setInterval(checkAuth, 60000); // Check every minute
     return () => clearInterval(interval);
@@ -65,11 +65,11 @@ const Header = () => {
   };
 
   const handleLogout = () => {
+    // Clear everything in correct order
+    setUser(null);
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
-    setIsAuthenticated(false);
-    setUser(null);
-    setShowProfileDropdown(false);
+    localStorage.removeItem("user");
     navigate("/");
   };
 
