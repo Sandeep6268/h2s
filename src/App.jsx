@@ -98,7 +98,7 @@ function App() {
   }, [user]);
 
   useEffect(() => {
-    console.log("User state updated:", user);
+    // console.log("User state updated:", user);
   }, [user]);
   const stableSetUser = useCallback((newUser) => {
     setUser((prev) => {
@@ -111,7 +111,7 @@ function App() {
   }, []);
   // In App.js
   useEffect(() => {
-    console.log("Authentication state changed:", {
+    // console.log("Authentication state changed:", {
       user,
       hasAccessToken: !!localStorage.getItem("access"),
       hasRefreshToken: !!localStorage.getItem("refresh"),
