@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Context } from "./Context";
 import Home from "./Pages/Home Page/Home";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import HtmlCssJs from "./Component/Courses/Courses Page/HTML CSS JS/HtmlCssJs";
 import PythonDjango from "./Component/Courses/Courses Page/PYTHON AND DJANGO/PythonDjango";
 import Reactjs from "./Component/Courses/Courses Page/REACT/Reactjs";
@@ -15,40 +15,79 @@ import Login from "./Pages/Login Page/Login";
 import Register from "./Pages/Login Page/Register";
 import About from "./Pages/About Page/About";
 import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
+import { jwtDecode } from "jwt-decode";
+import API from "./Api"; // Make sure this is properly configured
 
 function App() {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Load enrolled courses from localStorage on init
+  // Load enrolled courses and check user authentication on init
   useEffect(() => {
-    const savedCourses =
-      JSON.parse(localStorage.getItem("enrolledCourses")) || [];
+    // 1. Load enrolled courses
+    const savedCourses = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
     setEnrolledCourses(savedCourses);
+
+    // 2. Check if user is authenticated
+    const token = localStorage.getItem("access");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        
+        // Check if token is expired
+        if (decoded.exp * 1000 < Date.now()) {
+          localStorage.removeItem("access");
+          localStorage.removeItem("refresh");
+          setUser(null);
+        } else {
+          // Fetch complete user data if needed
+          fetchUserData(token);
+        }
+      } catch (error) {
+        console.error("Invalid token:", error);
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        setUser(null);
+      }
+    }
+    setLoading(false);
   }, []);
+
+  const fetchUserData = async (token) => {
+    try {
+      const response = await API.get("users/me/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUser(response.data);
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+      // If token is invalid, clear it
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      setUser(null);
+    }
+  };
 
   const handlePayment = (price, redirectUrl) => {
     const options = {
-      key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
-      amount: price * 100, // Amount is in paise: 50000 paise = ₹500
+      key: "rzp_test_9laFgTaGBY10xm",
+      amount: price * 100,
       currency: "INR",
       name: "Test Corp",
       description: "Test Transaction",
-      image: "https://your-logo-url.com/logo.png", // optional
-
+      image: "https://your-logo-url.com/logo.png",
       handler: function (response) {
         const updatedCourses = [...enrolledCourses, redirectUrl];
         setEnrolledCourses(updatedCourses);
-
-        // 2. localStorage में save करें (ताकि refresh पर भी ना खोए)
         localStorage.setItem("enrolledCourses", JSON.stringify(updatedCourses));
-
-        // 3. User को redirectUrl पर भेजें (आपका existing flow)
         window.location.replace(redirectUrl);
       },
-
       prefill: {
-        name: "Test User",
-        email: "test@example.com",
+        name: user?.username || "Test User",
+        email: user?.email || "test@example.com",
         contact: "9999999999",
       },
       notes: {
@@ -58,28 +97,40 @@ function App() {
         color: "#3399cc",
       },
     };
-    const getUser = async () => {
-      const res = await API.get("users/me/", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      });
-      // console.log(res.data);
-    };
 
     const rzp = new window.Razorpay(options);
     rzp.open();
   };
-  const [user, setUser] = useState(null);
+
+  const handleLogin = (token) => {
+    localStorage.setItem("access", token.access);
+    localStorage.setItem("refresh", token.refresh);
+    const decoded = jwtDecode(token.access);
+    setUser(decoded);
+    // Optionally fetch complete user data
+    fetchUserData(token.access);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    setUser(null);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>; // Or a proper loading spinner
+  }
 
   return (
     <BrowserRouter>
       <Context.Provider
         value={{
-          handlePayment: handlePayment,
-          user: user,
-          setUser: setUser,
-          enrolledCourses: enrolledCourses,
+          handlePayment,
+          user,
+          setUser,
+          enrolledCourses,
+          handleLogin,
+          handleLogout,
         }}
       >
         <NotificationPopup />
@@ -94,8 +145,14 @@ function App() {
           <Route path="/react79" element={<Reactjs />} />
           <Route path="/reactandjs43" element={<ReactandJs />} />
           <Route path="/pythondjango90" element={<PythonDjango />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route 
+            path="/login" 
+            element={<Login onLogin={handleLogin} />} 
+          />
+          <Route 
+            path="/register" 
+            element={<Register onRegister={handleLogin} />} 
+          />
         </Routes>
       </Context.Provider>
     </BrowserRouter>
@@ -103,7 +160,3 @@ function App() {
 }
 
 export default App;
-{
-  /* <Route path="/login" element={<LoginForm />} />
-<Route path="/register" element={<RegisterForm />} /> */
-}

@@ -1,48 +1,17 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import API from "../../api";
-import "./Login.css";
-
-const Login = () => {
-  const [data, setData] = useState({ email: "", password: "" });
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState("success");
-  const [modalMessage, setModalMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+function Login({ onLogin }) {
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
-
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    
     try {
-      const res = await API.post("jwt/create/", data);
-      localStorage.setItem("access", res.data.access);
-      localStorage.setItem("refresh", res.data.refresh);
-      setIsLoading(false);
-      showCustomModal("success", "Login successful!");
-      setTimeout(() => navigate("/"), 2000);
-    } catch (err) {
-      console.error(err.response?.data || err);
-      setIsLoading(false);
-      showCustomModal("error", "Login failed. Please check your credentials.");
+      const response = await API.post("auth/login/", credentials);
+      onLogin(response.data); // This calls handleLogin in App.js
+      navigate("/"); // Redirect after login
+    } catch (error) {
+      console.error("Login failed:", error);
     }
   };
-
-  const showCustomModal = (type, message) => {
-    setModalType(type);
-    setModalMessage(message);
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
   return (
     <section className="container pt-5">
       {/* Loading Spinner */}
@@ -142,6 +111,6 @@ const Login = () => {
       </div>
     </section>
   );
-};
+}
 
 export default Login;

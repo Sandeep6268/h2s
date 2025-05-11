@@ -1,52 +1,16 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import API from "../../api";
-import "./Register.css";
-
-const Register = () => {
-  const [data, setData] = useState({ email: "", username: "", password: "" });
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState("success");
-  const [modalMessage, setModalMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+function Register({ onRegister }) {
+  const [formData, setFormData] = useState({ /* your fields */ });
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
-
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    const sanitizedData = {
-      ...data,
-      username: data.username.replace(/\s/g, ""),
-    };
-    
     try {
-      const res = await API.post('users/', sanitizedData);
-      setIsLoading(false);
-      showCustomModal("success", "Registration successful!");
-      setTimeout(() => navigate("/login"), 2000);
-    } catch (err) {
-      console.error(err.response?.data || err);
-      setIsLoading(false);
-      const errorMsg = err.response?.data?.email?.[0]?.includes("already exists") 
-        ? "Email already registered" 
-        : "Registration failed. Please try again.";
-      showCustomModal("error", errorMsg);
+      const response = await API.post("auth/register/", formData);
+      onRegister(response.data); // This calls handleLogin in App.js
+      navigate("/"); // Redirect after registration
+    } catch (error) {
+      console.error("Registration failed:", error);
     }
-  };
-
-  const showCustomModal = (type, message) => {
-    setModalType(type);
-    setModalMessage(message);
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
   };
 
   return (
