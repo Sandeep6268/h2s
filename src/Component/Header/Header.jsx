@@ -26,7 +26,7 @@ const Header = () => {
     try {
       const userData = await getUserById(userId);
       setUser(userData);
-      console.log("yahi wo", user);
+      // console.log("yahi wo", user);
     } catch (error) {
       // Handle error
     }
@@ -111,7 +111,7 @@ const Header = () => {
   const getAvatarLetter = () => {
     return user?.username?.charAt(0).toUpperCase() || "U";
   };
-  console.log(user?.username);
+  // console.log(user?.username);
 
   return (
     <header className="header">

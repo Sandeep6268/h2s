@@ -96,7 +96,7 @@ function App() {
         );
         stableSetUser(response.data);
       } catch (error) {
-        console.error("Error loading user:", error);
+        // console.error("Error loading user:", error);
         localStorage.removeItem("access");
         stableSetUser(null);
       }
@@ -140,14 +140,7 @@ function App() {
         color: "#3399cc",
       },
     };
-    const getUser = async () => {
-      const res = await API.get("users/me/", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      });
-      // console.log(res.data);
-    };
+    
 
     const rzp = new window.Razorpay(options);
     rzp.open();
