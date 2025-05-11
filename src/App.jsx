@@ -110,13 +110,7 @@ function App() {
     });
   }, []);
   // In App.js
-  useEffect(() => {
-    // console.log("Authentication state changed:", {
-      user,
-      hasAccessToken: !!localStorage.getItem("access"),
-      hasRefreshToken: !!localStorage.getItem("refresh"),
-    });
-  }, [user]);
+  
 
   // In your API interceptors (add to your api.js)
   API.interceptors.response.use(
