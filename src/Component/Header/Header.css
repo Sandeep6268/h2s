@@ -34,12 +34,15 @@
 }
 
 .modal-content {
-  background: white;
   padding: 20px;
   border-radius: 10px;
   width: 90%;
   max-width: 500px;
-  position: relative;
+  position: absolute;
+  top: 100%;
+  background: black;
+  color: white;
+  box-shadow: 0px 0px 5px white !important;
 }
 
 .close-btn {
