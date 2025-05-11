@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { Card, Button, Badge, Container } from "react-bootstrap";
 import "./Reviews.css";
 
 const Reviews = () => {
   const [name, setName] = useState("");
   const [review, setReview] = useState("");
   const [reviews, setReviews] = useState([]);
+  const [wordCount, setWordCount] = useState(0);
+
+  // Your existing reviews_content array remains the same
   const reviews_content = [
     {
       name: "Harish",
@@ -421,7 +425,6 @@ const Reviews = () => {
     },
   ];
 
-  // Load reviews from localStorage
   useEffect(() => {
     const storedReviews = JSON.parse(localStorage.getItem("reviews")) || [];
     setReviews(storedReviews);
@@ -431,19 +434,24 @@ const Reviews = () => {
     e.preventDefault();
     if (!name.trim() || !review.trim()) return;
 
-    const wordCount = review.trim().split(/\s+/).length;
     if (wordCount > 50) {
       alert("Review cannot be more than 50 words!");
       return;
     }
 
-    const newReview = { id: Date.now(), name, review };
+    const newReview = {
+      id: Date.now(),
+      name,
+      review,
+      timestamp: new Date().toLocaleString(),
+    };
     const updatedReviews = [newReview, ...reviews];
 
     setReviews(updatedReviews);
     localStorage.setItem("reviews", JSON.stringify(updatedReviews));
     setName("");
     setReview("");
+    setWordCount(0);
   };
 
   const handleDelete = (id) => {
@@ -452,65 +460,121 @@ const Reviews = () => {
     localStorage.setItem("reviews", JSON.stringify(updatedReviews));
   };
 
+  const handleReviewChange = (e) => {
+    const text = e.target.value;
+    const words = text.trim() ? text.trim().split(/\s+/) : [];
+    if (words.length <= 50) {
+      setReview(text);
+      setWordCount(words.length);
+    }
+  };
+
+  // Combine user reviews with default reviews
+  const allReviews = [
+    ...reviews,
+    ...reviews_content.map((r, i) => ({
+      id: `default-${i}`,
+      name: r.name,
+      review: r.message,
+      timestamp: new Date().toLocaleString(),
+    })),
+  ];
+
   return (
-    <>
-      <h2 className="review-heading py-2 text-primary container-fluid">
-        Share Your Experience
-      </h2>
-      <div className="review-container">
-        <form onSubmit={handleSubmit} className="review-form">
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your Name"
-            className="input-field"
-          />
-          <textarea
-            value={review}
-            onChange={(e) => {
-              const words = e.target.value.trim().split(/\s+/);
-              if (words.length <= 50) {
-                setReview(e.target.value);
-              }
-            }}
-            placeholder="Write your review here (max 50 words)..."
-            className="textarea-field"
-            rows={4}
-          />
-          <button type="submit" className="submit-button">
-            Submit Review
-          </button>
-        </form>
-      </div>
-      <h2 className="text-center py-3 my-5 container-fluid bg-black text-primary" id="testimonials">
-        Users Reviews
-      </h2>
-      <div className="review-list">
-        {reviews.map((r) => (
-          <div key={r.id} className="review-item">
-            <div className="review-header">
-              <h4 className="review-name">{r.name}</h4>
-              <button
-                className="delete-button"
-                onClick={() => handleDelete(r.id)}
+    <div data-bs-theme="dark">
+      <Container className="py-5">
+        {/* Review Form Section */}
+        <Card className="mb-5 border-primary shadow-lg">
+          <Card.Header className="bg-dark text-primary border-primary">
+            <h2 className="mb-0">Share Your Experience</h2>
+          </Card.Header>
+          <Card.Body>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your Name"
+                  className="form-control bg-dark text-white border-primary"
+                  required
+                />
+              </div>
+              <div className="mb-3 position-relative">
+                <textarea
+                  value={review}
+                  onChange={handleReviewChange}
+                  placeholder="Write your review here (max 50 words)..."
+                  className="form-control bg-dark text-white border-primary"
+                  rows={4}
+                  required
+                />
+                <Badge
+                  pill
+                  bg={wordCount > 50 ? "danger" : "primary"}
+                  className="position-absolute bottom-0 end-0 m-2"
+                >
+                  {wordCount}/50 words
+                </Badge>
+              </div>
+              <Button
+                variant="primary"
+                type="submit"
+                className="w-100 py-2 fw-bold"
               >
-                Delete
-              </button>
-            </div>
-            <p className="review-text">{r.review}</p>
-          </div>
-        ))}
-        {reviews_content.map((review, index) => (
-          <div className="review-item" key={index}>
-            <div className="review-header">
-              <h4 className="review-name">{review.name}</h4>
-            </div>
-            <p className="review-text">{review.message}</p>
-          </div>
-        ))}
-      </div>
-    </>
+                Submit Review
+              </Button>
+            </form>
+          </Card.Body>
+        </Card>
+
+        {/* Reviews Display Section */}
+        <h2 className="text-center mb-4 text-primary py-3 bg-black rounded">
+          <i className="fas fa-comments me-2"></i> User Testimonials
+        </h2>
+
+        <div className="reviews-grid">
+          {allReviews.map((r) => (
+            <Card
+              key={r.id}
+              className="review-card h-100 border-primary bg-dark text-white shadow-sm"
+            >
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-start mb-3">
+                  <div>
+                    <Card.Title className="text-primary mb-1">
+                      <i className="fas fa-user-circle me-2"></i>
+                      {r.name}
+                    </Card.Title>
+                    
+                  </div>
+                  {!r.id.includes("default") && (
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() => handleDelete(r.id)}
+                      className="rounded-circle"
+                    >
+                      <i className="fas fa-times"></i>
+                    </Button>
+                  )}
+                </div>
+                <Card.Text className="review-text">
+                  <i className="fas fa-quote-left text-primary me-2"></i>
+                  {r.review}
+                  <i className="fas fa-quote-right text-primary ms-2"></i>
+                </Card.Text>
+                <div className="text-end">
+                  <Badge bg="secondary" className="me-1">
+                    <i className="fas fa-star text-warning"></i> 
+                  </Badge>
+                </div>
+              </Card.Body>
+            </Card>
+          ))}
+        </div>
+      </Container>
+    </div>
   );
 };
 
