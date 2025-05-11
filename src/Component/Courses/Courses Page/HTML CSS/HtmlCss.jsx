@@ -194,12 +194,12 @@ const HtmlCss = () => {
             ))}
           </div>
         </div>
-        <button
+        {/* <button
           className="btn btn-info w-25 mx-auto"
           onClick={() => setShowForm(true)}
         >
           Get your certificate
-        </button>
+        </button> */}
       </div>
       {showForm && (
         <div
