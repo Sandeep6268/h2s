@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import API, { getUserById } from "../../api"; // Import the function instead of FindUser
 import "./Login.css";
 import { Context } from "../../Context";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const { setUser } = useContext(Context);
