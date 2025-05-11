@@ -24,6 +24,7 @@ const Header = () => {
     try {
       const userData = await getUserById(userId);
       setUser(userData);
+      console.log('yahi wo',user)
     } catch (error) {
       // Handle error
     }
