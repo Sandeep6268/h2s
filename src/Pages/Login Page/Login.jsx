@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../../api"; // Import the function instead of FindUser
 // Header.js
-import { getUserById } from "../../api"; // Adjust path as needed
+import { fetchUserData } from "../../api"; // Adjust path as needed
 import "./Login.css";
 import { Context } from "../../Context";
 import { jwtDecode } from "jwt-decode";
