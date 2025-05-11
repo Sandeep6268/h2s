@@ -13,6 +13,8 @@ import ReactandJs from "./Component/Courses/Courses Page/REACT AND JS/ReactandJs
 import Contact from "./Pages/Contact Page/Contact";
 import Login from "./Pages/Login Page/Login";
 import Register from "./Pages/Login Page/Register";
+import About from "./Pages/About Page/About";
+import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
 
 function App() {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
@@ -83,7 +85,8 @@ function App() {
         <NotificationPopup />
         <Routes>
           <Route path="/" element={<Home />} />
-
+          <Route path="/about" element={<About />} />
+          <Route path="/course" element={<InternshipPrograms />} />
           <Route path="/contactus" element={<Contact />} />
           <Route path="/htmlcss89" element={<HtmlCss />} />
           <Route path="/htmlcssjs62" element={<HtmlCssJs />} />

@@ -483,7 +483,7 @@ const Reviews = () => {
           </button>
         </form>
       </div>
-      <h2 className="text-center py-3 my-5 container-fluid bg-black text-primary">
+      <h2 className="text-center py-3 my-5 container-fluid bg-black text-primary" id="testimonials">
         Users Reviews
       </h2>
       <div className="review-list">

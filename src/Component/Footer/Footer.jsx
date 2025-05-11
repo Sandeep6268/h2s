@@ -43,7 +43,7 @@ const Footer = () => {
               <h5><Link to={'/contactus'} className="text-decoration-none text-white">Contact Us</Link></h5>
             </li>
             <li className="my-3">
-              <h5>Testimonials</h5>
+              <a href="#testimonials" className="text-decoration-none text-white"><h5>Testimonials</h5></a>
             </li>
             <li className="my-3">
               <h5>Support</h5>
