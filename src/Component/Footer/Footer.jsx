@@ -37,7 +37,9 @@ const Footer = () => {
           <h3 className="text-primary">Quick Links</h3>
           <ul type="none" className="p-0">
             <li className="my-3">
-            <h5>
+            <h5 className="text-white hover-cursor"
+                
+                style={{ cursor: "pointer" }}>
                 <Link
                   to={"/about"}
                   className="text-decoration-none text-white"
@@ -47,7 +49,9 @@ const Footer = () => {
               </h5>
             </li>
             <li className="my-3">
-              <h5>
+              <h5 className="text-white hover-cursor"
+                
+                style={{ cursor: "pointer" }}>
                 <Link
                   to={"/course"}
                   className="text-decoration-none text-white"
@@ -57,7 +61,9 @@ const Footer = () => {
               </h5>
             </li>
             <li className="my-3">
-              <h5>
+              <h5 className="text-white hover-cursor"
+                
+                style={{ cursor: "pointer" }}>
                 <Link
                   to={"/register"}
                   className="text-decoration-none text-white"
@@ -71,7 +77,9 @@ const Footer = () => {
         <div className="col-md-2 my-md-4 my-sm-0 py-2">
           <ul type="none" className="p-0">
             <li className="my-3">
-              <h5>
+              <h5 className="text-white hover-cursor"
+                
+                style={{ cursor: "pointer" }}>
                 <Link
                   to={"/contactus"}
                   className="text-decoration-none text-white"
@@ -85,7 +93,9 @@ const Footer = () => {
                 href="#testimonials"
                 className="text-decoration-none text-white"
               >
-                <h5>Testimonials</h5>
+                <h5 className="text-white hover-cursor"
+                
+                style={{ cursor: "pointer" }}>Testimonials</h5>
               </a>
             </li>
             <li className="my-3">
