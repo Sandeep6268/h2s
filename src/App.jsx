@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Context } from "./Context";
 import Home from "./Pages/Home Page/Home";
@@ -15,12 +15,12 @@ import Login from "./Pages/Login Page/Login";
 import Register from "./Pages/Login Page/Register";
 
 function App() {
-
   const [enrolledCourses, setEnrolledCourses] = useState([]);
 
   // Load enrolled courses from localStorage on init
   useEffect(() => {
-    const savedCourses = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
+    const savedCourses =
+      JSON.parse(localStorage.getItem("enrolledCourses")) || [];
     setEnrolledCourses(savedCourses);
   }, []);
 
@@ -36,12 +36,13 @@ function App() {
       handler: function (response) {
         const updatedCourses = [...enrolledCourses, redirectUrl];
         setEnrolledCourses(updatedCourses);
-        
+
+        // 2. localStorage में save करें (ताकि refresh पर भी ना खोए)
         localStorage.setItem("enrolledCourses", JSON.stringify(updatedCourses));
-        
+
+        // 3. User को redirectUrl पर भेजें (आपका existing flow)
         window.location.replace(redirectUrl);
       },
-    
 
       prefill: {
         name: "Test User",
@@ -67,11 +68,18 @@ function App() {
     const rzp = new window.Razorpay(options);
     rzp.open();
   };
-  const [user, setUser] = useState(null); 
-  
+  const [user, setUser] = useState(null);
+
   return (
     <BrowserRouter>
-      <Context.Provider value={{ handlePayment: handlePayment,user:user,setUser:setUser,enrolledCourses:enrolledCourses }}>
+      <Context.Provider
+        value={{
+          handlePayment: handlePayment,
+          user: user,
+          setUser: setUser,
+          enrolledCourses: enrolledCourses,
+        }}
+      >
         <NotificationPopup />
         <Routes>
           <Route path="/" element={<Home />} />

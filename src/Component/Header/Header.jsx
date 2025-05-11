@@ -86,37 +86,37 @@ const Header = () => {
               </a>
             </li>
             <li className="nav-item">
-              <button className="nav-link" onClick={handleYourCoursesClick}>
+              <button onClick={handleYourCoursesClick} className="nav-link">
                 Your Courses
               </button>
             </li>
-            {/* Modal for Enrolled Courses */}
-            {showCoursesModal && (
-              <div className="courses-modal-overlay">
-                <div className="courses-modal">
+
+            {/* Modal Popup */}
+            {showModal && (
+              <div className="your-courses-modal">
+                <div className="modal-content">
                   <h3>Your Enrolled Courses</h3>
                   <button
-                    className="close-modal"
-                    onClick={() => setShowCoursesModal(false)}
+                    onClick={() => setShowModal(false)}
+                    className="close-btn"
                   >
                     ×
                   </button>
-                  <ul>
+                  <div className="courses-list">
                     {enrolledCourses.length > 0 ? (
                       enrolledCourses.map((url, index) => (
-                        <li key={index}>
-                          <Link
-                            to={url}
-                            onClick={() => setShowCoursesModal(false)}
-                          >
-                            Course {index + 1}
-                          </Link>
-                        </li>
+                        <Link
+                          to={url}
+                          key={index}
+                          onClick={() => setShowModal(false)}
+                        >
+                          Course {index + 1} ({url.replace("/", "")})
+                        </Link>
                       ))
                     ) : (
                       <p>No courses enrolled yet.</p>
                     )}
-                  </ul>
+                  </div>
                 </div>
               </div>
             )}
