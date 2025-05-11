@@ -127,7 +127,7 @@ const Counter = () => {
                   +
                 </div>
                 <div className="stat-text fs-5 text-light">
-                  Students got helped after Our Programs.
+                  Students got helped to get jobs/placed after Our Programs.
                 </div>
               </div>
             </Col>
