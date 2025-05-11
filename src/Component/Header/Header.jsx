@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom"; // Added useLocation
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { COURSE_NAMES } from "../../Context";
 import "./Header.css";
@@ -7,14 +7,14 @@ import logo from "../../images/logo-removebg-preview.png";
 import { Context } from "../../Context";
 
 const Header = () => {
-  const location = useLocation(); // Get current route location
+  const location = useLocation();
   const [navActive, setNavActive] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { user, setUser, enrolledCourses } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const navigate = useNavigate();
 
-  // Check if link is active
   const isActive = (path) => {
     return location.pathname === path ? "active" : "";
   };
@@ -41,6 +41,7 @@ const Header = () => {
     localStorage.removeItem("refresh");
     setIsAuthenticated(false);
     setUser(null);
+    setShowProfileDropdown(false);
     navigate("/");
   };
 
@@ -50,6 +51,38 @@ const Header = () => {
     } else {
       setShowModal(true);
     }
+  };
+
+  const toggleProfileDropdown = () => {
+    setShowProfileDropdown(!showProfileDropdown);
+  };
+
+  // Add this to your main App.js or layout component
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        showProfileDropdown &&
+        !e.target.closest(".profile-dropdown-wrapper")
+      ) {
+        setShowProfileDropdown(false);
+      }
+    };
+
+    if (showProfileDropdown) {
+      document.body.classList.add("click-outside-handler", "active");
+      document.addEventListener("click", handleClickOutside);
+    } else {
+      document.body.classList.remove("click-outside-handler", "active");
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+      document.body.classList.remove("click-outside-handler", "active");
+    };
+  }, [showProfileDropdown]);
+  // Get first letter of username for avatar
+  const getAvatarLetter = () => {
+    return user?.username?.charAt(0).toUpperCase() || "U";
   };
 
   return (
@@ -142,21 +175,53 @@ const Header = () => {
             </li>
 
             {isAuthenticated ? (
-              <>
-                <li className="nav-item">
-                  <span className="nav-link username-display">
-                    {user?.username || "User"}
-                  </span>
-                </li>
-                <li className="nav-item">
+              <li className="nav-item profile-container">
+                <div className="profile-dropdown-wrapper">
                   <button
-                    className="btn btn-outline-danger logout-btn"
-                    onClick={handleLogout}
+                    className="profile-avatar"
+                    onClick={toggleProfileDropdown}
                   >
-                    Logout
+                    <span className="avatar-circle">{getAvatarLetter()}</span>
                   </button>
-                </li>
-              </>
+
+                  {showProfileDropdown && (
+                    <div className="profile-dropdown">
+                      <div className="dropdown-header">
+                        <span className="dropdown-avatar">
+                          {getAvatarLetter()}
+                        </span>
+                        <div className="user-info">
+                          <span className="username">
+                            {user?.username || "User"}
+                          </span>
+                          <span className="email">{user?.email || ""}</span>
+                        </div>
+                      </div>
+                      <div className="dropdown-divider"></div>
+                      <Link
+                        to="/profile"
+                        className="dropdown-item"
+                        onClick={() => setShowProfileDropdown(false)}
+                      >
+                        Profile
+                      </Link>
+                      <Link
+                        to="/settings"
+                        className="dropdown-item"
+                        onClick={() => setShowProfileDropdown(false)}
+                      >
+                        Settings
+                      </Link>
+                      <button
+                        className="dropdown-item logout-btn"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </li>
             ) : (
               <>
                 <li className="nav-item">

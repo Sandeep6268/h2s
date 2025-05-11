@@ -1,3 +1,156 @@
+/* Profile Dropdown Styles */
+.profile-container {
+  position: relative;
+  margin-left: 15px;
+}
+
+.profile-dropdown-wrapper {
+  position: relative;
+}
+
+.profile-avatar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+}
+
+.avatar-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #4a6bff;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 10px;
+  width: 250px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: dropdownFadeIn 0.3s ease forwards;
+  overflow: hidden;
+}
+
+@keyframes dropdownFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background-color: #f8f9fa;
+}
+
+.dropdown-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #4a6bff;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  margin-right: 12px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info .username {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.user-info .email {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #e9ecef;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 10px 15px;
+  color: #212529;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+  color: #4a6bff;
+  padding-left: 20px;
+}
+
+.dropdown-item.logout-btn {
+  color: #dc3545;
+  border-top: 1px solid #f1f1f1;
+  background: none;
+  width: 100%;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-item.logout-btn:hover {
+  background-color: #f8f9fa;
+  color: #c82333;
+}
+
+/* Close dropdown when clicking outside */
+body.click-outside-handler {
+  position: relative;
+}
+
+body.click-outside-handler::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: none;
+}
+
+body.click-outside-handler.active::before {
+  display: block;
+}
+
 :root {
   --primary-colo: #0082ec;
   --primary-glow: rgba(33, 150, 243, 0.8);
