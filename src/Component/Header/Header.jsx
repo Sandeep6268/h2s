@@ -25,7 +25,7 @@ const Header = () => {
   const fetchUserData = async (userId) => {
     try {
       const userData = await getUserById(userId);
-      setUser(userData);
+      // setUser(userData);
       // console.log("yahi wo", user);
     } catch (error) {
       // Handle error

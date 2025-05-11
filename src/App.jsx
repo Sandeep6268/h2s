@@ -34,7 +34,7 @@ function App() {
       localStorage.removeItem("user");
     }
   }, [user]);
-console.log('mere wala',user?.username)
+  
   useEffect(() => {
     console.log("Current user state:", user);
   }, [user]);
@@ -73,7 +73,7 @@ console.log('mere wala',user?.username)
                 },
               }
             );
-            setUser(response.data);
+            // setUser(response.data);
           } catch (error) {
             console.error("Error fetching user:", error);
             localStorage.removeItem("access");
@@ -87,6 +87,7 @@ console.log('mere wala',user?.username)
       }
     }
   }, []);
+
 
   const handlePayment = (price, redirectUrl) => {
     const options = {
