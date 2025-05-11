@@ -102,6 +102,7 @@ const Header = () => {
     return user?.username?.charAt(0).toUpperCase() || "U";
   };
   // console.log(user?.username);
+  // hogya 
 
   // console.log("Header rendered", {
   //   user,
