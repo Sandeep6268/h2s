@@ -4,6 +4,7 @@ import { FaLaptopCode, FaCode, FaLightbulb, FaUsers, FaAward } from 'react-icons
 import './About.css'; // We'll create this CSS file
 import Header from '../../Component/Header/Header';
 import Footer from '../../Component/Footer/Footer';
+import Counter from '../Counter Page/Counter';
 
 const About = () => {
   return (
@@ -84,9 +85,10 @@ const About = () => {
           </Row>
         </Container>
       </section>
+      <Counter/>
 
       {/* Portfolio Grid */}
-      <section className="py-6 bg-dark-gradient mt-5">
+      <section className="py-5 bg-dark-gradient mt-5">
         <Container>
           <h3 className="fw-bold mb-5 text-center text-white">
             Our <span className="text-primary">Work</span> in Action
