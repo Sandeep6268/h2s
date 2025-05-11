@@ -35,44 +35,27 @@ const Header = () => {
       const token = localStorage.getItem("access");
       if (token) {
         try {
-          const decoded = jwtDecode(token);
-          const currentTime = Date.now() / 1000;
-
-          if (decoded.exp < currentTime) {
-            handleLogout();
-            return;
-          }
-
-          // Set basic user data from token
-          const basicUserData = {
-            username: decoded.username,
-            email: decoded.email,
-            user_id: decoded.user_id,
-          };
-          setUser(basicUserData);
-
-          // Try to fetch additional user data
-          try {
-            const fullUserData = await getUserById(decoded.user_id);
-            setUser((prev) => ({
-              ...prev,
-              ...fullUserData,
-            }));
-          } catch (error) {
-            console.log("Using basic user data from token");
-            // Continue with just the token data
+          // Verify token
+          await API.post('jwt/verify/', { token });
+  
+          // If user exists but missing data
+          if (user && (!user.username || !user.email)) {
+            const fullData = await fetchUserData(user.id);
+            setUser(prev => ({ ...prev, ...fullData }));
           }
         } catch (err) {
-          console.error("Invalid token:", err);
-          handleLogout();
+          console.log("Token invalid", err);
+          setUser(null);
+          localStorage.removeItem("access");
+          localStorage.removeItem("refresh");
         }
-      } else {
-        handleLogout();
       }
     };
-
+  
     checkAuth();
-  }, []);
+    const interval = setInterval(checkAuth, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, [user]);
 
   // Rest of your component remains the same...
   const toggleNav = () => {

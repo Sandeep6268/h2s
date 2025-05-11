@@ -21,15 +21,45 @@ function App() {
 
   // Load enrolled courses from localStorage on init
   const [user, setUser] = useState(() => {
-    // Load user from localStorage if available
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
+    // Load from localStorage
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
   });
 
+  // Persist user state
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
+
+  // Add this to handle token refresh
+  const refreshToken = async () => {
+    const refresh = localStorage.getItem("refresh");
+    if (refresh) {
+      try {
+        const { data } = await API.post("jwt/refresh/", { refresh });
+        localStorage.setItem("access", data.access);
+      } catch (err) {
+        console.log("Token refresh failed", err);
+        setUser(null);
+      }
+    }
+  };
+
+  // Check auth state periodically
+  useEffect(() => {
+    const interval = setInterval(refreshToken, 5 * 60 * 1000); // 5 minutes
+    return () => clearInterval(interval);
+  }, []);
+console.log(user?.username)
   // Update localStorage when user changes
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
+
     } else {
       localStorage.removeItem("user");
     }

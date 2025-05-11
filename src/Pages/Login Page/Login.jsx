@@ -25,37 +25,40 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // 1. Get JWT tokens
-      const res = await API.post("jwt/create/", data);
-      localStorage.setItem("access", res.data.access);
-      localStorage.setItem("refresh", res.data.refresh);
+      // 1. Login with existing API
+      const { data: tokens } = await API.post("jwt/create/", {
+        email: data.email,
+        password: data.password,
+      });
 
-      // 2. Decode token to get basic user info
-      const decoded = jwtDecode(res.data.access);
-      const basicUserData = {
-        username: decoded.username,
-        email: decoded.email,
-        user_id: decoded.user_id,
+      // 2. Save tokens
+      localStorage.setItem("access", tokens.access);
+      localStorage.setItem("refresh", tokens.refresh);
+
+      // 3. Get basic info from token
+      const decoded = jwtDecode(tokens.access);
+      const minimalUser = {
+        id: decoded.user_id,
+        username: decoded.username || "",
+        email: decoded.email || "",
       };
-      setUser(basicUserData);
+      setUser(minimalUser);
 
-      // 3. Try to get full user data
-      try {
-        const fullUserData = await getUserById(decoded.user_id);
-        setUser((prev) => ({
-          ...prev,
-          ...fullUserData,
-        }));
-      } catch (error) {
-        console.log("Using basic user data from token");
-      }
+      // 4. Fetch full user data (non-blocking)
+      fetchUserData(decoded.user_id)
+        .then((fullData) => {
+          setUser((prev) => ({ ...prev, ...fullData }));
+        })
+        .catch((err) => {
+          console.log("Using minimal user data", err);
+        });
 
-      setIsLoading(false);
       navigate("/");
     } catch (err) {
-      console.error(err.response?.data || err);
+      console.error("Login failed:", err);
+      // Handle error
+    } finally {
       setIsLoading(false);
-      // Show error message
     }
   };
 
