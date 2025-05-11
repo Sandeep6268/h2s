@@ -17,6 +17,7 @@ import About from "./Pages/About Page/About";
 import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
 import axios from "axios";
 import API from "./api";
+import { jwtDecode } from "jwt-decode";
 
 function App() {
   const [enrolledCourses, setEnrolledCourses] = useState(() => {
