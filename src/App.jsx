@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Context } from "./Context";
 import Home from "./Pages/Home Page/Home";
@@ -15,35 +15,18 @@ import Login from "./Pages/Login Page/Login";
 import Register from "./Pages/Login Page/Register";
 import About from "./Pages/About Page/About";
 import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
-import axios from "axios";
 
-
-
-// Define API outside component
-const API = axios.create({
-  baseURL: 'https://h2s-backend-urrt.onrender.com/api/auth/',
-  withCredentials: true,
-});
 function App() {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
 
   // Load enrolled courses from localStorage on init
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem("user");
-    return saved ? JSON.parse(saved) : null;
+    // Load user from localStorage if available
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  // Stable version of setUser to prevent unnecessary updates
-  const stableSetUser = useCallback((newUser) => {
-    setUser((prev) => {
-      if (JSON.stringify(prev) !== JSON.stringify(newUser)) {
-        return newUser;
-      }
-      return prev;
-    });
-  }, []);
-
-  // Single useEffect for user persistence
+  // Update localStorage when user changes
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -51,22 +34,21 @@ function App() {
       localStorage.removeItem("user");
     }
   }, [user]);
-console.log(user?.username)
-  // Token refresh logic
-  const refreshToken = useCallback(async () => {
-    const refresh = localStorage.getItem("refresh");
-    if (refresh) {
-      try {
-        const { data } = await API.post("jwt/refresh/", { refresh });
-        localStorage.setItem("access", data.access);
-      } catch (err) {
-        console.log("Token refresh failed", err);
-        stableSetUser(null);
-      }
-    }
-  }, [stableSetUser]);
+console.log('mere wala',user?.username)
+  useEffect(() => {
+    console.log("Current user state:", user);
+  }, [user]);
 
-  // Initial load and periodic checks
+  // Update localStorage when user changes
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
+
+  // Load enrolled courses and user data on init
   useEffect(() => {
     // Load courses
     const savedCourses =
@@ -74,40 +56,38 @@ console.log(user?.username)
     setEnrolledCourses(savedCourses);
 
     // Load user if token exists
-    const loadUser = async () => {
-      const token = localStorage.getItem("access");
-      if (!token) return;
-
+    const token = localStorage.getItem("access");
+    if (token) {
       try {
         const tokenPayload = JSON.parse(atob(token.split(".")[1]));
         const userId = tokenPayload.user_id;
 
-        // Verify token first
-        await API.post("jwt/verify/", { token });
-
         // Fetch user data
-        const response = await axios.get(
-          `https://h2s-backend-urrt.onrender.com/api/user/${userId}/`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const fetchUser = async () => {
+          try {
+            const response = await axios.get(
+              `https://h2s-backend-urrt.onrender.com/api/user/${userId}/`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            setUser(response.data);
+          } catch (error) {
+            console.error("Error fetching user:", error);
+            localStorage.removeItem("access");
           }
-        );
-        stableSetUser(response.data);
+        };
+
+        fetchUser();
       } catch (error) {
-        // console.error("Error loading user:", error);
+        console.error("Error decoding token:", error);
         localStorage.removeItem("access");
-        stableSetUser(null);
       }
-    };
+    }
+  }, []);
 
-    loadUser();
-
-    // Set up periodic refresh
-    const refreshInterval = setInterval(refreshToken, 5 * 60 * 1000);
-    return () => clearInterval(refreshInterval);
-  }, [refreshToken, stableSetUser]);
   const handlePayment = (price, redirectUrl) => {
     const options = {
       key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
@@ -140,7 +120,14 @@ console.log(user?.username)
         color: "#3399cc",
       },
     };
-    
+    const getUser = async () => {
+      const res = await API.get("users/me/", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      });
+      // console.log(res.data);
+    };
 
     const rzp = new window.Razorpay(options);
     rzp.open();
@@ -152,7 +139,7 @@ console.log(user?.username)
         value={{
           handlePayment: handlePayment,
           user: user,
-          setUser: stableSetUser,
+          setUser: setUser,
           enrolledCourses: enrolledCourses,
         }}
       >
