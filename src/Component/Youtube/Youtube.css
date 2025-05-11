@@ -8,118 +8,182 @@
   display: inline-block;
 }
 
-/* Floating Certificate Button Styles */
-.floating-certificate-btn {
+/* HOLOGRAPHIC BUTTON STYLES */
+.holographic-btn-container {
   position: fixed;
-  top: 100px;
-  right: 30px;
-  z-index: 1000;
-  animation: floatUpDown 3s ease-in-out infinite;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  perspective: 1000px;
 }
 
-.certificate-cta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
-  color: white;
+.holographic-cert-btn {
+  position: relative;
+  padding: 16px 30px;
   border: none;
   border-radius: 50px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  box-shadow: 0 10px 25px rgba(13, 110, 253, 0.5);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 212, 255, 0.7) 0%,
+    rgba(9, 9, 121, 0.8) 35%,
+    rgba(2, 0, 36, 0.9) 100%
+  );
+  color: white;
+  font-weight: 800;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
   overflow: hidden;
+  transform-style: preserve-3d;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5), 0 0 20px rgba(9, 9, 121, 0.4),
+    0 0 30px rgba(2, 0, 36, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
-.certificate-cta::before {
-  content: "";
+.holographic-effect {
   position: absolute;
   top: 0;
-  left: -100%;
+  left: 0;
   width: 100%;
   height: 100%;
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.4),
     transparent
   );
-  transition: 0.5s;
+  transform: translateX(-100%) skewX(-15deg);
 }
 
-.certificate-cta:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 30px rgba(13, 110, 253, 0.7);
+.certificate-stars {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
 
-.certificate-cta:hover::before {
-  left: 100%;
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  width: var(--size);
+  height: var(--size);
+  top: var(--pos-y);
+  left: var(--pos-x);
+  animation: twinkle var(--delay) infinite alternate;
+  filter: drop-shadow(0 0 5px gold);
 }
 
-.certificate-icon {
-  display: flex;
-  align-items: center;
+.cert-icon-3d {
+  display: inline-block;
+  margin-right: 12px;
+  transform: translateZ(20px);
 }
 
-.cta-text {
-  white-space: nowrap;
+.cert-icon-3d svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2;
 }
 
-.badge {
-  background-color: #ffc107;
-  color: #000;
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  margin-left: 5px;
-  animation: pulse 2s infinite;
+.btn-text-3d {
+  display: inline-block;
+  transform: translateZ(30px);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-/* Animations */
-@keyframes floatUpDown {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+.flash-effect {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  opacity: 0;
 }
 
-@keyframes pulse {
+/* ANIMATIONS */
+@keyframes twinkle {
   0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
+    opacity: 0.2;
+    transform: scale(0.5);
   }
   100% {
+    opacity: 1;
     transform: scale(1);
   }
 }
 
-.pulse-animation {
-  animation: pulse 2s infinite;
+@keyframes cosmicGlow {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  }
+  25% {
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(9, 9, 121, 0.8);
+  }
+  75% {
+    box-shadow: 0 0 20px rgba(2, 0, 36, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  }
 }
 
-/* Responsive adjustments */
+.holographic-cert-btn:hover {
+  transform: translateY(-5px) rotateX(10deg) rotateY(5deg);
+  box-shadow: 0 5px 15px rgba(0, 212, 255, 0.6),
+    0 10px 30px rgba(9, 9, 121, 0.5), 0 15px 45px rgba(2, 0, 36, 0.4),
+    inset 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.holographic-cert-btn:hover .holographic-effect {
+  animation: slideLight 1s forwards;
+}
+
+.holographic-cert-btn:hover .flash-effect {
+  animation: flash 0.5s forwards;
+}
+
+.cosmic-glow {
+  animation: cosmicGlow 3s infinite alternate;
+}
+
+@keyframes slideLight {
+  to {
+    transform: translateX(100%) skewX(-15deg);
+  }
+}
+
+@keyframes flash {
+  to {
+    opacity: 0.4;
+    transform: translate(50%, 50%);
+  }
+}
+
+/* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
-  .floating-certificate-btn {
+  .holographic-btn-container {
     top: auto;
     bottom: 20px;
     right: 20px;
     left: 20px;
-    animation: none;
   }
 
-  .certificate-cta {
+  .holographic-cert-btn {
     width: 100%;
-    justify-content: center;
+    text-align: center;
+    padding: 14px 20px;
+    font-size: 1rem;
   }
 }
 

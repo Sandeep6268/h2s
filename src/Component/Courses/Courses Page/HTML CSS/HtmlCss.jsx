@@ -101,23 +101,31 @@ const HtmlCss = () => {
     <>
       {" "}
       <Header />{" "}
-      <div className="floating-certificate-btn">
+      <div className="holographic-btn-container">
         <button 
-          className="certificate-cta pulse-animation"
+          className="holographic-cert-btn cosmic-glow"
           onClick={() => setShowForm(true)}
         >
-          <span className="certificate-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <path d="M10 13h4"></path>
-              <path d="M10 17h4"></path>
-              <path d="M8 13h1"></path>
-              <path d="M8 17h1"></path>
+          <span className="holographic-effect"></span>
+          <span className="certificate-stars">
+            {[...Array(5)].map((_, i) => (
+              <span key={i} className="star" style={{
+                '--delay': `${i * 0.2}s`,
+                '--size': `${Math.random() * 6 + 4}px`,
+                '--pos-x': `${Math.random() * 100}%`,
+                '--pos-y': `${Math.random() * 100}%`
+              }}></span>
+            ))}
+          </span>
+          <span className="cert-icon-3d">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="none" stroke="currentColor"/>
+              <path d="M7 15h10M7 11h10M7 7h4" fill="none" stroke="currentColor"/>
+              <path d="M14 18v-1a2 2 0 0 1 2-2h1" fill="none" stroke="currentColor"/>
             </svg>
           </span>
-          <span className="cta-text">Get Your Certificate</span>
-          <span className="badge">FREE</span>
+          <span className="btn-text-3d">GET CERTIFIED</span>
+          <span className="flash-effect"></span>
         </button>
       </div>
       <div className="container-fluid my-2 main-yt-div row align-content-center margin-top">
@@ -186,12 +194,12 @@ const HtmlCss = () => {
             ))}
           </div>
         </div>
-        {/* <button
+        <button
           className="btn btn-info w-25 mx-auto"
           onClick={() => setShowForm(true)}
         >
           Get your certificate
-        </button> */}
+        </button>
       </div>
       {showForm && (
         <div
