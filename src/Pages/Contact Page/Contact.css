@@ -1,3 +1,74 @@
+/* Contact Form Success Modal Styles */
+.contact-success-modal .modal-content {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.contact-success-modal .modal-header {
+  border-bottom: none;
+  background-color: #28a745;
+}
+
+.contact-success-modal .modal-body {
+  padding: 2rem;
+}
+
+.contact-success-modal .success-icon {
+  animation: bounce 1s ease;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+
+.contact-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Form loading state */
+.submit-btn:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+/* Social links in modal */
+.contact-alternatives a {
+  transition: all 0.3s ease;
+}
+
+.contact-alternatives a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+}
+
+/* Responsive adjustments for modal buttons */
+@media (max-width: 576px) {
+  .contact-success-modal .modal-footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .contact-success-modal .modal-footer .btn {
+    width: 100%;
+  }
+}
+
 .landing_page * {
   font-family: Nunito, sans-serif;
 }
