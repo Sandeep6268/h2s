@@ -11,8 +11,8 @@
 /* HOLOGRAPHIC BUTTON STYLES */
 .holographic-btn-container {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  bottom: 30px;
+  left: 50%;
   z-index: 9999;
   perspective: 1000px;
 }
