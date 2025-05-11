@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { FaYoutube, FaUserGraduate, FaBriefcase } from 'react-icons/fa';
-import './Counter.css'; // We'll create this CSS file
+import React, { useEffect, useRef } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { FaYoutube, FaUserGraduate, FaBriefcase } from "react-icons/fa";
+import "./Counter.css"; // We'll create this CSS file
 
 const Counter = () => {
   const sectionRef = useRef(null);
@@ -12,13 +12,13 @@ const Counter = () => {
       if (countersAnimated.current) return;
       countersAnimated.current = true;
 
-      const counters = document.querySelectorAll('.counter');
+      const counters = document.querySelectorAll(".counter");
       const speed = 300; // Increased duration for slower animation
 
-      counters.forEach(counter => {
+      counters.forEach((counter) => {
         const updateCount = () => {
-          const target = +counter.getAttribute('data-target');
-          const count = +counter.innerText.replace(/,/g, '');
+          const target = +counter.getAttribute("data-target");
+          const count = +counter.innerText.replace(/,/g, "");
           const increment = target / speed;
 
           if (count < target) {
@@ -34,14 +34,14 @@ const Counter = () => {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
             animateCounters();
           } else {
             // Reset counters when leaving view
-            const counters = document.querySelectorAll('.counter');
-            counters.forEach(counter => {
-              counter.innerText = '0';
+            const counters = document.querySelectorAll(".counter");
+            counters.forEach((counter) => {
+              counter.innerText = "0";
             });
             countersAnimated.current = false;
           }
@@ -62,16 +62,21 @@ const Counter = () => {
   }, []);
 
   return (
-    <div data-bs-theme="dark" className='mt-5 py-5'>
-      <section className="stats-section py-6 position-relative overflow-hidden " ref={sectionRef}>
+    <div data-bs-theme="dark" className="mt-5 py-5">
+      <section
+        className="stats-section py-6 position-relative overflow-hidden "
+        ref={sectionRef}
+      >
         <div className="stats-bg-overlay position-absolute w-100 h-100"></div>
-        <Container className='py-5'>
+        <Container className="py-5">
           <div className="text-center mb-5 py-5 position-relative z-index-1">
             <h1 className="display-4 fw-bold mb-3 text-primary">
-              Trusted by <span className="text-white">Learners</span>, Followed by <span className="text-white">Thousands</span>.
+              Trusted by <span className="text-white">Learners</span>, Followed
+              by <span className="text-white">Thousands</span>.
             </h1>
             <p className="fs-4 text-light opacity-75">
-              Real numbers, <span className="text-primary fw-bold">Real results</span>.
+              Real numbers,{" "}
+              <span className="text-primary fw-bold">Real results</span>.
             </p>
           </div>
 
@@ -82,7 +87,10 @@ const Counter = () => {
                   <FaYoutube className="display-4 text-danger" />
                 </div>
                 <div className="stat-number display-4 fw-bold mb-2 text-primary">
-                  <span className="counter" data-target="100000">0</span>+
+                  <span className="counter" data-target="100000">
+                    0
+                  </span>
+                  +
                 </div>
                 <div className="stat-text fs-5 text-light">
                   YouTube Subscribers
@@ -96,7 +104,10 @@ const Counter = () => {
                   <FaUserGraduate className="display-4 text-primary" />
                 </div>
                 <div className="stat-number display-4 fw-bold mb-2 text-primary">
-                  <span className="counter" data-target="10000">0</span>+
+                  <span className="counter" data-target="10000">
+                    0
+                  </span>
+                  +
                 </div>
                 <div className="stat-text fs-5 text-light">
                   Interns Trained via H2S Skills Academy
@@ -110,10 +121,13 @@ const Counter = () => {
                   <FaBriefcase className="display-4 text-primary" />
                 </div>
                 <div className="stat-number display-4 fw-bold mb-2 text-primary">
-                  <span className="counter" data-target="8500">0</span>+
+                  <span className="counter" data-target="8500">
+                    0
+                  </span>
+                  +
                 </div>
                 <div className="stat-text fs-5 text-light">
-                  Students Got Jobs After Our Programs
+                  Students got helped after Our Programs.
                 </div>
               </div>
             </Col>
