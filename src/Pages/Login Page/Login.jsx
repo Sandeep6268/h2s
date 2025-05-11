@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../../api";
 import "./Login.css";
+import { Context } from "../../Context";
 
 const Login = () => {
+  const {setUser} = useContext(Context)
   const [data, setData] = useState({ email: "", password: "" });
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("success");
@@ -26,6 +28,7 @@ const Login = () => {
       setIsLoading(false);
       showCustomModal("success", "Login successful!");
       setTimeout(() => navigate("/"), 2000);
+      
     } catch (err) {
       console.error(err.response?.data || err);
       setIsLoading(false);

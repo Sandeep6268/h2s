@@ -6,3 +6,20 @@ const API = axios.create({
 });
 
 export default API;
+export const getUserById = async (userId) => {
+  const FindUser = axios.create({
+    baseURL: 'https://h2s-backend-urrt.onrender.com/api/',
+    withCredentials: true, // required for cookies/session-based auth
+  });
+  try {
+    const response = await FindUser.get(`user/${userId}/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    throw error;
+  }
+};

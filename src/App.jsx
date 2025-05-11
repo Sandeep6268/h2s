@@ -71,6 +71,7 @@ function App() {
     rzp.open();
   };
   const [user, setUser] = useState(null);
+  console.log(user)
 
   return (
     <BrowserRouter>

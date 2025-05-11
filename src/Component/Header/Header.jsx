@@ -19,13 +19,23 @@ const Header = () => {
     return location.pathname === path ? "active" : "";
   };
 
+  // Fetch user data when needed
+  const fetchUserData = async (userId) => {
+    try {
+      const userData = await getUserById(userId);
+      setUser(userData);
+    } catch (error) {
+      // Handle error
+    }
+  };
+
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem("access");
       if (token) {
         try {
           const decoded = jwtDecode(token);
-          
+
           // Verify the token is not expired
           const currentTime = Date.now() / 1000;
           if (decoded.exp < currentTime) {
@@ -38,7 +48,7 @@ const Header = () => {
 
           setIsAuthenticated(true);
           setUser(decoded);
-          
+
           // If you need to fetch additional user data from your backend:
           // try {
           //   const response = await fetch('/api/user/', {
@@ -53,7 +63,6 @@ const Header = () => {
           // } catch (error) {
           //   console.error("Failed to fetch user data:", error);
           // }
-          
         } catch (err) {
           console.error("Invalid token:", err);
           localStorage.removeItem("access");
@@ -98,21 +107,24 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (showProfileDropdown && !e.target.closest('.profile-dropdown-wrapper')) {
+      if (
+        showProfileDropdown &&
+        !e.target.closest(".profile-dropdown-wrapper")
+      ) {
         setShowProfileDropdown(false);
       }
     };
 
     if (showProfileDropdown) {
-      document.body.classList.add('click-outside-handler', 'active');
-      document.addEventListener('click', handleClickOutside);
+      document.body.classList.add("click-outside-handler", "active");
+      document.addEventListener("click", handleClickOutside);
     } else {
-      document.body.classList.remove('click-outside-handler', 'active');
+      document.body.classList.remove("click-outside-handler", "active");
     }
 
     return () => {
-      document.removeEventListener('click', handleClickOutside);
-      document.body.classList.remove('click-outside-handler', 'active');
+      document.removeEventListener("click", handleClickOutside);
+      document.body.classList.remove("click-outside-handler", "active");
     };
   }, [showProfileDropdown]);
 
@@ -215,11 +227,9 @@ const Header = () => {
                     className="profile-avatar"
                     onClick={toggleProfileDropdown}
                   >
-                    <span className="avatar-circle">
-                      {getAvatarLetter()}
-                    </span>
+                    <span className="avatar-circle">{getAvatarLetter()}</span>
                   </button>
-                  
+
                   {showProfileDropdown && (
                     <div className="profile-dropdown">
                       <div className="dropdown-header">
@@ -227,26 +237,28 @@ const Header = () => {
                           {getAvatarLetter()}
                         </span>
                         <div className="user-info">
-                          <span className="username">{user?.username || "User"}</span>
+                          <span className="username">
+                            {user?.username || "User"}
+                          </span>
                           <span className="email">{user?.email || ""}</span>
                         </div>
                       </div>
                       <div className="dropdown-divider"></div>
-                      <Link 
-                        to="/profile" 
+                      <Link
+                        to="/profile"
                         className="dropdown-item"
                         onClick={() => setShowProfileDropdown(false)}
                       >
                         Profile
                       </Link>
-                      <Link 
-                        to="/settings" 
+                      <Link
+                        to="/settings"
                         className="dropdown-item"
                         onClick={() => setShowProfileDropdown(false)}
                       >
                         Settings
                       </Link>
-                      <button 
+                      <button
                         className="dropdown-item logout-btn"
                         onClick={handleLogout}
                       >
