@@ -9,7 +9,17 @@ import { Context } from "../../Context";
 const Header = () => {
   const [navActive, setNavActive] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const {user,setUser} = useContext(Context)// ⬅️ Store user data here
+  const { user, setUser, enrolledCourses } = useContext(Context); // ⬅️ Store user data here
+  // const [showCoursesModal, setShowCoursesModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleYourCoursesClick = () => {
+    if (!user) {
+      navigate("/login"); // User logged out है तो login पर भेजो
+    } else {
+      setShowModal(true); // Modal दिखाओ
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -26,7 +36,6 @@ const Header = () => {
       }
     }
   }, []);
-  
 
   const toggleNav = () => {
     setNavActive(!navActive);
@@ -77,11 +86,41 @@ const Header = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a href="#" className="nav-link">
+              <button className="nav-link" onClick={handleYourCoursesClick}>
                 Your Courses
-              </a>
+              </button>
             </li>
-            
+            {/* Modal for Enrolled Courses */}
+            {showCoursesModal && (
+              <div className="courses-modal-overlay">
+                <div className="courses-modal">
+                  <h3>Your Enrolled Courses</h3>
+                  <button
+                    className="close-modal"
+                    onClick={() => setShowCoursesModal(false)}
+                  >
+                    ×
+                  </button>
+                  <ul>
+                    {enrolledCourses.length > 0 ? (
+                      enrolledCourses.map((url, index) => (
+                        <li key={index}>
+                          <Link
+                            to={url}
+                            onClick={() => setShowCoursesModal(false)}
+                          >
+                            Course {index + 1}
+                          </Link>
+                        </li>
+                      ))
+                    ) : (
+                      <p>No courses enrolled yet.</p>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            )}
+
             <li className="nav-item">
               <Link to="/contactus" className="nav-link">
                 ContactUs

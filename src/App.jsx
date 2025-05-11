@@ -7,17 +7,23 @@ import HtmlCssJs from "./Component/Courses/Courses Page/HTML CSS JS/HtmlCssJs";
 import PythonDjango from "./Component/Courses/Courses Page/PYTHON AND DJANGO/PythonDjango";
 import Reactjs from "./Component/Courses/Courses Page/REACT/Reactjs";
 import Python from "./Component/Courses/Courses Page/Python/Python";
-import PlayVideo from "./Component/Youtube/Youtube";
 import NotificationPopup from "./Component/Notification/NotificationPopup";
 import HtmlCss from "./Component/Courses/Courses Page/HTML CSS/HtmlCss";
 import ReactandJs from "./Component/Courses/Courses Page/REACT AND JS/ReactandJs";
 import Contact from "./Pages/Contact Page/Contact";
-import LoginForm from "./Pages/Login Page/Login";
-import RegisterForm from "./Pages/Login Page/Register";
 import Login from "./Pages/Login Page/Login";
 import Register from "./Pages/Login Page/Register";
 
 function App() {
+
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+
+  // Load enrolled courses from localStorage on init
+  useEffect(() => {
+    const savedCourses = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
+    setEnrolledCourses(savedCourses);
+  }, []);
+
   const handlePayment = (price, redirectUrl) => {
     const options = {
       key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
@@ -28,10 +34,14 @@ function App() {
       image: "https://your-logo-url.com/logo.png", // optional
 
       handler: function (response) {
-        // console.log("Payment Success:", response.razorpay_payment_id);
-        // Redirect to dynamic page
-        window.location.replace(`${redirectUrl}`);
+        const updatedCourses = [...enrolledCourses, redirectUrl];
+        setEnrolledCourses(updatedCourses);
+        
+        localStorage.setItem("enrolledCourses", JSON.stringify(updatedCourses));
+        
+        window.location.replace(redirectUrl);
       },
+    
 
       prefill: {
         name: "Test User",
@@ -61,7 +71,7 @@ function App() {
   
   return (
     <BrowserRouter>
-      <Context.Provider value={{ handlePayment: handlePayment,user:user,setUser:setUser }}>
+      <Context.Provider value={{ handlePayment: handlePayment,user:user,setUser:setUser,enrolledCourses:enrolledCourses }}>
         <NotificationPopup />
         <Routes>
           <Route path="/" element={<Home />} />
