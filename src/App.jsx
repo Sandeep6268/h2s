@@ -16,7 +16,7 @@ import Register from "./Pages/Login Page/Register";
 import About from "./Pages/About Page/About";
 import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
 import { jwtDecode } from "jwt-decode";
-import API from "./Api"; // Make sure this is properly configured
+import API from "./api"; // Make sure this is properly configured
 
 function App() {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
