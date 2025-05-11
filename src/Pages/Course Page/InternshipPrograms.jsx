@@ -52,7 +52,7 @@ const InternshipPrograms = () => {
   return (
     <>
     <Header/>
-    <div data-bs-theme='dark' style={{marginTop:'115px'}}>
+    <div data-bs-theme='dark' style={{marginTop:'115px'}} >
       <Container className="py-5">
         <h1 className="text-center mb-5 fw-bold">Internship Programs</h1>
         

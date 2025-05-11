@@ -42,7 +42,7 @@ const Footer = () => {
                 style={{ cursor: "pointer" }}>
                 <Link
                   to={"/about"}
-                  className="text-decoration-none text-white"
+                  className="text-decoration-none text-white hover-cursor"
                 >
                   About
                 </Link>
@@ -54,7 +54,7 @@ const Footer = () => {
                 style={{ cursor: "pointer" }}>
                 <Link
                   to={"/course"}
-                  className="text-decoration-none text-white"
+                  className="text-decoration-none text-white hover-cursor"
                 >
                   Courses
                 </Link>
@@ -66,7 +66,7 @@ const Footer = () => {
                 style={{ cursor: "pointer" }}>
                 <Link
                   to={"/register"}
-                  className="text-decoration-none text-white"
+                  className="text-decoration-none text-white hover-cursor"
                 >
                   Register
                 </Link>
@@ -82,7 +82,7 @@ const Footer = () => {
                 style={{ cursor: "pointer" }}>
                 <Link
                   to={"/contactus"}
-                  className="text-decoration-none text-white"
+                  className="text-decoration-none text-white hover-cursor"
                 >
                   Contact Us
                 </Link>
@@ -176,6 +176,7 @@ const Footer = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+      <p className="text-center w-100 pt-5 text-danger">CODE | CREATE | CONQUER © H2S TECH SOLUTIONS PVT. LIMITED</p>
       </section>
     </>
   );
