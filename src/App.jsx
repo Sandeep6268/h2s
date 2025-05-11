@@ -24,7 +24,7 @@ function App() {
     setEnrolledCourses(savedCourses);
   }, []);
 
-  const handlePayment = (price, redirectUrl) => {
+  const handlePayment = (price, redirectUrl,name) => {
     const options = {
       key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
       amount: price * 100, // Amount is in paise: 50000 paise = ₹500
@@ -34,7 +34,7 @@ function App() {
       image: "https://your-logo-url.com/logo.png", // optional
 
       handler: function (response) {
-        const updatedCourses = [...enrolledCourses, redirectUrl];
+        const updatedCourses = [...enrolledCourses, redirectUrl,name];
         setEnrolledCourses(updatedCourses);
 
         // 2. localStorage में save करें (ताकि refresh पर भी ना खोए)
