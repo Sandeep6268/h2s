@@ -39,33 +39,30 @@ const Header = () => {
           const currentTime = Date.now() / 1000;
 
           if (decoded.exp < currentTime) {
-            localStorage.removeItem("access");
-            localStorage.removeItem("refresh");
-            setIsAuthenticated(false);
-            setUser(null);
+            handleLogout();
             return;
           }
 
           setIsAuthenticated(true);
 
-          // First set the basic user data from token
+          // Set basic user data from token first
           setUser({
             username: decoded.username,
             email: decoded.email,
             first_name: decoded.first_name,
-            // other fields from token
+            user_id: decoded.user_id, // Make sure to include user_id
           });
 
-          // Then fetch complete user data from backend
+          // Then try to get additional user data
           try {
             const userData = await getUserById(decoded.user_id);
             setUser((prev) => ({
               ...prev,
-              ...userData, // Merge with any additional data from backend
+              ...userData,
             }));
           } catch (error) {
             console.error("Failed to fetch user details:", error);
-            // Continue with just the token data if this fails
+            // Continue with just the token data
           }
         } catch (err) {
           console.error("Invalid token:", err);
@@ -181,7 +178,6 @@ const Header = () => {
                 User Dashboard
               </button>
             </li>
-            
 
             {showModal && (
               <div className="your-courses-modal top-100">

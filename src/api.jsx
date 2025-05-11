@@ -12,7 +12,6 @@ export const FindUser = axios.create({
   withCredentials: true,
 });
 
-// Function to get user by ID
 export const getUserById = async (userId) => {
   try {
     const response = await FindUser.get(`user/${userId}/`, {
