@@ -37,7 +37,14 @@ const Footer = () => {
           <h3 className="text-primary">Quick Links</h3>
           <ul type="none" className="p-0">
             <li className="my-3">
-              <h5>About</h5>
+            <h5>
+                <Link
+                  to={"/about"}
+                  className="text-decoration-none text-white"
+                >
+                  About
+                </Link>
+              </h5>
             </li>
             <li className="my-3">
               <h5>
@@ -50,7 +57,14 @@ const Footer = () => {
               </h5>
             </li>
             <li className="my-3">
-              <h5>Register</h5>
+              <h5>
+                <Link
+                  to={"/register"}
+                  className="text-decoration-none text-white"
+                >
+                  Register
+                </Link>
+              </h5>
             </li>
           </ul>
         </div>
@@ -111,18 +125,6 @@ const Footer = () => {
 
               <div className="support-channels">
                 <div className="channel-item mb-3">
-                  <i className="fas fa-envelope me-2 text-primary"></i>
-                  <a
-                    class="share-icon"
-                    href="https://mail.google.com/mail/?view=cm&fs=1&to=h2stechsolutions@gmail.com"
-                    target="_blank"
-                    className="text-white"
-                  >
-                    support@h2sacademy.com
-                  </a>
-                </div>
-
-                <div className="channel-item mb-3">
                   <i className="fab fa-instagram me-2 text-primary"></i>
                   <a
                     href="https://www.instagram.com/h2stechsolutions?igsh=d3BkOTMxYWxpNjN5"
@@ -133,16 +135,15 @@ const Footer = () => {
                     @h2stechsolutions
                   </a>
                 </div>
-
                 <div className="channel-item mb-3">
-                  <i className="fab fa-whatsapp me-2 text-primary"></i>
+                  <i className="fas fa-envelope me-2 text-primary"></i>
                   <a
-                    href="https://wa.me/919876543210"
+                    class="share-icon"
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=h2stechsolutions@gmail.com"
                     target="_blank"
-                    rel="noopener noreferrer"
                     className="text-white"
                   >
-                    +91 98765 43210
+                    support@h2sacademy.com
                   </a>
                 </div>
               </div>
