@@ -20,18 +20,57 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("access");
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setIsAuthenticated(true);
-        setUser(decoded);
-      } catch (err) {
-        console.error("Invalid token:", err);
-      }
-    }
-  }, []);
+    const checkAuth = async () => {
+      const token = localStorage.getItem("access");
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          
+          // Verify the token is not expired
+          const currentTime = Date.now() / 1000;
+          if (decoded.exp < currentTime) {
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+            setIsAuthenticated(false);
+            setUser(null);
+            return;
+          }
 
+          setIsAuthenticated(true);
+          setUser(decoded);
+          
+          // If you need to fetch additional user data from your backend:
+          // try {
+          //   const response = await fetch('/api/user/', {
+          //     headers: {
+          //       'Authorization': `Bearer ${token}`
+          //     }
+          //   });
+          //   if (response.ok) {
+          //     const userData = await response.json();
+          //     setUser(userData);
+          //   }
+          // } catch (error) {
+          //   console.error("Failed to fetch user data:", error);
+          // }
+          
+        } catch (err) {
+          console.error("Invalid token:", err);
+          localStorage.removeItem("access");
+          localStorage.removeItem("refresh");
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+      }
+    };
+
+    checkAuth();
+  }, [setUser]);
+
+  // Rest of your component remains the same...
   const toggleNav = () => {
     setNavActive(!navActive);
   };
@@ -57,30 +96,26 @@ const Header = () => {
     setShowProfileDropdown(!showProfileDropdown);
   };
 
-  // Add this to your main App.js or layout component
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (
-        showProfileDropdown &&
-        !e.target.closest(".profile-dropdown-wrapper")
-      ) {
+      if (showProfileDropdown && !e.target.closest('.profile-dropdown-wrapper')) {
         setShowProfileDropdown(false);
       }
     };
 
     if (showProfileDropdown) {
-      document.body.classList.add("click-outside-handler", "active");
-      document.addEventListener("click", handleClickOutside);
+      document.body.classList.add('click-outside-handler', 'active');
+      document.addEventListener('click', handleClickOutside);
     } else {
-      document.body.classList.remove("click-outside-handler", "active");
+      document.body.classList.remove('click-outside-handler', 'active');
     }
 
     return () => {
-      document.removeEventListener("click", handleClickOutside);
-      document.body.classList.remove("click-outside-handler", "active");
+      document.removeEventListener('click', handleClickOutside);
+      document.body.classList.remove('click-outside-handler', 'active');
     };
   }, [showProfileDropdown]);
-  // Get first letter of username for avatar
+
   const getAvatarLetter = () => {
     return user?.username?.charAt(0).toUpperCase() || "U";
   };
@@ -134,7 +169,6 @@ const Header = () => {
               </button>
             </li>
 
-            {/* Modal Popup */}
             {showModal && (
               <div className="your-courses-modal top-100">
                 <div className="modal-content">
@@ -181,9 +215,11 @@ const Header = () => {
                     className="profile-avatar"
                     onClick={toggleProfileDropdown}
                   >
-                    <span className="avatar-circle">{getAvatarLetter()}</span>
+                    <span className="avatar-circle">
+                      {getAvatarLetter()}
+                    </span>
                   </button>
-
+                  
                   {showProfileDropdown && (
                     <div className="profile-dropdown">
                       <div className="dropdown-header">
@@ -191,28 +227,26 @@ const Header = () => {
                           {getAvatarLetter()}
                         </span>
                         <div className="user-info">
-                          <span className="username">
-                            {user?.username || "User"}
-                          </span>
+                          <span className="username">{user?.username || "User"}</span>
                           <span className="email">{user?.email || ""}</span>
                         </div>
                       </div>
                       <div className="dropdown-divider"></div>
-                      <Link
-                        to="/profile"
+                      <Link 
+                        to="/profile" 
                         className="dropdown-item"
                         onClick={() => setShowProfileDropdown(false)}
                       >
                         Profile
                       </Link>
-                      <Link
-                        to="/settings"
+                      <Link 
+                        to="/settings" 
                         className="dropdown-item"
                         onClick={() => setShowProfileDropdown(false)}
                       >
                         Settings
                       </Link>
-                      <button
+                      <button 
                         className="dropdown-item logout-btn"
                         onClick={handleLogout}
                       >
