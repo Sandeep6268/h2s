@@ -31,6 +31,7 @@ const Header = () => {
       // Handle error
     }
   };
+  console.log(user?.username,'header')
 
   useEffect(() => {
     const checkAuth = async () => {
