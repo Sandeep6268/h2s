@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API from "../../api";
+import API, { FindUser } from "../../api";
 import "./Login.css";
 import { Context } from "../../Context";
 
@@ -22,9 +22,25 @@ const Login = () => {
     setIsLoading(true);
     
     try {
+      // 1. Get JWT tokens
       const res = await API.post("jwt/create/", data);
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
+      
+      // 2. Decode token to get user_id
+      const tokenPayload = JSON.parse(atob(res.data.access.split('.')[1]));
+      const userId = tokenPayload.user_id;
+      
+      // 3. Fetch complete user data using user_id
+      const userRes = await FindUser.get(`user/${userId}/`, {
+        headers: {
+          Authorization: `Bearer ${res.data.access}`,
+        },
+      });
+      
+      // 4. Set user in context
+      setUser(userRes.data);
+      
       setIsLoading(false);
       showCustomModal("success", "Login successful!");
       setTimeout(() => navigate("/"), 2000);

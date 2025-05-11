@@ -20,10 +20,46 @@ function App() {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
 
   // Load enrolled courses from localStorage on init
+  const [user, setUser] = useState(null);
+
+  // Load enrolled courses and user data on init
   useEffect(() => {
+    // Load courses
     const savedCourses =
       JSON.parse(localStorage.getItem("enrolledCourses")) || [];
     setEnrolledCourses(savedCourses);
+
+    // Load user if token exists
+    const token = localStorage.getItem("access");
+    if (token) {
+      try {
+        const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+        const userId = tokenPayload.user_id;
+
+        // Fetch user data
+        const fetchUser = async () => {
+          try {
+            const response = await axios.get(
+              `https://h2s-backend-urrt.onrender.com/api/user/${userId}/`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            setUser(response.data);
+          } catch (error) {
+            console.error("Error fetching user:", error);
+            localStorage.removeItem("access");
+          }
+        };
+
+        fetchUser();
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        localStorage.removeItem("access");
+      }
+    }
   }, []);
 
   const handlePayment = (price, redirectUrl) => {
@@ -70,8 +106,6 @@ function App() {
     const rzp = new window.Razorpay(options);
     rzp.open();
   };
-  const [user, setUser] = useState(null);
-  console.log(user)
 
   return (
     <BrowserRouter>

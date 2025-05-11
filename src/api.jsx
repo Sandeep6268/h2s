@@ -6,8 +6,8 @@ const API = axios.create({
 });
 
 export default API;
-export const getUserById = async (userId) => {
-  const FindUser = axios.create({
+
+ export const FindUser = axios.create({
     baseURL: 'https://h2s-backend-urrt.onrender.com/api/',
     withCredentials: true, // required for cookies/session-based auth
   });
@@ -22,4 +22,3 @@ export const getUserById = async (userId) => {
     console.error("Error fetching user:", error);
     throw error;
   }
-};

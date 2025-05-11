@@ -24,7 +24,7 @@ const Header = () => {
     try {
       const userData = await getUserById(userId);
       setUser(userData);
-      console.log('yahi wo',user)
+      console.log("yahi wo", user);
     } catch (error) {
       // Handle error
     }
@@ -181,6 +181,11 @@ const Header = () => {
                 User Dashboard
               </button>
             </li>
+            {user && (
+              <div className="user-greeting">
+                Welcome, {user.first_name || user.username || user.email}
+              </div>
+            )}
 
             {showModal && (
               <div className="your-courses-modal top-100">
