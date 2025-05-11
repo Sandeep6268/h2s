@@ -71,27 +71,65 @@ function App() {
   }, [user]);
 
   // Token refresh logic
+
   useEffect(() => {
     const refreshToken = async () => {
-      const refresh = localStorage.getItem("refresh");
-      if (!refresh || !user) return;
-
       try {
+        const refresh = localStorage.getItem("refresh");
+        if (!refresh || !user) return;
+
         const { data } = await API.post("jwt/refresh/", { refresh });
         localStorage.setItem("access", data.access);
+
+        // Verify the new token
+        await API.post("jwt/verify/", { token: data.access });
       } catch (error) {
         console.log("Token refresh failed - logging out", error);
+        // Clear all auth data
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        localStorage.removeItem("user");
         setUser(null);
       }
     };
 
-    const interval = setInterval(refreshToken, 5 * 60 * 1000); // 5 minutes
+    const interval = setInterval(refreshToken, 4.5 * 60 * 1000); // 4.5 minutes
     return () => clearInterval(interval);
   }, [user]);
 
   useEffect(() => {
     console.log("User state updated:", user);
   }, [user]);
+  const stableSetUser = useCallback((newUser) => {
+    setUser((prev) => {
+      // Only update if something actually changed
+      if (JSON.stringify(prev) !== JSON.stringify(newUser)) {
+        return newUser;
+      }
+      return prev;
+    });
+  }, []);
+  // In App.js
+  useEffect(() => {
+    console.log("Authentication state changed:", {
+      user,
+      hasAccessToken: !!localStorage.getItem("access"),
+      hasRefreshToken: !!localStorage.getItem("refresh"),
+    });
+  }, [user]);
+
+  // In your API interceptors (add to your api.js)
+  API.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response?.status === 401) {
+        console.error("Unauthorized request - possible token issue");
+        // You might want to logout here
+      }
+      return Promise.reject(error);
+    }
+  );
+
   const handlePayment = (price, redirectUrl) => {
     const options = {
       key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
@@ -143,7 +181,7 @@ function App() {
         value={{
           handlePayment: handlePayment,
           user: user,
-          setUser: setUser,
+          setUser: stableSetUser,
           enrolledCourses: enrolledCourses,
         }}
       >

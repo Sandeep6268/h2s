@@ -21,40 +21,47 @@ const Login = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
+  // In your Login component
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Clear any existing state first
+      // Clear existing tokens
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
-      localStorage.removeItem("user");
 
-      // 1. Get new tokens
       const { data: tokens } = await API.post("jwt/create/", {
         email: data.email,
         password: data.password,
       });
 
-      // 2. Save tokens
+      // Save tokens first
       localStorage.setItem("access", tokens.access);
       localStorage.setItem("refresh", tokens.refresh);
 
-      // 3. Get user data (single API call)
-      const decoded = jwtDecode(tokens.access);
-      const userResponse = await axios.get(
-        `https://h2s-backend-urrt.onrender.com/api/user/${decoded.user_id}/`,
-        { headers: { Authorization: `Bearer ${tokens.access}` } }
-      );
+      // Verify the token immediately
+      try {
+        await API.post("jwt/verify/", { token: tokens.access });
 
-      // 4. Set complete user data at once
-      setUser(userResponse.data);
+        const decoded = jwtDecode(tokens.access);
+        const userResponse = await axios.get(
+          `https://h2s-backend-urrt.onrender.com/api/user/${decoded.user_id}/`,
+          { headers: { Authorization: `Bearer ${tokens.access}` } }
+        );
 
-      navigate("/");
+        // Update context
+        setUser(userResponse.data);
+        navigate("/");
+      } catch (verifyError) {
+        console.error("Token verification failed:", verifyError);
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        throw verifyError;
+      }
     } catch (err) {
       console.error("Login failed:", err);
-      // Handle error
+      // Show error to user
     } finally {
       setIsLoading(false);
     }
