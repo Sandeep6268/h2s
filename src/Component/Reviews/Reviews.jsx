@@ -476,7 +476,6 @@ const Reviews = () => {
       id: `default-${i}`, // Ensure this is always a string
       name: r.name,
       review: r.message,
-      timestamp: new Date().toLocaleString(),
     })),
   ];
 
@@ -548,12 +547,9 @@ const Reviews = () => {
                       <i className="fas fa-user-circle me-2"></i>
                       {r.name}
                     </Card.Title>
-                    <small className="text-muted">
-                      <i className="far fa-clock me-1"></i>
-                      {r.timestamp}
-                    </small>
                   </div>
-                  {typeof r.id === "string" && !r.id.includes("default") && (
+                  {/* Changed this condition to check if it's a user review */}
+                  {!r.id.toString().includes("default") && (
                     <Button
                       variant="outline-danger"
                       size="sm"
@@ -571,7 +567,7 @@ const Reviews = () => {
                 </Card.Text>
                 <div className="text-end">
                   <Badge bg="secondary" className="me-1">
-                    <i className="fas fa-star text-warning"></i> 
+                    <i className="fas fa-star text-warning"></i>
                   </Badge>
                 </div>
               </Card.Body>
