@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import { Context } from "./Context";
 import Home from "./Pages/Home Page/Home";
