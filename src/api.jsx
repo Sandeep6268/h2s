@@ -6,8 +6,14 @@ const API = axios.create({
   withCredentials: true,
 });
 
-// Base API instance for user data
-// User functions
+
+// User Data API (explicitly exported)
+export const FindUser = axios.create({
+  baseURL: 'https://h2s-backend-urrt.onrender.com/api/',
+  withCredentials: true,
+});
+
+// User data fetching function
 export const fetchUserData = async (userId) => {
   try {
     const response = await FindUser.get(`user/${userId}/`, {
@@ -21,5 +27,4 @@ export const fetchUserData = async (userId) => {
     throw error;
   }
 };
-
 export default API;
