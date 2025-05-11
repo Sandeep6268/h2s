@@ -6,6 +6,7 @@ import { fetchUserData } from "../../api"; // Adjust path as needed
 import "./Login.css";
 import { Context } from "../../Context";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 const Login = () => {
   const { setUser } = useContext(Context);
