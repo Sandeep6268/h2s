@@ -53,7 +53,7 @@
 }
 
 .stat-box:hover .stat-icon {
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 
 .stat-number {
