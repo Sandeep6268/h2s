@@ -86,7 +86,7 @@ const Header = () => {
               </a>
             </li>
             <li className="nav-item">
-              <button onClick={handleYourCoursesClick} className="nav-link">
+              <button onClick={handleYourCoursesClick} className="nav-link text-decoration-none">
                 Your Courses
               </button>
             </li>
