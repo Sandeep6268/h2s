@@ -473,12 +473,14 @@ const Reviews = () => {
   const allReviews = [
     ...reviews,
     ...reviews_content.map((r, i) => ({
-      id: `default-${i}`,
+      id: `default-${i}`, // Ensure this is always a string
       name: r.name,
       review: r.message,
       timestamp: new Date().toLocaleString(),
     })),
   ];
+
+  // ... (previous imports and code remain the same until the return statement)
 
   return (
     <div data-bs-theme="dark">
@@ -546,9 +548,12 @@ const Reviews = () => {
                       <i className="fas fa-user-circle me-2"></i>
                       {r.name}
                     </Card.Title>
-                    
+                    <small className="text-muted">
+                      <i className="far fa-clock me-1"></i>
+                      {r.timestamp}
+                    </small>
                   </div>
-                  {!r.id.includes("default") && (
+                  {typeof r.id === "string" && !r.id.includes("default") && (
                     <Button
                       variant="outline-danger"
                       size="sm"
