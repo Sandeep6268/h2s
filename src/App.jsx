@@ -16,6 +16,8 @@ import Register from "./Pages/Login Page/Register";
 import About from "./Pages/About Page/About";
 import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
 import axios from "axios";
+import API from "./api";
+
 function App() {
   const [enrolledCourses, setEnrolledCourses] = useState(() => {
     try {
