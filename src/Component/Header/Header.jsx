@@ -102,9 +102,15 @@ const Header = () => {
     return user?.username?.charAt(0).toUpperCase() || "U";
   };
   // console.log(user?.username);
-  // hogya 
+  // hogya
 
-
+  /*
+console.log("Authentication state changed:", {
+  user,
+  hasAccessToken: !!localStorage.getItem("access"),
+  hasRefreshToken: !!localStorage.getItem("refresh"),
+});
+*/
 
   return (
     <header className="header">
@@ -221,10 +227,9 @@ const Header = () => {
                       </div>
                       <div className="dropdown-divider"></div>
                       <button
-                      onClick={handleYourCoursesClick}
-                      className={`dropdown-item ${isActive(
-                        "/dashboard"
-                      )}`}>
+                        onClick={handleYourCoursesClick}
+                        className={`dropdown-item ${isActive("/dashboard")}`}
+                      >
                         Your purchased courses
                       </button>
                       <button
