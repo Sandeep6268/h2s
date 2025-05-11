@@ -225,7 +225,7 @@ const Header = () => {
                       <div className="dropdown-divider"></div>
                       <button
                       onClick={handleYourCoursesClick}
-                      className={`nav-link text-decoration-none ${isActive(
+                      className={`dropdown-item ${isActive(
                         "/dashboard"
                       )}`}>
                         Your purchased courses
