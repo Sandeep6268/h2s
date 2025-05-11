@@ -15,6 +15,7 @@ import Login from "./Pages/Login Page/Login";
 import Register from "./Pages/Login Page/Register";
 import About from "./Pages/About Page/About";
 import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
+import axios from "axios";
 
 
 
