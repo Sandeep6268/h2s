@@ -77,7 +77,7 @@ const Header = () => {
             </li>
             <li className="nav-item">
               <Link to="/course" className="nav-link">
-                Course
+                Courses
               </Link>
             </li>
             <li className="nav-item">
@@ -90,7 +90,7 @@ const Header = () => {
                 onClick={handleYourCoursesClick}
                 className="nav-link text-decoration-none"
               >
-                Your Courses
+                User Dasboard
               </button>
             </li>
 
