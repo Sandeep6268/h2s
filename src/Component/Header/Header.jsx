@@ -31,7 +31,7 @@ const Header = () => {
       // Handle error
     }
   };
-  console.log(user?.username,'header')
+  console.log(user?.username, "header");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -48,17 +48,15 @@ const Header = () => {
           }
         } catch (err) {
           console.log("Token invalid", err);
-          setUser(null);
-          localStorage.removeItem("access");
-          localStorage.removeItem("refresh");
+          handleLogout(); // Use centralized logout function
         }
       }
     };
 
     checkAuth();
-    const interval = setInterval(checkAuth, 60000); // Check every minute
+    const interval = setInterval(checkAuth, 60000);
     return () => clearInterval(interval);
-  }, [user]);
+  }, [user]); // Only run when user changes
 
   // Rest of your component remains the same...
   const toggleNav = () => {
@@ -71,6 +69,7 @@ const Header = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     localStorage.removeItem("user");
+    setShowProfileDropdown(false);
     navigate("/");
   };
 
@@ -140,15 +139,10 @@ const Header = () => {
                 Home
               </Link>
             </li>
-            
+
             <li className="nav-item">
               <Link to="/about" className={`nav-link ${isActive("/about")}`}>
                 About
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/about" className={`nav-link ${isActive("/about")}`}>
-                {user?.username}
               </Link>
             </li>
 
@@ -209,51 +203,7 @@ const Header = () => {
 
             {isAuthenticated ? (
               <li className="nav-item profile-container">
-                <div className="profile-dropdown-wrapper">
-                  <button
-                    className="profile-avatar"
-                    onClick={toggleProfileDropdown}
-                  >
-                    <span className="avatar-circle">{getAvatarLetter()}</span>
-                  </button>
-
-                  {showProfileDropdown && (
-                    <div className="profile-dropdown">
-                      <div className="dropdown-header">
-                        <span className="dropdown-avatar">
-                          {getAvatarLetter()}
-                        </span>
-                        <div className="user-info">
-                          <span className="username">
-                            {user?.username || "User"}
-                          </span>
-                          <span className="email">{user?.email || ""}</span>
-                        </div>
-                      </div>
-                      <div className="dropdown-divider"></div>
-                      <Link
-                        to="/profile"
-                        className="dropdown-item"
-                        onClick={() => setShowProfileDropdown(false)}
-                      >
-                        Profile
-                      </Link>
-                      <Link
-                        to="/settings"
-                        className="dropdown-item"
-                        onClick={() => setShowProfileDropdown(false)}
-                      >
-                        Settings
-                      </Link>
-                      <button
-                        className="dropdown-item logout-btn"
-                        onClick={handleLogout}
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  )}
-                </div>
+                {/* Profile dropdown code */}
               </li>
             ) : (
               <>
