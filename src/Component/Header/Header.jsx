@@ -132,6 +132,7 @@ const Header = () => {
   const getAvatarLetter = () => {
     return user?.username?.charAt(0).toUpperCase() || "U";
   };
+  console.log(user)
 
   return (
     <header className="header">
