@@ -90,7 +90,7 @@ const Header = () => {
                 onClick={handleYourCoursesClick}
                 className="nav-link text-decoration-none"
               >
-                User Dasboard
+                User Dashboard
               </button>
             </li>
 
