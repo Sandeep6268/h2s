@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { COURSE_NAMES } from "../../Context";
 import "./Header.css";
-
 import logo from "../../images/logo-removebg-preview.png";
 import { Context } from "../../Context";
 import API from "../../api";
@@ -11,27 +10,17 @@ import API from "../../api";
 const Header = () => {
   const location = useLocation();
   const [navActive, setNavActive] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { user, setUser, enrolledCourses } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const navigate = useNavigate();
 
+  // Derived authentication state from user context
+  const isAuthenticated = !!user;
+
   const isActive = (path) => {
     return location.pathname === path ? "active" : "";
   };
-
-  // Fetch user data when needed
-  const fetchUserData = async (userId) => {
-    try {
-      const userData = await getUserById(userId);
-      // setUser(userData);
-      // console.log("yahi wo", user);
-    } catch (error) {
-      // Handle error
-    }
-  };
-  console.log(user?.username, "header");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -41,30 +30,29 @@ const Header = () => {
           // Verify token
           await API.post("jwt/verify/", { token });
 
-          // If user exists but missing data
-          if (user && (!user.username || !user.email)) {
-            const fullData = await fetchUserData(user.id);
-            setUser((prev) => ({ ...prev, ...fullData }));
+          // If we have a token but no user data, fetch it
+          if (!user) {
+            const decoded = jwtDecode(token);
+            const response = await API.get(`user/${decoded.user_id}/`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            setUser(response.data);
           }
         } catch (err) {
           console.log("Token invalid", err);
-          handleLogout(); // Use centralized logout function
+          handleLogout();
         }
+      } else {
+        handleLogout();
       }
     };
 
     checkAuth();
     const interval = setInterval(checkAuth, 60000);
     return () => clearInterval(interval);
-  }, [user]); // Only run when user changes
-
-  // Rest of your component remains the same...
-  const toggleNav = () => {
-    setNavActive(!navActive);
-  };
+  }, [user, setUser]);
 
   const handleLogout = () => {
-    // Clear everything in correct order
     setUser(null);
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
@@ -84,7 +72,9 @@ const Header = () => {
   const toggleProfileDropdown = () => {
     setShowProfileDropdown(!showProfileDropdown);
   };
-
+  const toggleNav = () => {
+    setNavActive(!navActive);
+  };
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -112,6 +102,12 @@ const Header = () => {
     return user?.username?.charAt(0).toUpperCase() || "U";
   };
   // console.log(user?.username);
+
+  console.log("Header rendered", {
+    user,
+    hasToken: !!localStorage.getItem("access"),
+    isAuthenticated: !!user,
+  });
 
   return (
     <header className="header">
@@ -203,7 +199,46 @@ const Header = () => {
 
             {isAuthenticated ? (
               <li className="nav-item profile-container">
-                {/* Profile dropdown code */}
+                <div className="profile-dropdown-wrapper">
+                  <button
+                    className="profile-avatar"
+                    onClick={toggleProfileDropdown}
+                  >
+                    <span className="avatar-circle">
+                      {user?.username?.charAt(0).toUpperCase() || "U"}
+                    </span>
+                  </button>
+
+                  {showProfileDropdown && (
+                    <div className="profile-dropdown">
+                      <div className="dropdown-header">
+                        <span className="dropdown-avatar">
+                          {user?.username?.charAt(0).toUpperCase() || "U"}
+                        </span>
+                        <div className="user-info">
+                          <span className="username">
+                            {user?.username || "User"}
+                          </span>
+                          <span className="email">{user?.email || ""}</span>
+                        </div>
+                      </div>
+                      <div className="dropdown-divider"></div>
+                      <Link
+                        to="/profile"
+                        className="dropdown-item"
+                        onClick={() => setShowProfileDropdown(false)}
+                      >
+                        Profile
+                      </Link>
+                      <button
+                        className="dropdown-item logout-btn"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
               </li>
             ) : (
               <>
