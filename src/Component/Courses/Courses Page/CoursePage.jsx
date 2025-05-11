@@ -53,7 +53,7 @@ const CoursePage = () => {
                     if (!user) {
                       navigate("/login");
                     } else {
-                      handlePayment(49, "/htmlcss89",'Html Css');
+                      handlePayment(49, "/htmlcss89");
                     }
                   }}
                 >
@@ -82,7 +82,7 @@ const CoursePage = () => {
                     if (!user) {
                       navigate("/login");
                     } else {
-                      handlePayment(99, "/htmlcssjs62", 'Html Css Js');
+                      handlePayment(99, "/htmlcssjs62");
                     }
                   }}
                 >
@@ -133,7 +133,7 @@ const CoursePage = () => {
                     if (!user) {
                       navigate("/login");
                     } else {
-                      handlePayment(129, "/python24",'Python');
+                      handlePayment(129, "/python24");
                     }
                   }}
                 >
@@ -163,7 +163,7 @@ const CoursePage = () => {
                     if (!user) {
                       navigate("/login");
                     } else {
-                      handlePayment(179, "/pythondjango90" ,'Python and Django');
+                      handlePayment(179, "/pythondjango90");
                     }
                   }}
                 >
@@ -214,7 +214,7 @@ const CoursePage = () => {
                     if (!user) {
                       navigate("/login");
                     } else {
-                      handlePayment(149, "/react79",'React(js)');
+                      handlePayment(149, "/react79");
                     }
                   }}
                 >
@@ -243,7 +243,7 @@ const CoursePage = () => {
                     if (!user) {
                       navigate("/login");
                     } else {
-                      handlePayment(199, "/reactandjs43",'React(js) and JavaScript');
+                      handlePayment(199, "/reactandjs43");
                     }
                   }}
                 >

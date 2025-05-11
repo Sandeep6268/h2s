@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-
+import { COURSE_NAMES } from "../../Context";
 import "./Header.css";
 import logo from "../../images/logo-removebg-preview.png";
 import { Context } from "../../Context";
@@ -109,8 +109,10 @@ const Header = () => {
                           to={url}
                           key={index}
                           onClick={() => setShowModal(false)}
+                          className="course-link"
                         >
-                          Course {index + 1} ({url.replace("/", "")})
+                          {/* Dynamic Name Display */}
+                          {COURSE_NAMES[url] || `Course ${index + 1}`}
                         </Link>
                       ))
                     ) : (
