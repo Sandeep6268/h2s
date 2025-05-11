@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import { Context } from "./Context";
 import Home from "./Pages/Home Page/Home";
@@ -15,18 +15,42 @@ import Login from "./Pages/Login Page/Login";
 import Register from "./Pages/Login Page/Register";
 import About from "./Pages/About Page/About";
 import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
+import axios from "axios";
+const API = axios.create({
+  baseURL: "https://h2s-backend-urrt.onrender.com/api/auth/",
+  withCredentials: true,
+});
 
 function App() {
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
-
-  // Load enrolled courses from localStorage on init
   const [user, setUser] = useState(() => {
-    // Load user from localStorage if available
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const saved = localStorage.getItem("user");
+      return saved ? JSON.parse(saved) : null;
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      return null;
+    }
   });
 
-  // Update localStorage when user changes
+  const [enrolledCourses, setEnrolledCourses] = useState(() => {
+    try {
+      const saved = localStorage.getItem("enrolledCourses");
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error("Error parsing courses data:", error);
+      return [];
+    }
+  });
+
+  const stableSetUser = useCallback((newUser) => {
+    setUser((prev) => {
+      if (JSON.stringify(prev) !== JSON.stringify(newUser)) {
+        return newUser;
+      }
+      return prev;
+    });
+  }, []);
+
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -34,61 +58,53 @@ function App() {
       localStorage.removeItem("user");
     }
   }, [user]);
-  
-  useEffect(() => {
-    console.log("Current user state:", user);
-  }, [user]);
 
-  // Update localStorage when user changes
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-    }
-  }, [user]);
+    localStorage.setItem("enrolledCourses", JSON.stringify(enrolledCourses));
+  }, [enrolledCourses]);
 
-  // Load enrolled courses and user data on init
-  useEffect(() => {
-    // Load courses
-    const savedCourses =
-      JSON.parse(localStorage.getItem("enrolledCourses")) || [];
-    setEnrolledCourses(savedCourses);
-
-    // Load user if token exists
-    const token = localStorage.getItem("access");
-    if (token) {
+  const refreshToken = useCallback(async () => {
+    const refresh = localStorage.getItem("refresh");
+    if (refresh) {
       try {
+        const { data } = await API.post("jwt/refresh/", { refresh });
+        localStorage.setItem("access", data.access);
+      } catch (err) {
+        console.log("Token refresh failed", err);
+        stableSetUser(null);
+      }
+    }
+  }, [stableSetUser]);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const token = localStorage.getItem("access");
+      if (!token) return;
+
+      try {
+        await API.post("jwt/verify/", { token });
         const tokenPayload = JSON.parse(atob(token.split(".")[1]));
         const userId = tokenPayload.user_id;
 
-        // Fetch user data
-        const fetchUser = async () => {
-          try {
-            const response = await axios.get(
-              `https://h2s-backend-urrt.onrender.com/api/user/${userId}/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-            // setUser(response.data);
-          } catch (error) {
-            console.error("Error fetching user:", error);
-            localStorage.removeItem("access");
-          }
-        };
-
-        fetchUser();
+        const response = await axios.get(
+          `https://h2s-backend-urrt.onrender.com/api/user/${userId}/`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        stableSetUser(response.data);
       } catch (error) {
-        console.error("Error decoding token:", error);
+        console.error("Error loading user:", error);
         localStorage.removeItem("access");
+        stableSetUser(null);
       }
-    }
-  }, []);
+    };
+
+    loadUser();
+    const refreshInterval = setInterval(refreshToken, 5 * 60 * 1000);
+    return () => clearInterval(refreshInterval);
+  }, [refreshToken, stableSetUser]);
 
 
+  console.log(user?.username,'hai')
   const handlePayment = (price, redirectUrl) => {
     const options = {
       key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
