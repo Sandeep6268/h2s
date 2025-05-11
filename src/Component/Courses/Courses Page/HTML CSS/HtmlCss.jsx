@@ -124,7 +124,7 @@ const HtmlCss = () => {
               <path d="M14 18v-1a2 2 0 0 1 2-2h1" fill="none" stroke="currentColor"/>
             </svg>
           </span>
-          <span className="btn-text-3d">GET CERTIFIED</span>
+          <span className="btn-text-3d">GET CERTIFICATE</span>
           <span className="flash-effect"></span>
         </button>
       </div>
