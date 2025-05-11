@@ -20,7 +20,19 @@ function App() {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
 
   // Load enrolled courses from localStorage on init
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  // Update localStorage when user changes
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
 
   // Load enrolled courses and user data on init
   useEffect(() => {

@@ -22,20 +22,26 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // 1. Get JWT tokens
       const res = await API.post("jwt/create/", data);
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
 
-      // 2. Decode token to get user_id
-      const tokenPayload = JSON.parse(atob(res.data.access.split(".")[1]));
-      const userId = tokenPayload.user_id;
+      const decoded = jwtDecode(res.data.access);
+      const userId = decoded.user_id;
 
-      // 3. Fetch complete user data using the getUserById function
+      // First set basic user data from token
+      setUser({
+        username: decoded.username,
+        email: decoded.email,
+        first_name: decoded.first_name,
+      });
+
+      // Then fetch complete user data
       const userData = await getUserById(userId);
-
-      // 4. Set user in context
-      setUser(userData);
+      setUser((prev) => ({
+        ...prev,
+        ...userData,
+      }));
 
       setIsLoading(false);
       showCustomModal("success", "Login successful!");

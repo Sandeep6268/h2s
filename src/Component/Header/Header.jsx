@@ -36,9 +36,8 @@ const Header = () => {
       if (token) {
         try {
           const decoded = jwtDecode(token);
-
-          // Verify the token is not expired
           const currentTime = Date.now() / 1000;
+
           if (decoded.exp < currentTime) {
             localStorage.removeItem("access");
             localStorage.removeItem("refresh");
@@ -48,32 +47,32 @@ const Header = () => {
           }
 
           setIsAuthenticated(true);
-          setUser(decoded);
 
-          // If you need to fetch additional user data from your backend:
-          // try {
-          //   const response = await fetch('/api/user/', {
-          //     headers: {
-          //       'Authorization': `Bearer ${token}`
-          //     }
-          //   });
-          //   if (response.ok) {
-          //     const userData = await response.json();
-          //     setUser(userData);
-          //   }
-          // } catch (error) {
-          //   console.error("Failed to fetch user data:", error);
-          // }
+          // First set the basic user data from token
+          setUser({
+            username: decoded.username,
+            email: decoded.email,
+            first_name: decoded.first_name,
+            // other fields from token
+          });
+
+          // Then fetch complete user data from backend
+          try {
+            const userData = await getUserById(decoded.user_id);
+            setUser((prev) => ({
+              ...prev,
+              ...userData, // Merge with any additional data from backend
+            }));
+          } catch (error) {
+            console.error("Failed to fetch user details:", error);
+            // Continue with just the token data if this fails
+          }
         } catch (err) {
           console.error("Invalid token:", err);
-          localStorage.removeItem("access");
-          localStorage.removeItem("refresh");
-          setIsAuthenticated(false);
-          setUser(null);
+          handleLogout();
         }
       } else {
-        setIsAuthenticated(false);
-        setUser(null);
+        handleLogout();
       }
     };
 
@@ -132,7 +131,7 @@ const Header = () => {
   const getAvatarLetter = () => {
     return user?.username?.charAt(0).toUpperCase() || "U";
   };
-  console.log(user?.username)
+  console.log(user?.username);
 
   return (
     <header className="header">
@@ -182,11 +181,7 @@ const Header = () => {
                 User Dashboard
               </button>
             </li>
-            {user && (
-              <div className="user-greeting">
-                Welcome, {user.first_name || user.username || user.email}
-              </div>
-            )}
+            
 
             {showModal && (
               <div className="your-courses-modal top-100">
