@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import axios from "axios";
 
 import "./Header.css";
 import logo from "../../images/logo-removebg-preview.png";
@@ -10,32 +9,24 @@ import { Context } from "../../Context";
 const Header = () => {
   const [navActive, setNavActive] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [purchasedCourses, setPurchasedCourses] = useState([]);
-  const { user, setUser } = useContext(Context);
+  const {user,setUser} = useContext(Context)// ⬅️ Store user data here
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("access");
     if (token) {
       try {
-        const decoded = jwtDecode(token);
+        const decoded = jwtDecode(token); // Decode the token
+        // console.log(decoded); // Log the decoded token to inspect its structure
         setIsAuthenticated(true);
         setUser(decoded);
-        fetchPurchasedCourses(decoded.user_id);
       } catch (err) {
         console.error("Invalid token:", err);
       }
     }
   }, []);
-
-  const fetchPurchasedCourses = async (userId) => {
-    try {
-      const response = await axios.get(`/api/purchased-courses/${userId}/`);
-      setPurchasedCourses(response.data);
-    } catch (error) {
-      console.error("Error fetching purchased courses:", error);
-    }
-  };
+  
 
   const toggleNav = () => {
     setNavActive(!navActive);
@@ -46,18 +37,7 @@ const Header = () => {
     localStorage.removeItem("refresh");
     setIsAuthenticated(false);
     setUser(null);
-    setPurchasedCourses([]);
     navigate("/");
-  };
-
-  // Map course URLs to their display names
-  const courseNames = {
-    "/htmlcss89": "HTML & CSS Internship",
-    "/htmlcssjs62": "HTML, CSS & JS Internship",
-    "/python24": "Python Internship",
-    "/pythondjango90": "Django + Python Internship",
-    "/react79": "React JS Internship",
-    "/reactandjs43": "React JS + JavaScript Internship"
   };
 
   return (
@@ -96,25 +76,10 @@ const Header = () => {
                 About
               </a>
             </li>
-            <li className="nav-item dropdown">
-              <a href="#" className="nav-link dropdown-toggle">
+            <li className="nav-item">
+              <a href="#" className="nav-link">
                 Your Courses
               </a>
-              {isAuthenticated && purchasedCourses.length > 0 && (
-                <ul className="dropdown-menu">
-                  {purchasedCourses.map((course) => (
-                    <li key={course.id}>
-                      <Link 
-                        to={course.course_url} 
-                        className="dropdown-item"
-                        onClick={() => setNavActive(false)}
-                      >
-                        {courseNames[course.course_url] || course.course_url}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
             </li>
             
             <li className="nav-item">
@@ -126,7 +91,7 @@ const Header = () => {
             {isAuthenticated ? (
               <>
                 <li className="nav-item">
-                  <span className="nav-link">{user?.email}</span>
+                  <span className="nav-link"></span>
                 </li>
                 <li className="nav-item">
                   <button
