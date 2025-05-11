@@ -12,6 +12,8 @@ export const FindUser = axios.create({
   withCredentials: true,
 });
 
+
+// User-related API functions
 export const getUserById = async (userId) => {
   try {
     const response = await FindUser.get(`user/${userId}/`, {

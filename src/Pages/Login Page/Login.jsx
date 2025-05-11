@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../../api"; // Import the function instead of FindUser
 // Header.js
-import { getUserById } from '../../api'; // Adjust path as needed
+import { getUserById } from "../../api"; // Adjust path as needed
 import "./Login.css";
 import { Context } from "../../Context";
 import { jwtDecode } from "jwt-decode";
@@ -25,34 +25,37 @@ const Login = () => {
     setIsLoading(true);
 
     try {
+      // 1. Get JWT tokens
       const res = await API.post("jwt/create/", data);
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
 
+      // 2. Decode token to get basic user info
       const decoded = jwtDecode(res.data.access);
-      const userId = decoded.user_id;
-
-      // First set basic user data from token
-      setUser({
+      const basicUserData = {
         username: decoded.username,
         email: decoded.email,
-        first_name: decoded.first_name,
-      });
+        user_id: decoded.user_id,
+      };
+      setUser(basicUserData);
 
-      // Then fetch complete user data
-      const userData = await getUserById(userId);
-      setUser((prev) => ({
-        ...prev,
-        ...userData,
-      }));
+      // 3. Try to get full user data
+      try {
+        const fullUserData = await getUserById(decoded.user_id);
+        setUser((prev) => ({
+          ...prev,
+          ...fullUserData,
+        }));
+      } catch (error) {
+        console.log("Using basic user data from token");
+      }
 
       setIsLoading(false);
-      showCustomModal("success", "Login successful!");
-      setTimeout(() => navigate("/"), 2000);
+      navigate("/");
     } catch (err) {
       console.error(err.response?.data || err);
       setIsLoading(false);
-      showCustomModal("error", "Login failed. Please check your credentials.");
+      // Show error message
     }
   };
 

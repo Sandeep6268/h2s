@@ -43,25 +43,23 @@ const Header = () => {
             return;
           }
 
-          setIsAuthenticated(true);
-
-          // Set basic user data from token first
-          setUser({
+          // Set basic user data from token
+          const basicUserData = {
             username: decoded.username,
             email: decoded.email,
-            first_name: decoded.first_name,
-            user_id: decoded.user_id, // Make sure to include user_id
-          });
+            user_id: decoded.user_id,
+          };
+          setUser(basicUserData);
 
-          // Then try to get additional user data
+          // Try to fetch additional user data
           try {
-            const userData = await getUserById(decoded.user_id);
+            const fullUserData = await getUserById(decoded.user_id);
             setUser((prev) => ({
               ...prev,
-              ...userData,
+              ...fullUserData,
             }));
           } catch (error) {
-            console.error("Failed to fetch user details:", error);
+            console.log("Using basic user data from token");
             // Continue with just the token data
           }
         } catch (err) {
@@ -74,7 +72,7 @@ const Header = () => {
     };
 
     checkAuth();
-  }, [setUser]);
+  }, []);
 
   // Rest of your component remains the same...
   const toggleNav = () => {
