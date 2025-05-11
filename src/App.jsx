@@ -51,7 +51,7 @@ function App() {
       localStorage.removeItem("user");
     }
   }, [user]);
-
+console.log(user?.username)
   // Token refresh logic
   const refreshToken = useCallback(async () => {
     const refresh = localStorage.getItem("refresh");
