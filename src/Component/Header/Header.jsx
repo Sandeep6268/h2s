@@ -104,11 +104,11 @@ const Header = () => {
   // console.log(user?.username);
   // hogya 
 
-  // console.log("Header rendered", {
-  //   user,
-  //   hasToken: !!localStorage.getItem("access"),
-  //   isAuthenticated: !!user,
-  // });
+  console.log("Header rendered", {
+    user,
+    hasToken: !!localStorage.getItem("access"),
+    isAuthenticated: !!user,
+  });
 
   return (
     <header className="header">
