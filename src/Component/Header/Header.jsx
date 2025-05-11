@@ -97,7 +97,7 @@ const Header = () => {
             {/* Modal Popup */}
             {showModal && (
               <div className="your-courses-modal">
-                <div className="modal-content">
+                <div className="modal-content" >
                   <h3>Your Enrolled Courses</h3>
                   <button
                     onClick={() => setShowModal(false)}
