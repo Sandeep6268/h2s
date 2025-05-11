@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API, { FindUser } from "../../api";
+import API, { getUserById } from "../../api"; // Import the function instead of FindUser
 import "./Login.css";
 import { Context } from "../../Context";
 
 const Login = () => {
-  const {setUser} = useContext(Context)
+  const { setUser } = useContext(Context);
   const [data, setData] = useState({ email: "", password: "" });
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("success");
@@ -20,31 +20,26 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       // 1. Get JWT tokens
       const res = await API.post("jwt/create/", data);
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
-      
+
       // 2. Decode token to get user_id
-      const tokenPayload = JSON.parse(atob(res.data.access.split('.')[1]));
+      const tokenPayload = JSON.parse(atob(res.data.access.split(".")[1]));
       const userId = tokenPayload.user_id;
-      
-      // 3. Fetch complete user data using user_id
-      const userRes = await FindUser.get(`user/${userId}/`, {
-        headers: {
-          Authorization: `Bearer ${res.data.access}`,
-        },
-      });
-      
+
+      // 3. Fetch complete user data using the getUserById function
+      const userData = await getUserById(userId);
+
       // 4. Set user in context
-      setUser(userRes.data);
-      
+      setUser(userData);
+
       setIsLoading(false);
       showCustomModal("success", "Login successful!");
       setTimeout(() => navigate("/"), 2000);
-      
     } catch (err) {
       console.error(err.response?.data || err);
       setIsLoading(false);
