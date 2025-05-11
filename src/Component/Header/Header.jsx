@@ -3,8 +3,10 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { COURSE_NAMES } from "../../Context";
 import "./Header.css";
+
 import logo from "../../images/logo-removebg-preview.png";
 import { Context } from "../../Context";
+import API from "../../api";
 
 const Header = () => {
   const location = useLocation();
