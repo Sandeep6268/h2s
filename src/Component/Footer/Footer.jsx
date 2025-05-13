@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import "./Footer.css";
 import logo from "../../images/logo-removebg-preview.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import { Context } from "../../Context";
 
