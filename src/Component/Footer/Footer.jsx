@@ -65,7 +65,7 @@ const Footer = () => {
       </div>
 
       {/* Support Modal */}
-      <Modal show={showSupportModal} onHide={handleClose} className="support-modal-1" centered>
+      <Modal show={showSupportModal} onHide={handleClose} className="modal-content" centered>
         <Modal.Header closeButton className="modal-header-custom">
           <Modal.Title className="modal-title-custom">
             <i className="fas fa-headset me-2"></i> 24/7 Support
