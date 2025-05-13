@@ -1,3 +1,42 @@
+
+/* Success Animation Styles */
+.success-animation-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 1000;
+  max-width: 90%;
+  width: 400px;
+}
+
+.success-animation-container .message {
+  margin-top: 1rem;
+}
+
+.success-animation-container .alert {
+  color: #28a745;
+  margin-bottom: 0.5rem;
+}
+
+/* Hide login form when success animation is shown */
+.login-container {
+  transition: opacity 0.3s ease;
+}
+
+.success-animation-container ~ .login-container {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+
+
 /* Modal Styles */
 #modal-container {
   position: fixed;
