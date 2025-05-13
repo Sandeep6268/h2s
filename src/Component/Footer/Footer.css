@@ -1,3 +1,66 @@
+/* Already Registered Modal Styles */
+.already-registered-modal .modal-content {
+  border: 2px solid #28a745;
+  border-radius: 12px;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.already-registered-modal-body {
+  padding: 1.5rem;
+  text-align: center;
+  background-color: #f8f9fa;
+}
+
+.registered-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.registered-icon {
+  font-size: 2.5rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+.registered-title {
+  color: #28a745;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.registered-message {
+  color: #6c757d;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Differentiate from Support Modal */
+.support-modal .modal-content {
+  border-color: #0d6efd;
+}
+
+.support-modal .modal-header-custom {
+  border-bottom-color: #0d6efd;
+}
+
+.support-modal .modal-footer-custom {
+  border-top-color: #0d6efd;
+}
+
 /* Login Alert Modal Styles */
 .login-alert-modal .modal-content {
   border: 2px solid #28a745;

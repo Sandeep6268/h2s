@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./Footer.css";
 import logo from "../../images/logo-removebg-preview.png";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,24 +7,32 @@ import { Context } from "../../Context";
 
 const Footer = () => {
   const [showSupportModal, setShowSupportModal] = useState(false);
+  const [showAlreadyRegisteredModal, setShowAlreadyRegisteredModal] =
+    useState(false);
   const { user } = useContext(Context);
   const navigate = useNavigate();
-  // Check if user exists in localStorage (simple auth check)
- 
-
-  const handleRegisterClick = () => {
-    if (!user) {
-      navigate("/register");
-    } else {
-      // Show popup/modal if user is already logged in
-      alert("You are already registered and logged in!");
-      // Or show a modal:
-      // setShowAlreadyRegisteredModal(true);
-    }
-  };
 
   const handleClose = () => setShowSupportModal(false);
   const handleShow = () => setShowSupportModal(true);
+
+  // Auto-hide the already registered modal after 3 seconds
+  useEffect(() => {
+    let timer;
+    if (showAlreadyRegisteredModal) {
+      timer = setTimeout(() => {
+        setShowAlreadyRegisteredModal(false);
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [showAlreadyRegisteredModal]);
+
+  const handleRegisterClick = () => {
+    if (user) {
+      setShowAlreadyRegisteredModal(true);
+    } else {
+      navigate("/register");
+    }
+  };
 
   return (
     <footer className="footer-wrapper">
@@ -63,23 +71,32 @@ const Footer = () => {
                 </Link>
               </li>
               <li className="footer-link-item">
-                {user ? (
-                  <span
-                    className="footer-link"
-                    onClick={() => alert("You are already registered!")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Register
-                  </span>
-                ) : (
-                  <Link to="/register" className="footer-link">
-                    Register
-                  </Link>
-                )}
+                <button
+                  onClick={handleRegisterClick}
+                  className="footer-link register-btn"
+                  style={{ background: "none", border: "none", padding: 0 }}
+                >
+                  Register
+                </button>
               </li>
             </ul>
           </div>
-
+          {/* Already Registered Modal */}
+          <Modal
+            show={showAlreadyRegisteredModal}
+            onHide={() => setShowAlreadyRegisteredModal(false)}
+            className="already-registered-modal"
+            centered
+            size="sm"
+          >
+            <Modal.Body className="already-registered-modal-body">
+              <div className="registered-content">
+                <i className="fas fa-check-circle registered-icon"></i>
+                <h5 className="registered-title">Already Registered!</h5>
+                <p className="registered-message">You're already logged in.</p>
+              </div>
+            </Modal.Body>
+          </Modal>
           <div className="footer-links-group">
             <ul className="footer-links-list">
               <li className="footer-link-item">
