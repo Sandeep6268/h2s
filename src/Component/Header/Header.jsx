@@ -115,12 +115,14 @@ const Header = () => {
               Authorization: `Bearer ${localStorage.getItem("access")}`,
             },
           });
-          // Check if courses are defined and an array
-          if (Array.isArray(response.data)) {
-            setUserCourses(response.data);
-            console.log("Fetched user courses from API:", response.data);
+
+          const courseData = response.data.courses; // 👈 Fix here
+
+          if (Array.isArray(courseData)) {
+            setUserCourses(courseData);
+            console.log("Fetched user courses:", courseData);
           } else {
-            console.error("Invalid course data:", response.data.courses);
+            console.error("Unexpected data format:", courseData);
           }
         } catch (error) {
           console.error("Failed to fetch courses:", error);
