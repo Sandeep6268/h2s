@@ -108,30 +108,28 @@ const Header = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      if (user) {
-        try {
-          const response = await FindUser.get("/my-courses/", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access")}`,
-            },
-          });
+      try {
+        const response = await FindUser.get("/my-courses/", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        });
 
-          const courseData = response.data.courses; // 👈 Fix here
+        const courseData = response.data;
 
-          if (Array.isArray(courseData)) {
-            setUserCourses(courseData);
-            console.log("Fetched user courses:", courseData);
-          } else {
-            console.error("Unexpected data format:", courseData);
-          }
-        } catch (error) {
-          console.error("Failed to fetch courses:", error);
+        if (Array.isArray(courseData)) {
+          setUserCourses(courseData);
+          console.log("Fetched user courses:", courseData);
+        } else {
+          console.error("Unexpected data format:", courseData);
         }
+      } catch (error) {
+        console.error("Failed to fetch courses:", error);
       }
     };
 
     fetchCourses();
-  }, [user]);
+  }, []);
 
   return (
     <header className="header">
@@ -183,30 +181,14 @@ const Header = () => {
               <div className="your-courses-modal">
                 <div className="modal-content">
                   <h3>Your Purchased Courses</h3>
-                  {Array.isArray(userCourses) && userCourses.length > 0 ? (
-                    userCourses.map((course, index) => {
-                      const url = course?.course_url;
-                      const name = COURSE_NAMES[url];
-
-                      if (!url || !name) {
-                        console.warn("Invalid course data:", course);
-                        return null;
-                      }
-
-                      return (
-                        <Link
-                          key={index}
-                          to={url}
-                          className="course-link"
-                          onClick={() => setShowModal(false)}
-                        >
-                          {name}
-                        </Link>
-                      );
-                    })
-                  ) : (
-                    <p>No courses found.</p>
-                  )}
+                  {userCourses.map((course) => (
+                    <li key={course.course_url}>
+                      <Link to={course.course_url}>
+                        {userCoursesName[course.course_url]}
+                      </Link>
+                    </li>
+                  ))}
+                  ;
                 </div>
               </div>
             )}
