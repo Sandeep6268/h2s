@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import { Context } from "./Context";
-import logo from './images/logo-removebg-preview.png'
+import logo from '../public/logo.png'
 import Home from "./Pages/Home Page/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HtmlCssJs from "./Component/Courses/Courses Page/HTML CSS JS/HtmlCssJs";
