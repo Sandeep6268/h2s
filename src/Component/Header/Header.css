@@ -113,7 +113,7 @@
 .dropdown-item:hover {
   background-color: #f8f9fa;
   color: #4a6bff;
-  padding-left: 20px;
+  /* padding-left: 20px; */
 }
 
 .dropdown-item.logout-btn {

@@ -261,7 +261,7 @@ const Header = () => {
                       <div className="dropdown-divider"></div>
                       <button
                         onClick={handleYourCoursesClick}
-                        className={`dropdown-item ${isActive("/dashboard")}`}
+                        className={`dropdown-item text-black ${isActive("/dashboard")}`}
                       >
                         Your purchased courses
                       </button>
