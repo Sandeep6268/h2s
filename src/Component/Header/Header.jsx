@@ -180,9 +180,7 @@ const Header = () => {
               </button>
             </li> */}
             {showModal && (
-              <div
-                className={`your-courses-modal ${showModal ? "active" : ""}`}
-              >
+              <div className={`your-courses-modal ${showModal ? 'active' : ''}`}>
                 <div
                   className="modal-overlay-1"
                   onClick={() => setShowModal(false)}
@@ -263,9 +261,7 @@ const Header = () => {
                       <div className="dropdown-divider"></div>
                       <button
                         onClick={handleYourCoursesClick}
-                        className={`nav-link text-decoration-none ${isActive(
-                          "/dashboard"
-                        )}`}
+                        className={`dropdown-item text-black ${isActive("/dashboard")}`}
                       >
                         Your purchased courses
                       </button>
