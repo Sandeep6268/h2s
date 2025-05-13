@@ -180,21 +180,31 @@ const Header = () => {
               </button>
             </li>
             {showModal && (
-              <div className="your-courses-modal">
-                <div className="modal-content">
-                  <h3>Your Purchased Courses</h3>
-                  {userCourses.length > 0 ? (
-                    userCourses.map((course) => (
-                      <li key={course.course_url}>
-                        <Link to={course.course_url}>
-                          {COURSE_NAMES[course.course_url] || course.course_url}{" "}
-                          {/* Display name from COURSE_NAMES */}
-                        </Link>
-                      </li>
-                    ))
-                  ) : (
-                    <li>No courses found</li>
-                  )}
+              <div className="your-courses-modal-overlay">
+                <div className="your-courses-modal">
+                  <div className="modal-content">
+                    <button
+                      className="close-btn"
+                      onClick={() => setShowModal(false)}
+                    >
+                      ×
+                    </button>
+                    <h3>Your Purchased Courses</h3>
+                    <ul className="courses-list">
+                      {userCourses.length > 0 ? (
+                        userCourses.map((course) => (
+                          <li key={course.course_url}>
+                            <Link to={course.course_url}>
+                              {COURSE_NAMES[course.course_url] ||
+                                course.course_url}
+                            </Link>
+                          </li>
+                        ))
+                      ) : (
+                        <li>No courses found</li>
+                      )}
+                    </ul>
+                  </div>
                 </div>
               </div>
             )}

@@ -172,59 +172,94 @@ body.click-outside-handler.active::before {
   --border-radius: 12px;
   --text-description: rgba(255, 255, 255, 0.7);
 }
-/* Modal Styles */
-.your-courses-modal {
+/* Modal Overlay */
+.your-courses-modal-overlay {
   position: fixed;
-  top: 100% !important;
+  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* dark transparent background */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 999;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.modal-content {
-  padding: 20px;
-  border-radius: 10px;
+/* Modal Box */
+.your-courses-modal {
+  background: #1c1c1c;
+  border-radius: 12px;
+  padding: 25px 20px;
   width: 90%;
   max-width: 500px;
-  position: absolute;
-  top: 100% !important;
-  background: black !important;
-  color: white !important;
-  box-shadow: 0px 0px 5px white !important;
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+  position: relative;
 }
 
+/* Modal Heading */
+.modal-content h3 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #00d8ff;
+  text-align: center;
+}
+
+/* Close Button */
 .close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
+  top: 12px;
+  right: 15px;
+  background: transparent;
   border: none;
-  font-size: 20px;
+  font-size: 26px;
+  color: #ffffff;
   cursor: pointer;
+  transition: color 0.3s ease;
+}
+.close-btn:hover {
+  color: #ff4d4d;
 }
 
+/* Courses List */
 .courses-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 15px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
-
+.courses-list li {
+  margin-bottom: 12px;
+}
 .courses-list a {
-  color: #3399cc;
+  display: block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #282828;
+  color: #00d8ff;
   text-decoration: none;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+.courses-list a:hover {
+  background-color: #333;
+  border-color: #00d8ff;
+  transform: translateY(-2px);
 }
 
-.courses-list a:hover {
-  background: #f5f5f5;
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
+
 
 * {
   margin: 0;
