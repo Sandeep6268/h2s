@@ -202,7 +202,7 @@ body.click-outside-handler.active::before {
   width: 90%;
   top: 10% !important;
   max-width: 500px;
-  background: black;
+  background: black !important;
   color: white;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
