@@ -1001,8 +1001,8 @@ body {
 
   .modal-content-1 {
     top: 300% !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 2px !important;
+    padding: 8px !important;
     left: 50% !important;
     transform: translateY(-50%);
   }
