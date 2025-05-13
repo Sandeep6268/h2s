@@ -21,6 +21,17 @@ import API, { FindUser } from "./api";
 import { jwtDecode } from "jwt-decode";
 import PyandDJ from "./Component/Courses/Courses Page/Python/PyandDj";
 
+import { useLocation } from "react-router-dom";
+
+export function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // हर navigation पर top पर स्क्रॉल करेगा
+  }, [pathname]);
+
+  return null;
+}
 function App() {
   const [enrolledCourses, setEnrolledCourses] = useState(() => {
     try {
@@ -188,7 +199,7 @@ function App() {
       currency: "INR",
       name: "H2S Tech Solutions",
       description: "Course purchasing",
-      image:  logo , // optional
+      image: logo, // optional
 
       handler: async function (response) {
         try {
@@ -240,6 +251,7 @@ function App() {
         }}
       >
         <NotificationPopup />
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
