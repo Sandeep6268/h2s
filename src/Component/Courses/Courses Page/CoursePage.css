@@ -123,9 +123,9 @@ button {
   border-radius: 5px;
 }
 
-button:hover {
+/* button:hover {
   background-color: #218838;
-}
+} */
 
 /* List styling */
 ul {
