@@ -16,7 +16,7 @@
 #error-box {
   position: relative;
   width: 350px;
-  height: 250px;
+  height: 300px;
   border-radius: 20px;
   box-shadow: 5px 5px 20px rgba(203, 205, 211, 0.1);
   perspective: 40px;
