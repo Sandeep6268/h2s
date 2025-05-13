@@ -105,8 +105,7 @@
   display: block;
   padding: 10px 15px;
   color: #212529;
-  background: #000;
-  text-decoration: none !important;
+  text-decoration: none;
   transition: all 0.2s ease;
   font-size: 14px;
 }
