@@ -27,7 +27,7 @@
 }
 
 #success-box {
-  background: linear-gradient(to bottom right, #b0db7d 40%, #99dbb4 100%);
+  background: linear-gradient(to bottom right, #b0db7d 40%, #99dbb4 100%) !important;
 }
 
 #error-box {

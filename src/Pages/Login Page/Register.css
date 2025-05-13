@@ -145,14 +145,16 @@
 #success-box,
 #error-box {
   width: 300px;
-  background: white;
+  /* background: white; */
   border-radius: 10px;
   padding: 20px;
   text-align: center;
   position: relative;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
-
+#success-box {
+  background: linear-gradient(to bottom right, #b0db7d 40%, #99dbb4 100%);
+}
 /* Loader Styles */
 .loader-container {
   position: fixed;

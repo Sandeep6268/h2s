@@ -3,7 +3,9 @@
   position: relative;
   width: 350px;
   height: 300px;
-  background: linear-gradient(to bottom right, #b0db7d 40%, #99dbb4 100%);
+
+  background: linear-gradient(to bottom right, #b0db7d 40%, #99dbb4 100%) !important;
+
   border-radius: 20px;
   box-shadow: 5px 5px 20px rgba(203, 205, 211, 0.1);
   margin: 50px auto;
@@ -42,7 +44,8 @@
   opacity: 0.5;
 }
 
-.face, .face2 {
+.face,
+.face2 {
   position: absolute;
   width: 60px;
   height: 60px;
@@ -121,21 +124,40 @@
 
 /* Animations */
 @keyframes bounce {
-  50% { transform: translateY(-10px); }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes scale {
-  50% { transform: scale(0.9); }
+  50% {
+    transform: scale(0.9);
+  }
 }
 
 @keyframes roll {
-  0% { transform: rotate(0deg); left: 25%; }
-  50% { left: 60%; transform: rotate(168deg); }
-  100% { transform: rotate(0deg); left: 25%; }
+  0% {
+    transform: rotate(0deg);
+    left: 25%;
+  }
+  50% {
+    left: 60%;
+    transform: rotate(168deg);
+  }
+  100% {
+    transform: rotate(0deg);
+    left: 25%;
+  }
 }
 
 @keyframes move {
-  0% { left: 25%; }
-  50% { left: 60%; }
-  100% { left: 25%; }
+  0% {
+    left: 25%;
+  }
+  50% {
+    left: 60%;
+  }
+  100% {
+    left: 25%;
+  }
 }
