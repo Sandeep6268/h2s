@@ -18,6 +18,7 @@ import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
 import axios from "axios";
 import API, { FindUser } from "./api";
 import { jwtDecode } from "jwt-decode";
+import PyandDJ from "./Component/Courses/Courses Page/Python/PyandDj";
 
 function App() {
   const [enrolledCourses, setEnrolledCourses] = useState(() => {
@@ -206,7 +207,7 @@ function App() {
           <Route path="/react79" element={<Reactjs />} />
           <Route path="/reactandjs43" element={<ReactandJs />} />
           {/* <Route path="/pythondjango90" element={<PythonDjango />} /> */}
-          <Route path="/pythondjango90" element={<Py/>} />
+          <Route path="/pythondjango90" element={<PyandDJ/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
