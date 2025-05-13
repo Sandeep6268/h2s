@@ -180,39 +180,47 @@ const Header = () => {
               </button>
             </li>
             {showModal && (
-              <div
-                className={`purchased-modal-container ${
-                  showModal ? "active" : ""
-                }`}
-              >
-                <div className="purchased-modal">
+              <div className={`your-courses-modal ${showModal ? 'active' : ''}`}>
+                <div
+                  className="modal-overlay"
+                  onClick={() => setShowModal(false)}
+                ></div>
+                <div className="modal-content">
                   <button
-                    className="purchased-modal-close-btn"
-                    onClick={handleModalToggle}
+                    className="close-btn"
+                    onClick={() => setShowModal(false)}
                   >
-                    ✖
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                   </button>
-                  <h3 className="purchased-modal-title">
-                    Your Purchased Courses
-                  </h3>
-                  {purchasedCourses.length > 0 ? (
-                    <ul className="purchased-course-list">
-                      {purchasedCourses.map((course, index) => (
-                        <li key={index}>
-                          <Link
-                            to={`/${course.course_code}`}
-                            className="purchased-course-link"
-                          >
-                            {course.course_name}
+                  <h3 className="modal-title">Your Purchased Courses</h3>
+                  <ul className="courses-list">
+                    {userCourses.length > 0 ? (
+                      userCourses.map((course) => (
+                        <li key={course.course_url}>
+                          <Link to={course.course_url} className="course-link">
+                            {COURSE_NAMES[course.course_url] ||
+                              course.course_url}
+                            <span className="link-arrow">→</span>
                           </Link>
                         </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="no-purchased-courses">
-                      No courses purchased yet.
-                    </p>
-                  )}
+                      ))
+                    ) : (
+                      <li className="no-courses">No courses found</li>
+                    )}
+                  </ul>
                 </div>
               </div>
             )}
@@ -253,9 +261,7 @@ const Header = () => {
                       <div className="dropdown-divider"></div>
                       <button
                         onClick={handleYourCoursesClick}
-                        className={`dropdown-item text-black ${isActive(
-                          "/dashboard"
-                        )}`}
+                        className={`dropdown-item text-black ${isActive("/dashboard")}`}
                       >
                         Your purchased courses
                       </button>
