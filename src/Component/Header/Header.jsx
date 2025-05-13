@@ -180,7 +180,7 @@ const Header = () => {
               </button>
             </li>
             {showModal && (
-              <div className="your-courses-modal">
+              <div className={`your-courses-modal ${showModal ? 'active' : ''}`}>
                 <div
                   className="modal-overlay"
                   onClick={() => setShowModal(false)}

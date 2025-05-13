@@ -177,14 +177,23 @@ body.click-outside-handler.active::before {
 /* Modal Styles */
 .your-courses-modal {
   position: fixed;
-  top: 200%;
+  top: 0; /* Changed from 200% */
   left: 0;
   width: 100%;
   height: 100%;
+  margin-top: 115px !important;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.your-courses-modal.active {
+  opacity: 1;
+  visibility: visible;
 }
 
 .modal-overlay {
@@ -202,16 +211,34 @@ body.click-outside-handler.active::before {
   padding: 30px;
   border-radius: 16px;
   width: 90%;
-  top: 10% !important;
   max-width: 500px;
   background: black !important;
   color: white;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 2;
+  /* Removed top: 10% !important */
+  margin: 20px; /* Added for better spacing on mobile */
+  max-height: 80vh; /* Prevent modal from being too tall */
+  overflow-y: auto; /* Add scroll if content is too long */
   animation: modalFadeIn 0.3s ease-out;
 }
-
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .courses-list {
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+  
+  .course-link {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}
 @keyframes modalFadeIn {
   from {
     opacity: 0;
