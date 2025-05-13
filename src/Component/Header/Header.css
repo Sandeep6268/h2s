@@ -217,7 +217,7 @@ body.click-outside-handler.active::before {
   color: white;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 2;
+  z-index: 11112;
   /* Removed top: 10% !important */
   margin: 20px; /* Added for better spacing on mobile */
   max-height: 80vh; /* Prevent modal from being too tall */
