@@ -146,6 +146,46 @@ const CoursePage = () => {
             style={{ width: "98%" }}
             className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around"
           >
+            <div
+              className="comp-img p-0 col-md-5"
+              style={{ marginBlock: "30px" }}
+            >
+              <img
+                src={reactimg}
+                className="w-100 com-img-height"
+                style={{ height: "370px" }}
+                alt=""
+              />
+            </div>
+            <div className="comp-heading col-md-7 ps-md-5">
+              <h1>React JS Internship</h1>
+              <p className="p-3">
+                🎓 Company-verified Certificate from H2S Tech Solutions <br />
+                ⚛️ Component-based Projects using real React code <br />
+                🔄 API Integration with real-time data <br />
+                🧠 State Management using Hooks & Context <br />
+                🌐 Deployable Web Apps hosted on GitHub/Netlify
+              </p>
+              <div className="paybtn m-3 center-below-md d-flex">
+                <button
+                  className="button-85"
+                  onClick={() => {
+                    if (!user) {
+                      navigate("/login");
+                    } else {
+                      handlePayment(149, "/react79");
+                    }
+                  }}
+                >
+                  Pay ₹149
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{ width: "98%" }}
+            className="comp button-85 row my-3 p-md-5 d-flex  justify-content-around"
+          >
             <div className="comp-heading col-md-7 ">
               <h1>Django + Python Internship</h1>
               <p className="p-3">
@@ -183,46 +223,7 @@ const CoursePage = () => {
               />
             </div>
           </div>
-          <div
-            style={{ width: "98%" }}
-            className="comp button-85 row my-3 p-md-5 d-flex justify-content-around"
-          >
-            <div
-              className="comp-img p-0 col-md-5"
-              style={{ marginBlock: "30px" }}
-            >
-              <img
-                src={reactimg}
-                className="w-100 com-img-height"
-                style={{ height: "370px" }}
-                alt=""
-              />
-            </div>
-            <div className="comp-heading col-md-7 ps-md-5">
-              <h1>React JS Internship</h1>
-              <p className="p-3">
-                🎓 Company-verified Certificate from H2S Tech Solutions <br />
-                ⚛️ Component-based Projects using real React code <br />
-                🔄 API Integration with real-time data <br />
-                🧠 State Management using Hooks & Context <br />
-                🌐 Deployable Web Apps hosted on GitHub/Netlify
-              </p>
-              <div className="paybtn m-3 center-below-md d-flex">
-                <button
-                  className="button-85"
-                  onClick={() => {
-                    if (!user) {
-                      navigate("/login");
-                    } else {
-                      handlePayment(149, "/react79");
-                    }
-                  }}
-                >
-                  Pay ₹149
-                </button>
-              </div>
-            </div>
-          </div>
+
           <div
             style={{ width: "98%" }}
             className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around"

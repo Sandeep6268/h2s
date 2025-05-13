@@ -1,6 +1,8 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API from "../../api";
+import API from "../../api"; // Import the function instead of FindUser
+// Header.js
+import { fetchUserData } from "../../api"; // Adjust path as needed
 import "./Login.css";
 import { Context } from "../../Context";
 import { jwtDecode } from "jwt-decode";
@@ -14,13 +16,13 @@ const Login = () => {
   const [modalType, setModalType] = useState("success");
   const [modalMessage, setModalMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
+  // In your Login component
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -51,24 +53,16 @@ const Login = () => {
 
         // Update context
         setUser(userResponse.data);
-
-        // Show success animation
-        setShowSuccessAnimation(true);
-
-        // After 2 seconds, redirect to home
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
+        navigate("/");
       } catch (verifyError) {
         console.error("Token verification failed:", verifyError);
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
-        showCustomModal("error", "Login failed. Please try again.");
         throw verifyError;
       }
     } catch (err) {
       console.error("Login failed:", err);
-      showCustomModal("error", "Invalid email or password. Please try again.");
+      // Show error to user
     } finally {
       setIsLoading(false);
     }
@@ -100,74 +94,73 @@ const Login = () => {
         </div>
       )}
 
-      {/* Success Animation (shown after successful login) */}
-      {showSuccessAnimation && (
-        <div className="success-animation-container">
-          <EmotionAnimation type="success" />
-          <div className="message">
-            <h1 className="alert">Login Successful!</h1>
-            <p>Redirecting to home page...</p>
-          </div>
-        </div>
-      )}
-
-      {/* Error Modal */}
+      {/* Success/Error Modal */}
       {showModal && (
         <div id="modal-container">
-          <div id="error-box">
-            <EmotionAnimation type="error" />
-            <div className="message">
-              <h1 className="alert">Error!</h1>
-              <p>{modalMessage}</p>
+          {modalType === "success" ? (
+            <div id="success-box">
+              <EmotionAnimation type="success" />
+              <div className="message">
+                <h1 className="alert">Success!</h1>
+                <p>{modalMessage}</p>
+              </div>
+              <button className="button-box" onClick={closeModal}>
+                <p className="green">continue</p>
+              </button>
             </div>
-            <button className="button-box" onClick={closeModal}>
-              <p className="red">try again</p>
-            </button>
-          </div>
+          ) : (
+            <div id="error-box">
+              <EmotionAnimation type="error" />
+              <div className="message">
+                <h1 className="alert">Error!</h1>
+                <p>{modalMessage}</p>
+              </div>
+              <button className="button-box" onClick={closeModal}>
+                <p className="red">try again</p>
+              </button>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Login Form (hidden after successful login) */}
-      {!showSuccessAnimation && (
-        <div className="login-container mx-auto">
-          <div className="circle circle-one"></div>
-          <div className="form-container">
-            <img
-              src="https://raw.githubusercontent.com/hicodersofficial/glassmorphism-login-form/master/assets/illustration.png"
-              alt="illustration"
-              className="illustration"
+      <div className="login-container mx-auto">
+        <div className="circle circle-one"></div>
+        <div className="form-container">
+          <img
+            src="https://raw.githubusercontent.com/hicodersofficial/glassmorphism-login-form/master/assets/illustration.png"
+            alt="illustration"
+            className="illustration"
+          />
+          <h1 className="opacity">LOGIN</h1>
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              name="email"
+              placeholder="EMAIL"
+              onChange={handleChange}
+              value={data.email}
+              required
             />
-            <h1 className="opacity">LOGIN</h1>
-            <form onSubmit={handleLogin}>
-              <input
-                type="email"
-                name="email"
-                placeholder="EMAIL"
-                onChange={handleChange}
-                value={data.email}
-                required
-              />
-              <input
-                type="password"
-                name="password"
-                placeholder="PASSWORD"
-                onChange={handleChange}
-                value={data.password}
-                required
-              />
-              <button type="submit" className="opacity" disabled={isLoading}>
-                {isLoading ? "PROCESSING..." : "SUBMIT"}
-              </button>
-            </form>
-            <div className="register-forget opacity">
-              <Link to="/register" className="text-decoration-none text-danger">
-                Don't have an account?
-              </Link>
-            </div>
+            <input
+              type="password"
+              name="password"
+              placeholder="PASSWORD"
+              onChange={handleChange}
+              value={data.password}
+              required
+            />
+            <button type="submit" className="opacity" disabled={isLoading}>
+              {isLoading ? "PROCESSING..." : "SUBMIT"}
+            </button>
+          </form>
+          <div className="register-forget opacity">
+            <Link to="/register" className="text-decoration-none text-danger">
+              Don't have an account?
+            </Link>
           </div>
-          <div className="circle circle-two"></div>
         </div>
-      )}
+        <div className="circle circle-two"></div>
+      </div>
     </section>
   );
 };
