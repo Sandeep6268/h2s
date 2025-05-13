@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { COURSE_NAMES } from "../../Context";
+import { COURSE_NAMES, userCoursesName } from "../../Context";
 import "./Header.css";
 import logo from "../../images/logo-removebg-preview.png";
 import { Context } from "../../Context";
@@ -179,21 +179,25 @@ const Header = () => {
               <div className="your-courses-modal">
                 <div className="modal-content">
                   <h3>Your Purchased Courses</h3>
-                  {userCourses && userCourses.length > 0 ? (
-                    userCourses.map((course, index) => (
+                  {userCourses.map((course, index) => {
+                    const url = course?.course_url;
+
+                    if (!url) {
+                      console.warn("Invalid course data:", course);
+                      return null;
+                    }
+
+                    return (
                       <Link
-                        to={course.course_url}
+                        to={url}
                         key={index}
                         className="course-link"
                         onClick={() => setShowModal(false)}
                       >
-                        {COURSE_NAMES[course.course_url] ||
-                          `Course ${index + 1}`}
+                        {userCoursesName[url] || `Course ${index + 1}`}
                       </Link>
-                    ))
-                  ) : (
-                    <p>No courses purchased yet.</p>
-                  )}
+                    );
+                  })}
                 </div>
               </div>
             )}
