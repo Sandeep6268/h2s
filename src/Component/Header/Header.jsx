@@ -104,6 +104,7 @@ const Header = () => {
   // console.log(user?.username);
   // hogya
   const [userCourses, setUserCourses] = useState([]);
+  console.log(userCourses)
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -179,22 +180,23 @@ const Header = () => {
               <div className="your-courses-modal">
                 <div className="modal-content">
                   <h3>Your Purchased Courses</h3>
-                  {userCourses.map((course, index) => {
+                  {userCoursesName.map((course, index) => {
                     const url = course?.course_url;
+                    const name = COURSE_NAMES[url];
 
-                    if (!url) {
+                    if (!url || !name) {
                       console.warn("Invalid course data:", course);
                       return null;
                     }
 
                     return (
                       <Link
-                        to={url}
                         key={index}
+                        to={url}
                         className="course-link"
-                        onClick={() => setShowModal(false)}
+                        onClick={() => setShowModal(false)} // or close modal logic
                       >
-                        {userCoursesName[url] || `Course ${index + 1}`}
+                        {name}
                       </Link>
                     );
                   })}
