@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import { Context } from "./Context";
+import logo from './images/logo-removebg-preview.png'
 import Home from "./Pages/Home Page/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HtmlCssJs from "./Component/Courses/Courses Page/HTML CSS JS/HtmlCssJs";
@@ -142,9 +143,9 @@ function App() {
       key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
       amount: price * 100, // Amount is in paise: 50000 paise = ₹500
       currency: "INR",
-      name: "Test Corp",
-      description: "Test Transaction",
-      image: "https://your-logo-url.com/logo.png", // optional
+      name: "H2S Tech Solutions",
+      description: "Course purchasing",
+      image: {logo}, // optional
 
       handler: async function (response) {
         try {
