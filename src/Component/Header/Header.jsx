@@ -118,6 +118,7 @@ const Header = () => {
           // Check if courses are defined and an array
           if (Array.isArray(response.data)) {
             setUserCourses(response.data);
+            console.log("Fetched user courses from API:", response.data);
           } else {
             console.error("Invalid course data:", response.data.courses);
           }
@@ -126,7 +127,6 @@ const Header = () => {
         }
       }
     };
-    console.log("Fetched user courses from API:", response.data);
 
     fetchCourses();
   }, [user]);
