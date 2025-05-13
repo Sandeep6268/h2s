@@ -195,7 +195,7 @@ body.click-outside-handler.active::before {
   visibility: visible;
 }
 
-.modal-overlay {
+.modal-overlay-1 {
   position: absolute;
   top: 115px;
   left: 0;
@@ -228,6 +228,7 @@ body.click-outside-handler.active::before {
   .modal-content-1 {
     width: 95%;
     padding: 20px;
+    top: 115px !important;
   }
 
   .courses-list {
