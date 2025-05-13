@@ -114,7 +114,12 @@ const Header = () => {
               Authorization: `Bearer ${localStorage.getItem("access")}`,
             },
           });
-          setUserCourses(response.data.courses);
+          // Check if courses are defined and an array
+          if (Array.isArray(response.data.courses)) {
+            setUserCourses(response.data.courses);
+          } else {
+            console.error("Invalid course data:", response.data.courses);
+          }
         } catch (error) {
           console.error("Failed to fetch courses:", error);
         }
@@ -174,7 +179,7 @@ const Header = () => {
               <div className="your-courses-modal">
                 <div className="modal-content">
                   <h3>Your Purchased Courses</h3>
-                  {userCourses.length > 0 ? (
+                  {userCourses && userCourses.length > 0 ? (
                     userCourses.map((course, index) => (
                       <Link
                         to={course.course_url}
