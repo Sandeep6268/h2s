@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import { Context } from "./Context";
-import logo from '../public/logo.png'
+import logo from "../public/logo.png";
 import Home from "./Pages/Home Page/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HtmlCssJs from "./Component/Courses/Courses Page/HTML CSS JS/HtmlCssJs";
@@ -137,7 +137,50 @@ function App() {
       return Promise.reject(error);
     }
   );
+  // with original api
+  // const handlePayment = (price, redirectUrl) => {
+  //   // Get user data for prefill
+  //   const user = JSON.parse(localStorage.getItem("user")) || {};
 
+  //   const options = {
+  //     key: "rzp_live_JZumJpdNJsE2Xb", // Live Key
+  //     amount: price * 100,
+  //     currency: "INR",
+  //     name: "H2S Tech Solutions",
+  //     description: "Course purchasing",
+  //     image: "https://yourdomain.com/path/to/logo.png", // पूरा URL डालें
+
+  //     // Dynamic Prefill
+  //     prefill: {
+  //       name: user.name || "",
+  //       email: user.email || "",
+  //       contact: user.phone || "",
+  //     },
+
+  //     handler: async (response) => {
+  //       try {
+  //         await FindUser.post(
+  //           "/purchase-course/",
+  //           { course_url: redirectUrl },
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${localStorage.getItem("access")}`,
+  //             },
+  //           }
+  //         );
+  //         window.location.href = redirectUrl;
+  //       } catch (error) {
+  //         console.error("Failed to save course:", error);
+  //       }
+  //     },
+  //     theme: { color: "#3399cc" },
+  //   };
+
+  //   const rzp = new window.Razorpay(options);
+  //   rzp.open();
+  // };
+
+  // with test api
   const handlePayment = (price, redirectUrl) => {
     const options = {
       key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
@@ -145,7 +188,7 @@ function App() {
       currency: "INR",
       name: "H2S Tech Solutions",
       description: "Course purchasing",
-      image: {logo}, // optional
+      image:  logo , // optional
 
       handler: async function (response) {
         try {
@@ -208,7 +251,7 @@ function App() {
           <Route path="/react79" element={<Reactjs />} />
           <Route path="/reactandjs43" element={<ReactandJs />} />
           {/* <Route path="/pythondjango90" element={<PythonDjango />} /> */}
-          <Route path="/pythondjango90" element={<PyandDJ/>} />
+          <Route path="/pythondjango90" element={<PyandDJ />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
