@@ -176,7 +176,7 @@ body.click-outside-handler.active::before {
 }
 /* Modal Styles */
 .your-courses-modal {
-  position: fixed;
+  position: absolute;
   top: 115px; /* Changed from 200% */
   left: 0;
   width: 100%;
