@@ -185,7 +185,7 @@ const Header = () => {
                   className="modal-overlay"
                   onClick={() => setShowModal(false)}
                 ></div>
-                <div className="modal-content">
+                <div className="modal-content-1">
                   <button
                     className="close-btn"
                     onClick={() => setShowModal(false)}
