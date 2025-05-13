@@ -280,6 +280,7 @@
   .modal-content{
     width: 100% !important;
     margin: 0px !important;
+    padding: 2px !important;
   }
   .footer-logo {
     width: 120px;
