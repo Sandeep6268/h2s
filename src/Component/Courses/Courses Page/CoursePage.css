@@ -19,9 +19,7 @@ h1 {
   background: black;
   /* height: 500px; */
 }
-.comp-img {
-  /* border: 1px solid white; */
-}
+
 .comp-img-1 {
   background: url(../../../images/thumb1.jpeg) no-repeat center;
   background-size: cover;

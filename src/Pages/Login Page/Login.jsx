@@ -7,6 +7,7 @@ import "./Login.css";
 import { Context } from "../../Context";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import EmotionAnimation from "../../Component/Animation/EmotionAnimation";
 
 const Login = () => {
   const { setUser } = useContext(Context);
@@ -98,12 +99,7 @@ const Login = () => {
         <div id="modal-container">
           {modalType === "success" ? (
             <div id="success-box">
-              <div className="face">
-                <div className="eye"></div>
-                <div className="eye right"></div>
-                <div className="mouth happy"></div>
-              </div>
-              <div className="shadow scale"></div>
+              <EmotionAnimation type="success" />
               <div className="message">
                 <h1 className="alert">Success!</h1>
                 <p>{modalMessage}</p>
@@ -114,12 +110,7 @@ const Login = () => {
             </div>
           ) : (
             <div id="error-box">
-              <div className="face2">
-                <div className="eye"></div>
-                <div className="eye right"></div>
-                <div className="mouth sad"></div>
-              </div>
-              <div className="shadow move"></div>
+              <EmotionAnimation type="error" />
               <div className="message">
                 <h1 className="alert">Error!</h1>
                 <p>{modalMessage}</p>
