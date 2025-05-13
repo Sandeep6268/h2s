@@ -103,8 +103,26 @@ const Header = () => {
   };
   // console.log(user?.username);
   // hogya
+  const [userCourses, setUserCourses] = useState([]);
 
-  
+  useEffect(() => {
+    const fetchCourses = async () => {
+      if (user) {
+        try {
+          const response = await FindUser.get("/api/my-courses/", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+          });
+          setUserCourses(response.data.courses);
+        } catch (error) {
+          console.error("Failed to fetch courses:", error);
+        }
+      }
+    };
+
+    fetchCourses();
+  }, [user]);
 
   return (
     <header className="header">
@@ -132,13 +150,11 @@ const Header = () => {
                 Home
               </Link>
             </li>
-
             <li className="nav-item">
               <Link to="/about" className={`nav-link ${isActive("/about")}`}>
                 About
               </Link>
             </li>
-
             <li className="nav-item">
               <Link to="/course" className={`nav-link ${isActive("/course")}`}>
                 Courses
@@ -154,33 +170,25 @@ const Header = () => {
                 User Dashboard
               </button>
             </li>
-
             {showModal && (
-              <div className="your-courses-modal top-100">
+              <div className="your-courses-modal">
                 <div className="modal-content">
-                  <h3>Your Enrolled Courses</h3>
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="close-btn"
-                  >
-                    ×
-                  </button>
-                  <div className="courses-list">
-                    {enrolledCourses.length > 0 ? (
-                      enrolledCourses.map((url, index) => (
-                        <Link
-                          to={url}
-                          key={index}
-                          onClick={() => setShowModal(false)}
-                          className="course-link"
-                        >
-                          {COURSE_NAMES[url] || `Course ${index + 1}`}
-                        </Link>
-                      ))
-                    ) : (
-                      <p>No courses enrolled yet.</p>
-                    )}
-                  </div>
+                  <h3>Your Purchased Courses</h3>
+                  {userCourses.length > 0 ? (
+                    userCourses.map((course, index) => (
+                      <Link
+                        to={course.course_url}
+                        key={index}
+                        className="course-link"
+                        onClick={() => setShowModal(false)}
+                      >
+                        {COURSE_NAMES[course.course_url] ||
+                          `Course ${index + 1}`}
+                      </Link>
+                    ))
+                  ) : (
+                    <p>No courses purchased yet.</p>
+                  )}
                 </div>
               </div>
             )}
@@ -193,7 +201,6 @@ const Header = () => {
                 ContactUs
               </Link>
             </li>
-
             {isAuthenticated ? (
               <li className="nav-item profile-container">
                 <div className="profile-dropdown-wrapper">

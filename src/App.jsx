@@ -16,7 +16,7 @@ import Register from "./Pages/Login Page/Register";
 import About from "./Pages/About Page/About";
 import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
 import axios from "axios";
-import API from "./api";
+import API, { FindUser } from "./api";
 import { jwtDecode } from "jwt-decode";
 
 function App() {
@@ -133,15 +133,22 @@ function App() {
       description: "Test Transaction",
       image: "https://your-logo-url.com/logo.png", // optional
 
-      handler: function (response) {
-        const updatedCourses = [...enrolledCourses, redirectUrl];
-        setEnrolledCourses(updatedCourses);
-
-        // 2. localStorage में save करें (ताकि refresh पर भी ना खोए)
-        localStorage.setItem("enrolledCourses", JSON.stringify(updatedCourses));
-
-        // 3. User को redirectUrl पर भेजें (आपका existing flow)
-        window.location.replace(redirectUrl);
+      handler: async function(response) {
+        try {
+          // Save to backend
+          await FindUser.post("/api/purchase-course/", { 
+            course_url: redirectUrl 
+          }, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('access')}`
+            }
+          });
+          
+          // Redirect user
+          window.location.href = redirectUrl;
+        } catch (error) {
+          console.error("Failed to save course:", error);
+        }
       },
 
       prefill: {
