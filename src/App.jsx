@@ -16,7 +16,7 @@ import Register from "./Pages/Login Page/Register";
 import About from "./Pages/About Page/About";
 import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
 import axios from "axios";
-import API from "./api";
+import API, { FindUser } from "./api";
 import { jwtDecode } from "jwt-decode";
 
 function App() {
@@ -110,7 +110,6 @@ function App() {
     });
   }, []);
   // In App.js
-  
 
   // In your API interceptors (add to your api.js)
   API.interceptors.response.use(
@@ -124,7 +123,7 @@ function App() {
     }
   );
 
-  const handlePayment = (price, redirectUrl) => {
+  const handlePayment = async (price, courseId, redirectUrl) => {
     const options = {
       key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
       amount: price * 100, // Amount is in paise: 50000 paise = ₹500
@@ -133,15 +132,20 @@ function App() {
       description: "Test Transaction",
       image: "https://your-logo-url.com/logo.png", // optional
 
-      handler: function (response) {
-        const updatedCourses = [...enrolledCourses, redirectUrl];
-        setEnrolledCourses(updatedCourses);
+      handler: async function (response) {
+        try {
+          // 1. Save the course in the backend after successful payment
+          await FindUser.post("/save-course/", { course_id: courseId });
 
-        // 2. localStorage में save करें (ताकि refresh पर भी ना खोए)
-        localStorage.setItem("enrolledCourses", JSON.stringify(updatedCourses));
+          // 2. Update the frontend by fetching the latest enrolled courses from the backend
+          const res = await FindUser.get("/get-courses/");
+          setEnrolledCourses(res.data);
 
-        // 3. User को redirectUrl पर भेजें (आपका existing flow)
-        window.location.replace(redirectUrl);
+          // 3. Redirect the user to the course page after saving
+          window.location.replace(redirectUrl);
+        } catch (error) {
+          console.error("Error saving course:", error);
+        }
       },
 
       prefill: {
