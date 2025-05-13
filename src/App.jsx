@@ -16,7 +16,7 @@ import Register from "./Pages/Login Page/Register";
 import About from "./Pages/About Page/About";
 import InternshipPrograms from "./Pages/Course Page/InternshipPrograms";
 import axios from "axios";
-import API, { FindUser } from "./api";
+import API from "./api";
 import { jwtDecode } from "jwt-decode";
 
 function App() {
@@ -110,6 +110,7 @@ function App() {
     });
   }, []);
   // In App.js
+  
 
   // In your API interceptors (add to your api.js)
   API.interceptors.response.use(
@@ -123,37 +124,40 @@ function App() {
     }
   );
 
-  const handlePayment = async (price, courseId) => {
+  const handlePayment = (price, redirectUrl) => {
     const options = {
-      key: "rzp_test_9laFgTaGBY10xm",
-      amount: price * 100,
+      key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
+      amount: price * 100, // Amount is in paise: 50000 paise = ₹500
       currency: "INR",
-      name: "H2S Tech Solutions",
-      description: "Course Purchase",
-      handler: async function (response) {
-        try {
-          const token = localStorage.getItem("access");
-          // 1. Backend में course save करें
-          await FindUser.post(
-            "/save-course/",
-            { course_id: courseId },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          // 2. Courses refresh करें
-          fetchCourses();
-        } catch (error) {
-          console.error("Payment success but save failed:", error);
-        }
+      name: "Test Corp",
+      description: "Test Transaction",
+      image: "https://your-logo-url.com/logo.png", // optional
+
+      handler: function (response) {
+        const updatedCourses = [...enrolledCourses, redirectUrl];
+        setEnrolledCourses(updatedCourses);
+
+        // 2. localStorage में save करें (ताकि refresh पर भी ना खोए)
+        localStorage.setItem("enrolledCourses", JSON.stringify(updatedCourses));
+
+        // 3. User को redirectUrl पर भेजें (आपका existing flow)
+        window.location.replace(redirectUrl);
       },
+
       prefill: {
-        name: user?.username || "",
-        email: user?.email || "",
+        name: "Test User",
+        email: "test@example.com",
+        contact: "9999999999",
+      },
+      notes: {
+        address: "Test Address",
+      },
+      theme: {
+        color: "#3399cc",
       },
     };
+    
+
     const rzp = new window.Razorpay(options);
     rzp.open();
   };

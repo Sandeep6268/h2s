@@ -10,8 +10,7 @@ import API, { FindUser } from "../../api";
 const Header = () => {
   const location = useLocation();
   const [navActive, setNavActive] = useState(false);
-  const { user, setUser, enrolledCourses, setEnrolledCourses } =
-    useContext(Context);
+  const { user, setUser, enrolledCourses } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const navigate = useNavigate();
@@ -73,11 +72,9 @@ const Header = () => {
   const toggleProfileDropdown = () => {
     setShowProfileDropdown(!showProfileDropdown);
   };
-
   const toggleNav = () => {
     setNavActive(!navActive);
   };
-
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -104,27 +101,10 @@ const Header = () => {
   const getAvatarLetter = () => {
     return user?.username?.charAt(0).toUpperCase() || "U";
   };
+  // console.log(user?.username);
+  // hogya
 
-  // Replace previous useEffect with this
-  useEffect(() => {
-    const fetchCourses = async () => {
-      if (user) {
-        try {
-          const token = localStorage.getItem("access");
-          const response = await FindUser.get("/get-courses/", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setEnrolledCourses(response.data);
-        } catch (error) {
-          console.error("Failed to fetch courses:", error);
-        }
-      }
-    };
-
-    fetchCourses(); // Call the fetchCourses function
-  }, [user, setEnrolledCourses]); // Runs whenever user changes
+  
 
   return (
     <header className="header">
@@ -187,13 +167,14 @@ const Header = () => {
                   </button>
                   <div className="courses-list">
                     {enrolledCourses.length > 0 ? (
-                      enrolledCourses.map((courseId) => (
+                      enrolledCourses.map((url, index) => (
                         <Link
-                          to={`/${courseId}`}
-                          key={courseId}
+                          to={url}
+                          key={index}
+                          onClick={() => setShowModal(false)}
                           className="course-link"
                         >
-                          {COURSE_NAMES[courseId] || `Course ${courseId}`}
+                          {COURSE_NAMES[url] || `Course ${index + 1}`}
                         </Link>
                       ))
                     ) : (
