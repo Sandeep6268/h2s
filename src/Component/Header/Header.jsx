@@ -169,7 +169,7 @@ const Header = () => {
                 Courses
               </Link>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <button
                 onClick={handleYourCoursesClick}
                 className={`nav-link text-decoration-none ${isActive(
@@ -178,9 +178,11 @@ const Header = () => {
               >
                 User Dashboard
               </button>
-            </li>
+            </li> */}
             {showModal && (
-              <div className={`your-courses-modal ${showModal ? 'active' : ''}`}>
+              <div
+                className={`your-courses-modal ${showModal ? "active" : ""}`}
+              >
                 <div
                   className="modal-overlay-1"
                   onClick={() => setShowModal(false)}
@@ -261,7 +263,9 @@ const Header = () => {
                       <div className="dropdown-divider"></div>
                       <button
                         onClick={handleYourCoursesClick}
-                        className={`dropdown-item text-black ${isActive("/dashboard")}`}
+                        className={`nav-link text-decoration-none ${isActive(
+                          "/dashboard"
+                        )}`}
                       >
                         Your purchased courses
                       </button>
