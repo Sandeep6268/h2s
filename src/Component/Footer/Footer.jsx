@@ -73,7 +73,7 @@ const Footer = () => {
               <li className="footer-link-item">
                 <button
                   onClick={handleRegisterClick}
-                  className="footer-link register-btn"
+                  className="footer-link text-decoration-none register-btn"
                   style={{ background: "none", border: "none", padding: 0 }}
                 >
                   Register
@@ -125,7 +125,7 @@ const Footer = () => {
               <li className="footer-link-item">
                 <button
                   onClick={handleShow}
-                  className="footer-link support-btn"
+                  className="footer-link text-decoration-none support-btn"
                 >
                   Support
                 </button>
