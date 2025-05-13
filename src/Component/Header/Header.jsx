@@ -104,7 +104,7 @@ const Header = () => {
   // console.log(user?.username);
   // hogya
   const [userCourses, setUserCourses] = useState([]);
-  console.log(userCourses);
+  // console.log(userCourses);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -119,7 +119,7 @@ const Header = () => {
 
         if (Array.isArray(courseData)) {
           setUserCourses(courseData); // Check that data is set properly
-          console.log("Fetched user courses:", courseData); // Verify this in console
+          // console.log("Fetched user courses:", courseData); // Verify this in console
         } else {
           console.error("Unexpected data format:", courseData);
         }
@@ -131,7 +131,7 @@ const Header = () => {
     fetchCourses();
   }, []);
 
-  console.log("User Courses before render:", userCourses);
+  // console.log("User Courses before render:", userCourses);
 
   return (
     <header className="header">
