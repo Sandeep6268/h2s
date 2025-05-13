@@ -106,7 +106,7 @@ function App() {
       }
     };
 
-    const interval = setInterval(refreshToken, 4.5 * 60 * 1000); // 4.5 min
+    const interval = setInterval(refreshToken, 1 * 60 * 1000); // 4.5 min
     return () => clearInterval(interval);
   }, []);
 
