@@ -118,8 +118,8 @@ const Header = () => {
         const courseData = response.data;
 
         if (Array.isArray(courseData)) {
-          setUserCourses(courseData);
-          console.log("Fetched user courses:", courseData);
+          setUserCourses(courseData); // Check that data is set properly
+          console.log("Fetched user courses:", courseData); // Verify this in console
         } else {
           console.error("Unexpected data format:", courseData);
         }
@@ -130,6 +130,8 @@ const Header = () => {
 
     fetchCourses();
   }, []);
+
+  console.log("User Courses before render:", userCourses);
 
   return (
     <header className="header">
@@ -181,13 +183,18 @@ const Header = () => {
               <div className="your-courses-modal">
                 <div className="modal-content">
                   <h3>Your Purchased Courses</h3>
-                  {userCourses.map((course) => (
-                    <li key={course.course_url}>
-                      <Link to={course.course_url}>
-                        {userCoursesName[course.course_url]}
-                      </Link>
-                    </li>
-                  ))}
+                  {userCourses.length > 0 ? (
+                    userCourses.map((course) => (
+                      <li key={course.course_url}>
+                        <Link to={course.course_url}>
+                          {course.course_url}{" "}
+                          {/* You can map to course name here */}
+                        </Link>
+                      </li>
+                    ))
+                  ) : (
+                    <li>No courses found</li>
+                  )}
                   ;
                 </div>
               </div>
