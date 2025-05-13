@@ -253,6 +253,7 @@ body.click-outside-handler.active::before {
   overflow-y: auto; /* Add scroll if content is too long */
   animation: modalFadeIn 0.3s ease-out;
 }
+
 @media (max-width: 768px) {
   .modal-content {
     width: 95%;
@@ -957,4 +958,95 @@ body {
   .logo-div {
     width: 75px;
   }
+}
+
+/* Add these to your Header.css */
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .nav-menu {
+    padding-top: 20px;
+    align-items: flex-start;
+  }
+
+  .nav-list {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .nav-item {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .profile-container {
+    order: 1;
+    margin-left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .mobile-dashboard-item {
+    display: block !important;
+  }
+
+  .profile-dropdown {
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+    right: auto;
+    left: 0;
+  }
+
+  .modal-content-1 {
+    top: 50% !important;
+    transform: translateY(-50%);
+  }
+}
+
+/* Hide dashboard button on desktop */
+@media (min-width: 769px) {
+  .mobile-dashboard-item {
+    display: none !important;
+  }
+}
+
+/* Profile dropdown positioning */
+.profile-dropdown {
+  right: 0;
+}
+
+/* Modal positioning fix */
+.your-courses-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+}
+
+.modal-content-1 {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Better mobile menu transitions */
+.nav-menu {
+  transition: all 0.3s ease;
+}
+
+/* Avatar styling */
+.avatar-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #4a6bff;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
 }

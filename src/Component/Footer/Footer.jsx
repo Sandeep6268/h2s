@@ -99,6 +99,7 @@ const Footer = () => {
           </Modal>
           <div className="footer-links-group">
             <ul className="footer-links-list">
+              <li></li>
               <li className="footer-link-item">
                 <Link to="/contactus" className="footer-link">
                   Contact Us
