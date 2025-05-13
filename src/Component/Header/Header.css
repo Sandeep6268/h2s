@@ -1000,7 +1000,10 @@ body {
   }
 
   .modal-content-1 {
-    top: 50% !important;
+    top: 200% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0 !important;
     transform: translateY(-50%);
   }
 }
@@ -1027,7 +1030,7 @@ body {
 
 .modal-content-1 {
   position: fixed;
-  top: 50%;
+
   left: 50%;
   transform: translate(-50%, -50%);
 }
