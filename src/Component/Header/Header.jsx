@@ -187,15 +187,14 @@ const Header = () => {
                     userCourses.map((course) => (
                       <li key={course.course_url}>
                         <Link to={course.course_url}>
-                          {course.course_url}{" "}
-                          {/* You can map to course name here */}
+                          {COURSE_NAMES[course.course_url] || course.course_url}{" "}
+                          {/* Display name from COURSE_NAMES */}
                         </Link>
                       </li>
                     ))
                   ) : (
                     <li>No courses found</li>
                   )}
-                  ;
                 </div>
               </div>
             )}
