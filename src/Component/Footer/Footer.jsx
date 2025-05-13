@@ -11,180 +11,117 @@ const Footer = () => {
   const handleShow = () => setShowSupportModal(true);
 
   return (
-    <>
-      <section className="footer bg-black p-5 row">
-        <div className="col-md-6">
-          <div className="footer-img">
-            <img src={logo} alt="" className="w-100" />
+    <footer className="footer-wrapper">
+      <div className="footer-container">
+        <div className="footer-brand-section">
+          <div className="footer-logo-container">
+            <img src={logo} alt="H2S Skills Academy" className="footer-logo" />
           </div>
-          <h5 className="pe-5">
-            At <small className="text-primary">H2S Skills Academy</small>, you
-            can gain practical knowledge and learn real-world skills that will
-            help you transform your life at work, school and home.
-          </h5>
-          <p>
-            <span className="text-primary">Head Quarter At :-</span>
-            <br />
-            91Springboard, 4th Floor, Salarpuria Tower-I,
-            <br /> No. 22, Hosur Road, Koramangala, <br />
-            Bengaluru, Karnataka – 560095
+          <p className="footer-description">
+            At <span className="text-primary">H2S Skills Academy</span>, you can gain practical knowledge and learn real-world skills that will help you transform your life at work, school and home.
           </p>
-        </div>
-        <div className="offset-md-2 mt-sm-5 my-md-0 col-md-2">
-          <h3 className="text-primary">Quick Links</h3>
-          <ul type="none" className="p-0">
-            <li className="my-3">
-              <h5
-                className="text-white hover-cursor"
-                style={{ cursor: "pointer" }}
-              >
-                <Link
-                  to={"/about"}
-                  className="text-decoration-none text-white hover-cursor"
-                >
-                  About
-                </Link>
-              </h5>
-            </li>
-            <li className="my-3">
-              <h5
-                className="text-white hover-cursor"
-                style={{ cursor: "pointer" }}
-              >
-                <Link
-                  to={"/course"}
-                  className="text-decoration-none text-white hover-cursor"
-                >
-                  Courses
-                </Link>
-              </h5>
-            </li>
-            <li className="my-3">
-              <h5
-                className="text-white hover-cursor"
-                style={{ cursor: "pointer" }}
-              >
-                <Link
-                  to={"/register"}
-                  className="text-decoration-none text-white hover-cursor"
-                >
-                  Register
-                </Link>
-              </h5>
-            </li>
-          </ul>
-        </div>
-        <div className="col-md-2 my-md-4 my-sm-0 py-2">
-          <ul type="none" className="p-0">
-            <li className="my-3">
-              <h5
-                className="text-white hover-cursor"
-                style={{ cursor: "pointer" }}
-              >
-                <Link
-                  to={"/contactus"}
-                  className="text-decoration-none text-white hover-cursor"
-                >
-                  Contact Us
-                </Link>
-              </h5>
-            </li>
-            <li className="my-3">
-              <a
-                href="#testimonials"
-                className="text-decoration-none text-white"
-              >
-                <h5
-                  className="text-white hover-cursor"
-                  style={{ cursor: "pointer" }}
-                >
-                  Testimonials
-                </h5>
-              </a>
-            </li>
-            <li className="my-3">
-              <h5
-                className="text-white hover-cursor"
-                onClick={handleShow}
-                style={{ cursor: "pointer" }}
-              >
-                Support
-              </h5>
-            </li>
-          </ul>
+          <div className="footer-address">
+            <p className="address-heading"><span className="text-primary">Head Quarter At :-</span></p>
+            <p>91Springboard, 4th Floor, Salarpuria Tower-I,</p>
+            <p>No. 22, Hosur Road, Koramangala,</p>
+            <p>Bengaluru, Karnataka – 560095</p>
+          </div>
         </div>
 
-        {/* Support Modal */}
-        <Modal
-          show={showSupportModal}
-          onHide={handleClose}
-          className="support-modal"
-          centered
-        >
-          <Modal.Header
-            closeButton
-            className="bg-dark text-white border-bottom-primary"
-          >
-            <Modal.Title className="text-primary">
-              <i className="fas fa-headset me-2"></i> 24/7 Support
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="bg-gradient-dark text-white">
-            <div className="support-content">
-              <div className="text-center mb-4">
-                <i className="fas fa-life-ring display-4 text-primary mb-3"></i>
-                <h3>We're Here to Help!</h3>
-                <p className="lead">Contact our support team anytime</p>
+        <div className="footer-links-section">
+          <div className="footer-links-group">
+            <h3 className="links-heading text-primary">Quick Links</h3>
+            <ul className="footer-links-list">
+              <li className="footer-link-item">
+                <Link to="/about" className="footer-link">About</Link>
+              </li>
+              <li className="footer-link-item">
+                <Link to="/course" className="footer-link">Courses</Link>
+              </li>
+              <li className="footer-link-item">
+                <Link to="/register" className="footer-link">Register</Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="footer-links-group">
+            <ul className="footer-links-list">
+              <li className="footer-link-item">
+                <Link to="/contactus" className="footer-link">Contact Us</Link>
+              </li>
+              <li className="footer-link-item">
+                <a href="#testimonials" className="footer-link">Testimonials</a>
+              </li>
+              <li className="footer-link-item">
+                <button onClick={handleShow} className="footer-link support-btn">Support</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="footer-copyright">
+        <p>CODE | CREATE | CONQUER © H2S TECH SOLUTIONS PVT. LIMITED</p>
+      </div>
+
+      {/* Support Modal */}
+      <Modal show={showSupportModal} onHide={handleClose} className="support-modal" centered>
+        <Modal.Header closeButton className="modal-header-custom">
+          <Modal.Title className="modal-title-custom">
+            <i className="fas fa-headset me-2"></i> 24/7 Support
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="modal-body-custom">
+          <div className="support-content">
+            <div className="support-header">
+              <i className="fas fa-life-ring support-icon"></i>
+              <h3>We're Here to Help!</h3>
+              <p className="support-subheader">Contact our support team anytime</p>
+            </div>
+
+            <div className="support-channels">
+              <div className="channel-item">
+                <i className="fab fa-instagram channel-icon"></i>
+                <a
+                  href="https://www.instagram.com/h2stechsolutions?igsh=d3BkOTMxYWxpNjN5"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="channel-link"
+                >
+                  @h2stechsolutions
+                </a>
               </div>
-
-              <div className="support-channels">
-                <div className="channel-item mb-3">
-                  <i className="fab fa-instagram me-2 text-primary"></i>
-                  <a
-                    href="https://www.instagram.com/h2stechsolutions?igsh=d3BkOTMxYWxpNjN5"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white"
-                  >
-                    @h2stechsolutions
-                  </a>
-                </div>
-                <div className="channel-item mb-3">
-                  <i className="fas fa-envelope me-2 text-primary"></i>
-                  <a
-                    href="https://mail.google.com/mail/?view=cm&fs=1&to=h2stechsolutions@gmail.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white"
-                  >
-                    support@h2sacademy.com
-                  </a>
-                </div>
-              </div>
-
-              <div className="support-hours mt-4 p-3 bg-dark rounded">
-                <h5 className="text-primary mb-2">Support Hours:</h5>
-                <p className="mb-1">
-                  <i className="far fa-clock me-2"></i> 24/7 Availability
-                </p>
-                <p className="mb-1">
-                  <i className="fas fa-bolt me-2"></i> Average Response Time:
-                  Under 1 hour
-                </p>
+              <div className="channel-item">
+                <i className="fas fa-envelope channel-icon"></i>
+                <a
+                  href="https://mail.google.com/mail/?view=cm&fs=1&to=h2stechsolutions@gmail.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="channel-link"
+                >
+                  support@h2sacademy.com
+                </a>
               </div>
             </div>
-          </Modal.Body>
-          <Modal.Footer className="bg-dark border-top-primary">
-            <Button variant="outline-primary" onClick={handleClose}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-        <p className="text-center w-100 pt-5 text-danger">
-          CODE | CREATE | CONQUER © H2S TECH SOLUTIONS PVT. LIMITED
-        </p>
-      </section>
-    </>
+
+            <div className="support-hours">
+              <h5 className="hours-heading">Support Hours:</h5>
+              <p className="hours-item">
+                <i className="far fa-clock me-2"></i> 24/7 Availability
+              </p>
+              <p className="hours-item">
+                <i className="fas fa-bolt me-2"></i> Average Response Time: Under 1 hour
+              </p>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="modal-footer-custom">
+          <Button variant="outline-primary" onClick={handleClose} className="modal-close-btn">
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </footer>
   );
 };
 
