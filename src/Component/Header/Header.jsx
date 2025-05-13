@@ -109,7 +109,7 @@ const Header = () => {
     const fetchCourses = async () => {
       if (user) {
         try {
-          const response = await FindUser.get("/api/my-courses/", {
+          const response = await FindUser.get("/my-courses/", {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access")}`,
             },
