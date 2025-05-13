@@ -5,12 +5,13 @@ import { COURSE_NAMES } from "../../Context";
 import "./Header.css";
 import logo from "../../images/logo-removebg-preview.png";
 import { Context } from "../../Context";
-import API from "../../api";
+import API, { FindUser } from "../../api";
 
 const Header = () => {
   const location = useLocation();
   const [navActive, setNavActive] = useState(false);
-  const { user, setUser, enrolledCourses } = useContext(Context);
+  const { user, setUser, enrolledCourses, setEnrolledCourses } =
+    useContext(Context);
   const [showModal, setShowModal] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const Header = () => {
           // If we have a token but no user data, fetch it
           if (!user) {
             const decoded = jwtDecode(token);
-            const response = await API.get(`user/${decoded.user_id}/`, {
+            const response = await FindUser.get(`user/${decoded.user_id}/`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             setUser(response.data);
@@ -72,9 +73,11 @@ const Header = () => {
   const toggleProfileDropdown = () => {
     setShowProfileDropdown(!showProfileDropdown);
   };
+
   const toggleNav = () => {
     setNavActive(!navActive);
   };
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -101,10 +104,23 @@ const Header = () => {
   const getAvatarLetter = () => {
     return user?.username?.charAt(0).toUpperCase() || "U";
   };
-  // console.log(user?.username);
-  // hogya
 
-  
+  // Replace previous useEffect with this
+  useEffect(() => {
+    const fetchCourses = async () => {
+      if (user) {
+        try {
+          // Fetch enrolled courses from the backend
+          const response = await FindUser.get("/get-courses/");
+          setEnrolledCourses(response.data); // Update the state with fetched data
+        } catch (error) {
+          console.error("Failed to fetch courses:", error);
+        }
+      }
+    };
+
+    fetchCourses(); // Call the fetchCourses function
+  }, [user, setEnrolledCourses]); // Runs whenever user changes
 
   return (
     <header className="header">
@@ -167,14 +183,13 @@ const Header = () => {
                   </button>
                   <div className="courses-list">
                     {enrolledCourses.length > 0 ? (
-                      enrolledCourses.map((url, index) => (
+                      enrolledCourses.map((courseId) => (
                         <Link
-                          to={url}
-                          key={index}
-                          onClick={() => setShowModal(false)}
+                          to={`/${courseId}`}
+                          key={courseId}
                           className="course-link"
                         >
-                          {COURSE_NAMES[url] || `Course ${index + 1}`}
+                          {COURSE_NAMES[courseId] || `Course ${courseId}`}
                         </Link>
                       ))
                     ) : (
