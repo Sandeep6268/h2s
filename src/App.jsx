@@ -76,16 +76,29 @@ function App() {
     const refreshToken = async () => {
       try {
         const refresh = localStorage.getItem("refresh");
-        if (!refresh || !user) return;
+        if (!refresh) return;
 
+        // 1. Get new access token
         const { data } = await API.post("jwt/refresh/", { refresh });
-        localStorage.setItem("access", data.access);
+        const newAccessToken = data.access;
 
-        // Verify the new token
-        await API.post("jwt/verify/", { token: data.access });
+        // 2. Save it
+        localStorage.setItem("access", newAccessToken);
+
+        // 3. Decode to get user ID
+        const decoded = jwtDecode(newAccessToken);
+
+        // 4. Fetch user info again
+        const userResponse = await axios.get(
+          `https://h2s-backend-urrt.onrender.com/api/user/${decoded.user_id}/`,
+          { headers: { Authorization: `Bearer ${newAccessToken}` } }
+        );
+
+        setUser(userResponse.data);
       } catch (error) {
         console.log("Token refresh failed - logging out", error);
-        // Clear all auth data
+
+        // Logout user safely
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
         localStorage.removeItem("user");
@@ -93,9 +106,9 @@ function App() {
       }
     };
 
-    const interval = setInterval(refreshToken, 4.5 * 60 * 1000); // 4.5 minutes
+    const interval = setInterval(refreshToken, 1 * 60 * 1000); // 4.5 min
     return () => clearInterval(interval);
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     // console.log("User state updated:", user);
@@ -110,7 +123,6 @@ function App() {
     });
   }, []);
   // In App.js
-  
 
   // In your API interceptors (add to your api.js)
   API.interceptors.response.use(
@@ -133,17 +145,21 @@ function App() {
       description: "Test Transaction",
       image: "https://your-logo-url.com/logo.png", // optional
 
-      handler: async function(response) {
+      handler: async function (response) {
         try {
           // Save to backend
-          await FindUser.post("/purchase-course/", { 
-            course_url: redirectUrl 
-          }, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('access')}`
+          await FindUser.post(
+            "/purchase-course/",
+            {
+              course_url: redirectUrl,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access")}`,
+              },
             }
-          });
-          
+          );
+
           // Redirect user
           window.location.href = redirectUrl;
         } catch (error) {
@@ -163,7 +179,6 @@ function App() {
         color: "#3399cc",
       },
     };
-    
 
     const rzp = new window.Razorpay(options);
     rzp.open();
