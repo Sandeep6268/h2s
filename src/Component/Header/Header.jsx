@@ -180,31 +180,47 @@ const Header = () => {
               </button>
             </li>
             {showModal && (
-              <div className="your-courses-modal-overlay">
-                <div className="your-courses-modal">
-                  <div className="modal-content">
-                    <button
-                      className="close-btn"
-                      onClick={() => setShowModal(false)}
+              <div className="your-courses-modal">
+                <div
+                  className="modal-overlay"
+                  onClick={() => setShowModal(false)}
+                ></div>
+                <div className="modal-content">
+                  <button
+                    className="close-btn"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
-                      ×
-                    </button>
-                    <h3>Your Purchased Courses</h3>
-                    <ul className="courses-list">
-                      {userCourses.length > 0 ? (
-                        userCourses.map((course) => (
-                          <li key={course.course_url}>
-                            <Link to={course.course_url}>
-                              {COURSE_NAMES[course.course_url] ||
-                                course.course_url}
-                            </Link>
-                          </li>
-                        ))
-                      ) : (
-                        <li>No courses found</li>
-                      )}
-                    </ul>
-                  </div>
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                  <h3 className="modal-title">Your Purchased Courses</h3>
+                  <ul className="courses-list">
+                    {userCourses.length > 0 ? (
+                      userCourses.map((course) => (
+                        <li key={course.course_url}>
+                          <Link to={course.course_url} className="course-link">
+                            {COURSE_NAMES[course.course_url] ||
+                              course.course_url}
+                            <span className="link-arrow">→</span>
+                          </Link>
+                        </li>
+                      ))
+                    ) : (
+                      <li className="no-courses">No courses found</li>
+                    )}
+                  </ul>
                 </div>
               </div>
             )}
