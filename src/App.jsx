@@ -123,44 +123,37 @@ function App() {
     }
   );
 
-  const handlePayment = async (price, courseId, redirectUrl) => {
+  const handlePayment = async (price, courseId) => {
     const options = {
-      key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
-      amount: price * 100, // Amount is in paise: 50000 paise = ₹500
+      key: "rzp_test_9laFgTaGBY10xm",
+      amount: price * 100,
       currency: "INR",
-      name: "Test Corp",
-      description: "Test Transaction",
-      image: "https://your-logo-url.com/logo.png", // optional
-
+      name: "H2S Tech Solutions",
+      description: "Course Purchase",
       handler: async function (response) {
         try {
-          // 1. Save the course in the backend after successful payment
-          await FindUser.post("/save-course/", { course_id: courseId });
-
-          // 2. Update the frontend by fetching the latest enrolled courses from the backend
-          const res = await FindUser.get("/get-courses/");
-          setEnrolledCourses(res.data);
-
-          // 3. Redirect the user to the course page after saving
-          window.location.replace(redirectUrl);
+          const token = localStorage.getItem("access");
+          // 1. Backend में course save करें
+          await FindUser.post(
+            "/save-course/",
+            { course_id: courseId },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          // 2. Courses refresh करें
+          fetchCourses();
         } catch (error) {
-          console.error("Error saving course:", error);
+          console.error("Payment success but save failed:", error);
         }
       },
-
       prefill: {
-        name: "Test User",
-        email: "test@example.com",
-        contact: "9999999999",
-      },
-      notes: {
-        address: "Test Address",
-      },
-      theme: {
-        color: "#3399cc",
+        name: user?.username || "",
+        email: user?.email || "",
       },
     };
-
     const rzp = new window.Razorpay(options);
     rzp.open();
   };

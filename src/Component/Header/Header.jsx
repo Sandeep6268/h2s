@@ -110,9 +110,13 @@ const Header = () => {
     const fetchCourses = async () => {
       if (user) {
         try {
-          // Fetch enrolled courses from the backend
-          const response = await FindUser.get("/get-courses/");
-          setEnrolledCourses(response.data); // Update the state with fetched data
+          const token = localStorage.getItem("access");
+          const response = await FindUser.get("/get-courses/", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setEnrolledCourses(response.data);
         } catch (error) {
           console.error("Failed to fetch courses:", error);
         }
