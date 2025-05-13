@@ -183,7 +183,10 @@ const Header = () => {
                     </div>
                     <div className="dropdown-divider"></div>
                     <button
-                      onClick={handleYourCoursesClick}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleYourCoursesClick();
+                      }}
                       className="dropdown-item"
                     >
                       <svg
