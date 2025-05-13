@@ -203,7 +203,7 @@ body.click-outside-handler.active::before {
   height: 100%;
   z-index: 0 !important;
   /* background-color: rgba(0, 0, 0, 0.7); */
-  backdrop-filter: blur(4px);
+  /* backdrop-filter: blur(4px); */
 }
 
 .modal-content-1 {
@@ -232,7 +232,7 @@ body.click-outside-handler.active::before {
   height: 100%;
   z-index: 0 !important;
   /* background-color: rgba(0, 0, 0, 0.7); */
-  backdrop-filter: blur(4px);
+  /* backdrop-filter: blur(4px); */
 }
 
 .modal-content {
