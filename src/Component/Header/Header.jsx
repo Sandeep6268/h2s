@@ -169,7 +169,7 @@ const Header = () => {
                 Courses
               </Link>
             </li>
-            {/* <li className="nav-item">
+            <li className="nav-item">
               <button
                 onClick={handleYourCoursesClick}
                 className={`nav-link text-decoration-none ${isActive(
@@ -178,7 +178,7 @@ const Header = () => {
               >
                 User Dashboard
               </button>
-            </li> */}
+            </li>
             {showModal && (
               <div className="your-courses-modal">
                 <div
