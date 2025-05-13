@@ -98,8 +98,6 @@ const Login = () => {
         <div id="modal-container">
           {modalType === "success" ? (
             <div id="success-box">
-              <div className="dot"></div>
-              <div className="dot two"></div>
               <div className="face">
                 <div className="eye"></div>
                 <div className="eye right"></div>
@@ -116,8 +114,6 @@ const Login = () => {
             </div>
           ) : (
             <div id="error-box">
-              <div className="dot"></div>
-              <div className="dot two"></div>
               <div className="face2">
                 <div className="eye"></div>
                 <div className="eye right"></div>
