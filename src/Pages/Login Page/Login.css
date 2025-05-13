@@ -1,171 +1,39 @@
-:root {
-  --background: #1a1a2e;
-  --color: #ffffff;
-  --primary-color: #0f3460;
-  --success-color: #5a8f3d;
-  --error-color: #d33f49;
-  --text-light: rgba(255, 255, 255, 0.6);
-}
-
-/* Base Styles */
-.login-container * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* Main Container Styles */
-.login-container {
-  position: relative;
-  width: 22.2rem;
-  margin: 0 auto;
-}
-
-.login-container .form-container {
-  border: 1px solid hsla(0, 0%, 65%, 0.158);
-  box-shadow: 0 0 36px 1px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  backdrop-filter: blur(20px);
-  z-index: 990;
-  padding: 2rem;
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-/* Form Elements */
-.login-container form input {
-  display: block;
-  padding: 14.5px;
-  width: 100%;
-  margin: 2rem 0;
-  color: var(--color);
-  outline: none;
-  background-color: rgba(145, 145, 145, 0.12);
-  border: none;
-  border-radius: 5px;
-  font-weight: 500;
-  letter-spacing: 0.8px;
-  font-size: 15px;
-  backdrop-filter: blur(15px);
-  transition: all 0.3s ease;
-}
-
-.login-container form input:focus {
-  box-shadow: 0 0 16px 1px rgba(0, 0, 0, 0.2);
-  animation: wobble 0.3s ease-in;
-}
-
-.login-container form button {
-  background-color: var(--primary-color);
-  color: var(--color);
-  display: block;
-  padding: 13px;
-  border-radius: 5px;
-  outline: none;
-  font-size: 18px;
-  letter-spacing: 1.5px;
-  font-weight: bold;
-  width: 100%;
-  cursor: pointer;
-  margin-bottom: 2rem;
-  transition: all 0.1s ease-in-out;
-  border: none;
-}
-
-.login-container form button:hover {
-  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.15);
-  transform: scale(1.02);
-}
-
-.login-container form button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-/* Decorative Elements */
-.login-container .circle {
-  width: 8rem;
-  height: 8rem;
-  background: var(--primary-color);
-  border-radius: 50%;
-  position: absolute;
-  z-index: -1;
-}
-
-.login-container .circle-one {
-  top: 0;
-  left: 0;
-  transform: translate(-45%, -45%);
-}
-
-.login-container .circle-two {
-  bottom: 0;
-  right: 0;
-  transform: translate(45%, 45%);
-}
-
-.login-container .illustration {
-  position: absolute;
-  top: -14%;
-  right: -2px;
-  width: 90%;
-  z-index: -1;
-}
-
-/* Utility Classes */
-.login-container .opacity {
-  opacity: 0.6;
-}
-
-.login-container .register-forget {
-  margin: 1rem 0;
-  display: flex;
-  justify-content: space-between;
-}
-
-.login-container .register-forget a {
-  color: var(--color);
-  text-decoration: none;
-  transition: opacity 0.3s ease;
-}
-
-.login-container .register-forget a:hover {
-  opacity: 1;
-}
-
 /* Modal Styles */
-.modal-overlay {
+#modal-container {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 10000;
 }
 
-.modal-container {
-  background: linear-gradient(to bottom right, #1a1a2e, #16213e);
-  padding: 2rem;
-  border-radius: 15px;
-  text-align: center;
-  max-width: 350px;
-  width: 90%;
+#success-box,
+#error-box {
   position: relative;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 350px;
+  height: 300px !important;
+  border-radius: 20px;
+  box-shadow: 5px 5px 20px rgba(203, 205, 211, 0.1);
+  perspective: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-#success-box, #error-box {
-  margin: 0 auto;
-  width: 150px;
-  height: 150px;
-  position: relative;
+#success-box {
+  background: linear-gradient(to bottom right, #b0db7d 40%, #99dbb4 100%);
 }
 
-/* Animation Elements */
+#error-box {
+  background: linear-gradient(to bottom left, #ef8d9c 40%, #ffc39e 100%);
+}
+
 .dot {
   width: 8px;
   height: 8px;
@@ -186,7 +54,8 @@
   opacity: 0.5;
 }
 
-.face, .face2 {
+.face,
+.face2 {
   position: absolute;
   width: 60px;
   height: 60px;
@@ -194,7 +63,6 @@
   border-radius: 50%;
   border: 1px solid #777777;
   top: 21%;
-  left: 25%;
   z-index: 2;
 }
 
@@ -262,65 +130,59 @@
   animation: move 3s ease-in-out infinite;
 }
 
-/* Message Styles */
 .message {
-  position: relative;
+  position: absolute;
   width: 100%;
   text-align: center;
-  margin: 1rem 0;
+  height: 40%;
+  top: 47%;
   color: white;
 }
 
 .alert {
   font-weight: 700;
-  letter-spacing: 2px;
-  font-size: 1.5em;
-  margin-bottom: 0.5rem;
+  letter-spacing: 5px;
+  font-size: 1.2em;
+  margin-bottom: 10px;
   color: white;
 }
 
 .message p {
   margin-top: 5px;
-  font-size: 0.9em;
+  font-size: 0.8em;
   font-weight: 300;
-  color: var(--text-light);
-  letter-spacing: 0.5px;
+  color: white;
+  letter-spacing: 1px;
 }
 
-/* Button Styles */
 .button-box {
-  position: relative;
+  position: absolute;
   background: #fcfcfc;
   width: 50%;
-  height: 40px;
+  height: 15%;
   border-radius: 20px;
-  margin: 1rem auto 0;
+  bottom: 5px;
+
+  left: 25%;
   outline: 0;
   border: none;
   box-shadow: 2px 2px 10px rgba(119, 119, 119, 0.5);
-  transition: all 0.3s ease-in-out;
+  transition: all 0.5s ease-in-out;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .button-box:hover {
   background: #f0f0f0;
   transform: scale(1.05);
-}
-
-.button-box p {
-  font-weight: 600;
-  letter-spacing: 1px;
+  transition: all 0.3s ease-in-out;
 }
 
 .green {
-  color: var(--success-color);
+  color: #5a8f3d;
 }
 
 .red {
-  color: var(--error-color);
+  color: #d33f49;
 }
 
 /* Loader Styles */
@@ -330,7 +192,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -362,11 +224,10 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: var(--primary-color);
+  background: #0f3460;
   animation: pulse 1.5s linear infinite;
 }
 
-/* Animations */
 @keyframes bounce {
   50% {
     transform: translateY(-10px);
@@ -419,6 +280,128 @@
     transform: scale(0.8);
     opacity: 0.5;
   }
+}
+
+/* Rest of your existing styles */
+:root {
+  --background: #1a1a2e;
+  --color: #ffffff;
+  --primary-color: #0f3460;
+}
+
+.login-container * {
+  box-sizing: border-box;
+}
+
+.login-container {
+  position: relative;
+  width: 22.2rem;
+}
+
+.login-container .form-container {
+  border: 1px solid hsla(0, 0%, 65%, 0.158);
+  box-shadow: 0 0 36px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  backdrop-filter: blur(20px);
+  z-index: 990;
+  padding: 2rem;
+}
+
+.login-container form input {
+  display: block;
+  padding: 14.5px;
+  width: 100%;
+  margin: 2rem 0;
+  color: var(--color);
+  outline: none;
+  background-color: #9191911f;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  font-size: 15px;
+  backdrop-filter: blur(15px);
+}
+
+.login-container form input:focus {
+  box-shadow: 0 0 16px 1px rgba(0, 0, 0, 0.2);
+  animation: wobble 0.3s ease-in;
+}
+
+.login-container form button {
+  background-color: var(--primary-color);
+  color: var(--color);
+  display: block;
+  padding: 13px;
+  border-radius: 5px;
+  outline: none;
+  font-size: 18px;
+  letter-spacing: 1.5px;
+  font-weight: bold;
+  width: 100%;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: all 0.1s ease-in-out;
+  border: none;
+}
+
+.login-container form button:hover {
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
+}
+
+.login-container .circle {
+  width: 8rem;
+  height: 8rem;
+  background: var(--primary-color);
+  border-radius: 50%;
+  position: absolute;
+}
+
+.login-container .illustration {
+  position: absolute;
+  top: -14%;
+  right: -2px;
+  width: 90%;
+}
+
+.login-container .circle-one {
+  top: 0;
+  left: 0;
+  z-index: -1;
+  transform: translate(-45%, -45%);
+}
+
+.login-container .circle-two {
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+  transform: translate(45%, 45%);
+}
+
+.login-container .register-forget {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.login-container .opacity {
+  opacity: 0.6;
+}
+
+.login-container .theme-btn-container {
+  position: absolute;
+  left: 0;
+  bottom: 2rem;
+}
+
+.login-container .theme-btn {
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+}
+
+.login-container .theme-btn:hover {
+  width: 40px !important;
 }
 
 @keyframes wobble {
