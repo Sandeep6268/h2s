@@ -197,6 +197,7 @@ body.click-outside-handler.active::before {
   color: #ffffff;
   box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
   position: relative;
+  top: 200%;
 }
 
 /* Modal Heading */
@@ -215,7 +216,7 @@ body.click-outside-handler.active::before {
   background: transparent;
   border: none;
   font-size: 26px;
-  color: #ffffff;
+  color: red;
   cursor: pointer;
   transition: color 0.3s ease;
 }
@@ -259,7 +260,9 @@ body.click-outside-handler.active::before {
     transform: scale(1);
   }
 }
-
+.modal-content{
+  width: 100%;
+}
 
 * {
   margin: 0;
