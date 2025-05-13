@@ -73,7 +73,7 @@ const Footer = () => {
               <li className="footer-link-item">
                 <button
                   onClick={handleRegisterClick}
-                  className="footer-link text-decoration-none register-btn"
+                  className="footer-link register-btn text-decoration-none"
                   style={{ background: "none", border: "none", padding: 0 }}
                 >
                   Register
@@ -106,21 +106,9 @@ const Footer = () => {
                 </Link>
               </li>
               <li className="footer-link-item">
-                <Link
-                  to="/#testimonials"
-                  className="footer-link"
-                  onClick={(e) => {
-                    if (window.location.pathname === "/") {
-                      e.preventDefault();
-                      const element = document.getElementById("testimonials");
-                      if (element) {
-                        element.scrollIntoView({ behavior: "smooth" });
-                      }
-                    }
-                  }}
-                >
+                <a href="#testimonials" className="footer-link">
                   Testimonials
-                </Link>
+                </a>
               </li>
               <li className="footer-link-item">
                 <button
