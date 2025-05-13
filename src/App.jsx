@@ -205,7 +205,8 @@ function App() {
           <Route path="/python24" element={<Python />} />
           <Route path="/react79" element={<Reactjs />} />
           <Route path="/reactandjs43" element={<ReactandJs />} />
-          <Route path="/pythondjango90" element={<PythonDjango />} />
+          {/* <Route path="/pythondjango90" element={<PythonDjango />} /> */}
+          <Route path="/pythondjango90" element={<Py/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
