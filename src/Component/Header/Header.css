@@ -224,7 +224,41 @@ body.click-outside-handler.active::before {
   overflow-y: auto; /* Add scroll if content is too long */
   animation: modalFadeIn 0.3s ease-out;
 }
+.modal-overlay {
+  position: absolute;
+  top: 115px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0 !important;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  position: relative;
+  padding: 30px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  top: 175% !important;
+  background: black !important;
+  color: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 2;
+  /* Removed top: 10% !important */
+  margin: 20px; /* Added for better spacing on mobile */
+  max-height: 80vh; /* Prevent modal from being too tall */
+  overflow-y: auto; /* Add scroll if content is too long */
+  animation: modalFadeIn 0.3s ease-out;
+}
 @media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+    top: 0 !important;
+  }
   .modal-content-1 {
     width: 95%;
     padding: 20px;
