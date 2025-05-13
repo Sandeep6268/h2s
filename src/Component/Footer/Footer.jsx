@@ -12,10 +12,7 @@ const Footer = () => {
 
   return (
     <>
-      <section
-        className="footer bg-black p-5 row"
-        style={{ marginRight: "1px" }}
-      >
+      <section className="footer bg-black p-5 row">
         <div className="col-md-6">
           <div className="footer-img">
             <img src={logo} alt="" className="w-100" />
@@ -37,9 +34,10 @@ const Footer = () => {
           <h3 className="text-primary">Quick Links</h3>
           <ul type="none" className="p-0">
             <li className="my-3">
-            <h5 className="text-white hover-cursor"
-                
-                style={{ cursor: "pointer" }}>
+              <h5
+                className="text-white hover-cursor"
+                style={{ cursor: "pointer" }}
+              >
                 <Link
                   to={"/about"}
                   className="text-decoration-none text-white hover-cursor"
@@ -49,9 +47,10 @@ const Footer = () => {
               </h5>
             </li>
             <li className="my-3">
-              <h5 className="text-white hover-cursor"
-                
-                style={{ cursor: "pointer" }}>
+              <h5
+                className="text-white hover-cursor"
+                style={{ cursor: "pointer" }}
+              >
                 <Link
                   to={"/course"}
                   className="text-decoration-none text-white hover-cursor"
@@ -61,9 +60,10 @@ const Footer = () => {
               </h5>
             </li>
             <li className="my-3">
-              <h5 className="text-white hover-cursor"
-                
-                style={{ cursor: "pointer" }}>
+              <h5
+                className="text-white hover-cursor"
+                style={{ cursor: "pointer" }}
+              >
                 <Link
                   to={"/register"}
                   className="text-decoration-none text-white hover-cursor"
@@ -77,9 +77,10 @@ const Footer = () => {
         <div className="col-md-2 my-md-4 my-sm-0 py-2">
           <ul type="none" className="p-0">
             <li className="my-3">
-              <h5 className="text-white hover-cursor"
-                
-                style={{ cursor: "pointer" }}>
+              <h5
+                className="text-white hover-cursor"
+                style={{ cursor: "pointer" }}
+              >
                 <Link
                   to={"/contactus"}
                   className="text-decoration-none text-white hover-cursor"
@@ -93,9 +94,12 @@ const Footer = () => {
                 href="#testimonials"
                 className="text-decoration-none text-white"
               >
-                <h5 className="text-white hover-cursor"
-                
-                style={{ cursor: "pointer" }}>Testimonials</h5>
+                <h5
+                  className="text-white hover-cursor"
+                  style={{ cursor: "pointer" }}
+                >
+                  Testimonials
+                </h5>
               </a>
             </li>
             <li className="my-3">
@@ -139,7 +143,7 @@ const Footer = () => {
                   <a
                     href="https://www.instagram.com/h2stechsolutions?igsh=d3BkOTMxYWxpNjN5"
                     target="_blank"
-                    class="share-icon"
+                    rel="noopener noreferrer"
                     className="text-white"
                   >
                     @h2stechsolutions
@@ -148,9 +152,9 @@ const Footer = () => {
                 <div className="channel-item mb-3">
                   <i className="fas fa-envelope me-2 text-primary"></i>
                   <a
-                    class="share-icon"
                     href="https://mail.google.com/mail/?view=cm&fs=1&to=h2stechsolutions@gmail.com"
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="text-white"
                   >
                     support@h2sacademy.com
@@ -176,7 +180,9 @@ const Footer = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-      <p className="text-center w-100 pt-5 text-danger">CODE | CREATE | CONQUER © H2S TECH SOLUTIONS PVT. LIMITED</p>
+        <p className="text-center w-100 pt-5 text-danger">
+          CODE | CREATE | CONQUER © H2S TECH SOLUTIONS PVT. LIMITED
+        </p>
       </section>
     </>
   );
