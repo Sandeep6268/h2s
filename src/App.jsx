@@ -136,7 +136,7 @@ function App() {
       handler: async function(response) {
         try {
           // Save to backend
-          await FindUser.post("/api/purchase-course/", { 
+          await FindUser.post("/purchase-course/", { 
             course_url: redirectUrl 
           }, {
             headers: {
