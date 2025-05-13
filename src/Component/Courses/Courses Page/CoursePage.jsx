@@ -145,7 +145,7 @@ const CoursePage = () => {
           {/* NOW POSITION 4: React JS (originally position 5) */}
           <div
             style={{ width: "98%" }}
-            className="comp button-85 row my-3 p-md-5 d-flex justify-content-around"
+            className="comp button-85 row my-3 p-md-5 d-flex flex-row-reverse justify-content-around"
           >
             <div
               className="comp-img p-0 col-md-5"
@@ -187,7 +187,7 @@ const CoursePage = () => {
           {/* NOW POSITION 5: Django + Python (originally position 4) */}
           <div
             style={{ width: "98%" }}
-            className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around"
+            className="comp button-85 row my-3 p-md-5 d-flex reverse-column flex-row-reverse justify-content-around"
           >
             <div className="comp-heading col-md-7 ">
               <h1>Django + Python Internship</h1>
