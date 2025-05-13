@@ -238,7 +238,7 @@ body.click-outside-handler.active::before {
 }
 
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255, 0, 0);
   transform: rotate(90deg);
 }
 
