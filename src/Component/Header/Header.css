@@ -206,7 +206,7 @@ body.click-outside-handler.active::before {
   backdrop-filter: blur(4px);
 }
 
-.modal-content {
+.modal-content-1 {
   position: relative;
   padding: 30px;
   border-radius: 16px;
