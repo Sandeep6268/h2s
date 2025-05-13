@@ -182,7 +182,7 @@ const Header = () => {
             {showModal && (
               <div className={`your-courses-modal ${showModal ? 'active' : ''}`}>
                 <div
-                  className="modal-overlay-1"
+                  className=""
                   onClick={() => setShowModal(false)}
                 ></div>
                 <div className="modal-content-1">

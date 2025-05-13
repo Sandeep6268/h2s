@@ -262,6 +262,7 @@ body.click-outside-handler.active::before {
   .modal-content-1 {
     width: 95%;
     padding: 20px;
+    top: 0% !important;
     top: 0 !important;
   }
 
