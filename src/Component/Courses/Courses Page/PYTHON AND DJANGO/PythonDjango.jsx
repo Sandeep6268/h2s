@@ -70,7 +70,7 @@ const PythonDjango = () => {
     const fetchPlaylistItems = async () => {
       try {
         const response = await fetch(
-          `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=20&key=${apiKey}`
+          `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistI}&maxResults=20&key=${apiKey}`
         );
         const data = await response.json();
         setVideos(data.items || []);
