@@ -105,10 +105,24 @@ const Footer = () => {
                   Contact Us
                 </Link>
               </li>
+              // Footer.js में लिंक को बदलें
               <li className="footer-link-item">
-                <a href="#testimonials" className="footer-link">
+                <Link
+                  to="/#testimonials"
+                  className="footer-link"
+                  onClick={(e) => {
+                    // अगर पहले से होम पेज पर हैं
+                    if (window.location.pathname === "/") {
+                      e.preventDefault();
+                      const element = document.getElementById("testimonials");
+                      if (element) {
+                        element.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }
+                  }}
+                >
                   Testimonials
-                </a>
+                </Link>
               </li>
               <li className="footer-link-item">
                 <button
