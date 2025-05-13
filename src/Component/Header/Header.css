@@ -60,7 +60,7 @@
   display: flex;
   align-items: center;
   padding: 16px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+  background: #0f0f97d9;
 }
 
 .dropdown-avatar {
@@ -85,14 +85,14 @@
 
 .username {
   font-weight: 600;
-  color: #333;
+  color: #ffffff;
   font-size: 16px;
   margin-bottom: 2px;
 }
 
 .email {
   font-size: 13px;
-  color: #666;
+  color: #ffffff;
 }
 
 .dropdown-divider {

@@ -96,7 +96,10 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (showProfileDropdown && !e.target.closest(".profile-dropdown-wrapper")) {
+      if (
+        showProfileDropdown &&
+        !e.target.closest(".profile-dropdown-wrapper")
+      ) {
         setShowProfileDropdown(false);
       }
     };
@@ -162,7 +165,11 @@ const Header = () => {
                     </span>
                   </button>
 
-                  <div className={`profile-dropdown ${showProfileDropdown ? "show" : ""}`}>
+                  <div
+                    className={`profile-dropdown ${
+                      showProfileDropdown ? "show" : ""
+                    }`}
+                  >
                     <div className="dropdown-header">
                       <span className="dropdown-avatar">
                         {user?.username?.charAt(0).toUpperCase() || "U"}
@@ -224,7 +231,9 @@ const Header = () => {
                 <li className="nav-item">
                   <Link
                     to="/login"
-                    className={`btn btn-outline-primary me-2 ${isActive("/login")}`}
+                    className={`btn btn-outline-primary me-2 ${isActive(
+                      "/login"
+                    )}`}
                   >
                     Login
                   </Link>
@@ -232,7 +241,9 @@ const Header = () => {
                 <li className="nav-item">
                   <Link
                     to="/register"
-                    className={`btn btn-outline-success ${isActive("/register")}`}
+                    className={`btn btn-outline-success ${isActive(
+                      "/register"
+                    )}`}
                   >
                     Register
                   </Link>
@@ -246,7 +257,7 @@ const Header = () => {
       {/* Courses Modal */}
       {showModal && (
         <div className="your-courses-modal">
-          <div className="modal-overlay" onClick={() => setShowModal(false)}></div>
+          <div className="modal-overlay" onClick={() => setShowModal(false)} />
           <div className="modal-content">
             <button className="close-btn" onClick={() => setShowModal(false)}>
               <svg
@@ -257,28 +268,28 @@ const Header = () => {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
               >
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
             </button>
             <h3 className="modal-title">Your Purchased Courses</h3>
-            <ul className="courses-list">
-              {userCourses.length > 0 ? (
-                userCourses.map((course) => (
-                  <li key={course.course_url}>
-                    <Link to={course.course_url} className="course-link">
-                      {COURSE_NAMES[course.course_url] || course.course_url}
-                      <span className="link-arrow">→</span>
-                    </Link>
-                  </li>
-                ))
-              ) : (
-                <li className="no-courses">No courses found</li>
-              )}
-            </ul>
+            <div className="modal-body">
+              <ul className="courses-list">
+                {userCourses.length > 0 ? (
+                  userCourses.map((course) => (
+                    <li key={course.course_url}>
+                      <Link to={course.course_url} className="course-link">
+                        {COURSE_NAMES[course.course_url] || course.course_url}
+                        <span className="link-arrow">→</span>
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <li className="no-courses">No courses found</li>
+                )}
+              </ul>
+            </div>
           </div>
         </div>
       )}
