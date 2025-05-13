@@ -1,44 +1,6 @@
 
-/* Success Animation Styles */
-.success-animation-container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.9);
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  text-align: center;
-  z-index: 1000;
-  max-width: 90%;
-  width: 400px;
-}
-
-.success-animation-container .message {
-  margin-top: 1rem;
-}
-
-.success-animation-container .alert {
-  color: #28a745;
-  margin-bottom: 0.5rem;
-}
-
-/* Hide login form when success animation is shown */
-.login-container {
-  transition: opacity 0.3s ease;
-}
-
-.success-animation-container ~ .login-container {
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-
-
-/* Modal Styles */
-#modal-container {
+/* Modal styles */
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -48,31 +10,51 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000;
+  z-index: 1000;
 }
 
-#success-box,
-#error-box {
-  position: relative;
-  width: 350px;
-  height: 300px !important;
-  border-radius: 20px;
-  box-shadow: 5px 5px 20px rgba(203, 205, 211, 0.1);
-  perspective: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.modal-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
 }
 
-#success-box {
-  background: linear-gradient(to bottom right, #b0db7d 40%, #99dbb4 100%);
+.message {
+  margin: 1rem 0;
 }
 
-#error-box {
-  background: linear-gradient(to bottom left, #ef8d9c 40%, #ffc39e 100%);
+.alert {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
+.button-box {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.green {
+  color: #4CAF50;
+}
+
+.red {
+  color: #f44336;
+}
+
+/* Animation container adjustments */
+#success-box, #error-box {
+  margin: 0 auto;
+  width: 150px;
+  height: 150px;
+}
+
+/* Rest of your existing Login.css styles */
 .dot {
   width: 8px;
   height: 8px;

@@ -1,13 +1,12 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API from "../../api"; // Import the function instead of FindUser
-// Header.js
-import { fetchUserData } from "../../api"; // Adjust path as needed
+import API from "../../api";
+import { fetchUserData } from "../../api";
 import "./Login.css";
 import { Context } from "../../Context";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import EmotionAnimation from "../../Component/Animation/EmotionAnimation";
+import EmotionAnimation from "../../Component/Animation/SuccessErrorAnimations";
 
 const Login = () => {
   const { setUser } = useContext(Context);
@@ -22,13 +21,11 @@ const Login = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  // In your Login component
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Clear existing tokens
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
 
@@ -37,11 +34,9 @@ const Login = () => {
         password: data.password,
       });
 
-      // Save tokens first
       localStorage.setItem("access", tokens.access);
       localStorage.setItem("refresh", tokens.refresh);
 
-      // Verify the token immediately
       try {
         await API.post("jwt/verify/", { token: tokens.access });
 
@@ -51,18 +46,20 @@ const Login = () => {
           { headers: { Authorization: `Bearer ${tokens.access}` } }
         );
 
-        // Update context
         setUser(userResponse.data);
-        navigate("/");
+        showCustomModal("success", "Login successful!");
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
       } catch (verifyError) {
         console.error("Token verification failed:", verifyError);
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
-        throw verifyError;
+        showCustomModal("error", "Login failed. Please try again.");
       }
     } catch (err) {
       console.error("Login failed:", err);
-      // Show error to user
+      showCustomModal("error", err.response?.data?.detail || "Login failed. Please check your credentials.");
     } finally {
       setIsLoading(false);
     }
@@ -76,11 +73,13 @@ const Login = () => {
 
   const closeModal = () => {
     setShowModal(false);
+    if (modalType === "success") {
+      navigate("/");
+    }
   };
 
   return (
     <section className="container pt-5">
-      {/* Loading Spinner */}
       {isLoading && (
         <div className="loader-container">
           <div className="loader">
@@ -94,32 +93,20 @@ const Login = () => {
         </div>
       )}
 
-      {/* Success/Error Modal */}
       {showModal && (
-        <div id="modal-container">
-          {modalType === "success" ? (
-            <div id="success-box">
-              <EmotionAnimation type="success" />
-              <div className="message">
-                <h1 className="alert">Success!</h1>
-                <p>{modalMessage}</p>
-              </div>
-              <button className="button-box" onClick={closeModal}>
-                <p className="green">continue</p>
-              </button>
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <EmotionAnimation type={modalType} />
+            <div className="message">
+              <h1 className="alert">{modalType === "success" ? "Success!" : "Error!"}</h1>
+              <p>{modalMessage}</p>
             </div>
-          ) : (
-            <div id="error-box">
-              <EmotionAnimation type="error" />
-              <div className="message">
-                <h1 className="alert">Error!</h1>
-                <p>{modalMessage}</p>
-              </div>
-              <button className="button-box" onClick={closeModal}>
-                <p className="red">try again</p>
-              </button>
-            </div>
-          )}
+            <button className="button-box" onClick={closeModal}>
+              <p className={modalType === "success" ? "green" : "red"}>
+                {modalType === "success" ? "Continue" : "Try again"}
+              </p>
+            </button>
+          </div>
         </div>
       )}
 
