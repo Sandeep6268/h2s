@@ -1,3 +1,88 @@
+/* Login Alert Modal Styles */
+.login-alert-modal .modal-content {
+  border: 2px solid #28a745;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.login-alert-header {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #28a745;
+  padding: 1rem 1.5rem;
+}
+
+.login-alert-title {
+  color: #28a745;
+  font-size: 1.3rem;
+}
+
+.login-alert-body {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.login-alert-content {
+  padding: 0.5rem;
+}
+
+.login-alert-icon {
+  font-size: 3rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+.login-alert-content h4 {
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+.login-alert-content p {
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+.login-alert-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+  padding: 1rem 1.5rem;
+  justify-content: center;
+}
+
+.login-alert-close-btn {
+  padding: 0.5rem 2rem;
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.login-alert-close-btn:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+/* Responsive adjustments for the alert modal */
+@media (max-width: 576px) {
+  .login-alert-modal .modal-dialog {
+    margin: 0.5rem;
+  }
+
+  .login-alert-header,
+  .login-alert-footer {
+    padding: 0.75rem 1rem;
+  }
+
+  .login-alert-body {
+    padding: 1rem;
+  }
+
+  .login-alert-icon {
+    font-size: 2.5rem;
+  }
+
+  .login-alert-content h4 {
+    font-size: 1.2rem;
+  }
+}
+
 /* Base Styles */
 .footer-wrapper {
   background-color: #000;
@@ -116,15 +201,16 @@
   border-radius: 10px;
   overflow: hidden;
   height: auto !important;
-
 }
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 4px;
 }
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   color: white;
 }
-.modal-body-custom,.modal-footer-custom,.modal-header-custom{
+.modal-body-custom,
+.modal-footer-custom,
+.modal-header-custom {
   border: 2px solid #0d6efd !important;
 }
 
@@ -239,15 +325,15 @@
   .footer-container {
     padding: 0 1rem;
   }
-  
+
   .footer-brand-section {
     padding-right: 1rem;
   }
-  
+
   .footer-links-section {
     flex-wrap: wrap;
   }
-  
+
   .footer-links-group {
     min-width: 120px;
     margin-bottom: 1rem;
@@ -258,26 +344,26 @@
   .footer-container {
     flex-direction: column;
   }
-  
+
   .footer-brand-section {
     padding-right: 0;
     margin-bottom: 2rem;
     text-align: center;
   }
-  
+
   .footer-logo-container {
     margin: 0 auto 1.5rem;
   }
-  
+
   .footer-links-section {
     justify-content: space-around;
     margin-top: 1rem;
   }
-  
+
   .links-heading {
     text-align: center;
   }
-  
+
   .footer-links-list {
     text-align: center;
   }
@@ -287,7 +373,7 @@
   .footer-container {
     padding: 0 0.5rem;
   }
-  .modal-content{
+  .modal-content {
     width: 100% !important;
     margin: 0px !important;
     padding: 2px !important;
@@ -295,24 +381,24 @@
   .footer-logo {
     width: 120px;
   }
-  
-  .footer-description, 
+
+  .footer-description,
   .footer-address p {
     font-size: 0.95rem;
   }
-  
+
   .footer-link {
     font-size: 1rem;
   }
-  
+
   .support-modal .modal-dialog {
     margin: 0.5rem;
   }
-  
+
   .support-channels {
     padding: 1rem;
   }
-  
+
   .channel-item {
     padding: 0.6rem 0;
   }
