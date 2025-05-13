@@ -238,41 +238,81 @@ const Header = () => {
                 <div className="profile-dropdown-wrapper">
                   <button
                     className="profile-avatar"
-                    onClick={toggleProfileDropdown}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleProfileDropdown();
+                    }}
                   >
                     <span className="avatar-circle">
                       {user?.username?.charAt(0).toUpperCase() || "U"}
                     </span>
                   </button>
 
-                  {showProfileDropdown && (
-                    <div className="profile-dropdown">
-                      <div className="dropdown-header">
-                        <span className="dropdown-avatar">
-                          {user?.username?.charAt(0).toUpperCase() || "U"}
+                  <div
+                    className={`profile-dropdown ${
+                      showProfileDropdown ? "show" : ""
+                    }`}
+                  >
+                    <div className="dropdown-header">
+                      <span className="dropdown-avatar">
+                        {user?.username?.charAt(0).toUpperCase() || "U"}
+                      </span>
+                      <div className="user-info">
+                        <span className="username">
+                          {user?.username || "User"}
                         </span>
-                        <div className="user-info">
-                          <span className="username">
-                            {user?.username || "User"}
-                          </span>
-                          <span className="email">{user?.email || ""}</span>
-                        </div>
+                        <span className="email">{user?.email || ""}</span>
                       </div>
-                      <div className="dropdown-divider"></div>
-                      <button
-                        onClick={handleYourCoursesClick}
-                        className={`dropdown-item ${isActive("/dashboard")}`}
-                      >
-                        Your purchased courses
-                      </button>
-                      <button
-                        className="dropdown-item logout-btn"
-                        onClick={handleLogout}
-                      >
-                        Logout
-                      </button>
                     </div>
-                  )}
+                    <div className="dropdown-divider"></div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleYourCoursesClick();
+                      }}
+                      className="dropdown-item"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                      </svg>
+                      Your Purchased Courses
+                    </button>
+                    <button
+                      className="dropdown-item logout-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLogout();
+                      }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                      </svg>
+                      Logout
+                    </button>
+                  </div>
                 </div>
               </li>
             ) : (
