@@ -116,8 +116,8 @@ const Header = () => {
             },
           });
           // Check if courses are defined and an array
-          if (Array.isArray(response.data.courses)) {
-            setUserCourses(response.data.courses);
+          if (Array.isArray(response.data)) {
+            setUserCourses(response.data);
           } else {
             console.error("Invalid course data:", response.data.courses);
           }
@@ -126,6 +126,7 @@ const Header = () => {
         }
       }
     };
+    console.log("Fetched user courses from API:", response.data);
 
     fetchCourses();
   }, [user]);
@@ -180,26 +181,30 @@ const Header = () => {
               <div className="your-courses-modal">
                 <div className="modal-content">
                   <h3>Your Purchased Courses</h3>
-                  {userCourses.map((course, index) => {
-                    const url = course?.course_url;
-                    const name = COURSE_NAMES[url];
+                  {Array.isArray(userCourses) && userCourses.length > 0 ? (
+                    userCourses.map((course, index) => {
+                      const url = course?.course_url;
+                      const name = COURSE_NAMES[url];
 
-                    if (!url || !name) {
-                      console.warn("Invalid course data:", course);
-                      return null;
-                    }
+                      if (!url || !name) {
+                        console.warn("Invalid course data:", course);
+                        return null;
+                      }
 
-                    return (
-                      <Link
-                        key={index}
-                        to={url}
-                        className="course-link"
-                        onClick={() => setShowModal(false)}
-                      >
-                        {name}
-                      </Link>
-                    );
-                  })}
+                      return (
+                        <Link
+                          key={index}
+                          to={url}
+                          className="course-link"
+                          onClick={() => setShowModal(false)}
+                        >
+                          {name}
+                        </Link>
+                      );
+                    })
+                  ) : (
+                    <p>No courses found.</p>
+                  )}
                 </div>
               </div>
             )}
