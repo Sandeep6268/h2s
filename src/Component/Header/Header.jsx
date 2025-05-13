@@ -104,7 +104,7 @@ const Header = () => {
   // console.log(user?.username);
   // hogya
   const [userCourses, setUserCourses] = useState([]);
-  console.log(userCourses)
+  console.log(userCourses);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -180,7 +180,7 @@ const Header = () => {
               <div className="your-courses-modal">
                 <div className="modal-content">
                   <h3>Your Purchased Courses</h3>
-                  {userCoursesName.map((course, index) => {
+                  {userCourses.map((course, index) => {
                     const url = course?.course_url;
                     const name = COURSE_NAMES[url];
 
@@ -194,7 +194,7 @@ const Header = () => {
                         key={index}
                         to={url}
                         className="course-link"
-                        onClick={() => setShowModal(false)} // or close modal logic
+                        onClick={() => setShowModal(false)}
                       >
                         {name}
                       </Link>
