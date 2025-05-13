@@ -1,27 +1,14 @@
 import React, { useState } from "react";
 import "./Footer.css";
 import logo from "../../images/logo-removebg-preview.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
 
 const Footer = () => {
   const [showSupportModal, setShowSupportModal] = useState(false);
-  const [showLoginAlertModal, setShowLoginAlertModal] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
 
   const handleClose = () => setShowSupportModal(false);
   const handleShow = () => setShowSupportModal(true);
-  const handleCloseLoginAlert = () => setShowLoginAlertModal(false);
-
-  const handleRegisterClick = () => {
-    if (isAuthenticated) {
-      setShowLoginAlertModal(true);
-    } else {
-      navigate("/register");
-    }
-  };
 
   return (
     <footer className="footer-wrapper">
@@ -52,7 +39,7 @@ const Footer = () => {
                 <Link to="/course" className="footer-link">Courses</Link>
               </li>
               <li className="footer-link-item">
-                <button onClick={handleRegisterClick} className="footer-link support-btn">Register</button>
+                <Link to="/register" className="footer-link">Register</Link>
               </li>
             </ul>
           </div>
@@ -131,27 +118,6 @@ const Footer = () => {
         <Modal.Footer className="modal-footer-custom">
           <Button variant="outline-primary" onClick={handleClose} className="modal-close-btn">
             Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Already Logged In Alert Modal */}
-      <Modal show={showLoginAlertModal} onHide={handleCloseLoginAlert} className="login-alert-modal" centered>
-        <Modal.Header closeButton className="login-alert-header">
-          <Modal.Title className="login-alert-title">
-            <i className="fas fa-info-circle me-2"></i> Already Registered
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="login-alert-body">
-          <div className="login-alert-content">
-            <i className="fas fa-check-circle login-alert-icon"></i>
-            <h4>You're already logged in!</h4>
-            <p>There's no need to register again. You can access all features with your current account.</p>
-          </div>
-        </Modal.Body>
-        <Modal.Footer className="login-alert-footer">
-          <Button variant="primary" onClick={handleCloseLoginAlert} className="login-alert-close-btn">
-            Continue
           </Button>
         </Modal.Footer>
       </Modal>
