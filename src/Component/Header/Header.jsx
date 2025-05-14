@@ -225,7 +225,7 @@ const Header = () => {
                 <li className="nav-item mobile-dashboard-item">
                   <button
                     onClick={handleLogout}
-                    className={`text-decoration-none logout-btn`}
+                    className={`text-decoration-none btn btn-outline-danger`}
                   >
                     Logout
                   </button>
