@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Card, Button, Badge, Container } from "react-bootstrap";
+import {
+  Card,
+  Button,
+  Badge,
+  Container,
+  Spinner,
+  Alert,
+} from "react-bootstrap";
 import "./Reviews.css";
 
 const Reviews = () => {
@@ -7,6 +14,9 @@ const Reviews = () => {
   const [review, setReview] = useState("");
   const [reviews, setReviews] = useState([]);
   const [wordCount, setWordCount] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState(null);
 
   // Your existing reviews_content array remains the same
   const reviews_content = [
@@ -430,28 +440,48 @@ const Reviews = () => {
     setReviews(storedReviews);
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name.trim() || !review.trim()) return;
+    setError(null);
 
-    if (wordCount > 50) {
-      alert("Review cannot be more than 50 words!");
+    if (!name.trim() || !review.trim()) {
+      setError("Please fill in all fields");
       return;
     }
 
-    const newReview = {
-      id: Date.now(),
-      name,
-      review,
-      timestamp: new Date().toLocaleString(),
-    };
-    const updatedReviews = [newReview, ...reviews];
+    if (wordCount > 50) {
+      setError("Review cannot be more than 50 words!");
+      return;
+    }
 
-    setReviews(updatedReviews);
-    localStorage.setItem("reviews", JSON.stringify(updatedReviews));
-    setName("");
-    setReview("");
-    setWordCount(0);
+    setIsSubmitting(true);
+
+    try {
+      // Simulate API call delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const newReview = {
+        id: Date.now(),
+        name,
+        review,
+        timestamp: new Date().toLocaleString(),
+      };
+      const updatedReviews = [newReview, ...reviews];
+
+      setReviews(updatedReviews);
+      localStorage.setItem("reviews", JSON.stringify(updatedReviews));
+      setName("");
+      setReview("");
+      setWordCount(0);
+      setShowSuccess(true);
+
+      // Hide success message after 3 seconds
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (err) {
+      setError("Failed to submit review. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDelete = (id) => {
@@ -473,17 +503,41 @@ const Reviews = () => {
   const allReviews = [
     ...reviews,
     ...reviews_content.map((r, i) => ({
-      id: `default-${i}`, // Ensure this is always a string
+      id: `default-${i}`,
       name: r.name,
       review: r.message,
     })),
   ];
 
-  // ... (previous imports and code remain the same until the return statement)
-
   return (
     <div data-bs-theme="dark">
       <Container className="py-5">
+        {/* Success Alert */}
+        {showSuccess && (
+          <Alert
+            variant="success"
+            className="text-center"
+            onClose={() => setShowSuccess(false)}
+            dismissible
+          >
+            <i className="fas fa-check-circle me-2"></i>
+            Review submitted successfully!
+          </Alert>
+        )}
+
+        {/* Error Alert */}
+        {error && (
+          <Alert
+            variant="danger"
+            className="text-center"
+            onClose={() => setError(null)}
+            dismissible
+          >
+            <i className="fas fa-exclamation-circle me-2"></i>
+            {error}
+          </Alert>
+        )}
+
         {/* Review Form Section */}
         <Card className="mb-5 border-primary shadow-lg">
           <Card.Header className="bg-dark text-primary border-primary">
@@ -499,6 +553,7 @@ const Reviews = () => {
                   placeholder="Your Name"
                   className="form-control bg-dark text-white border-primary"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               <div className="mb-3 position-relative">
@@ -509,6 +564,7 @@ const Reviews = () => {
                   className="form-control bg-dark text-white border-primary"
                   rows={4}
                   required
+                  disabled={isSubmitting}
                 />
                 <Badge
                   pill
@@ -522,8 +578,23 @@ const Reviews = () => {
                 variant="primary"
                 type="submit"
                 className="w-100 py-2 fw-bold"
+                disabled={isSubmitting}
               >
-                Submit Review
+                {isSubmitting ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      className="me-2"
+                    />
+                    Submitting...
+                  </>
+                ) : (
+                  "Submit Review"
+                )}
               </Button>
             </form>
           </Card.Body>
@@ -548,7 +619,6 @@ const Reviews = () => {
                       {r.name}
                     </Card.Title>
                   </div>
-                  {/* Changed this condition to check if it's a user review */}
                   {!r.id.toString().includes("default") && (
                     <Button
                       variant="outline-danger"
