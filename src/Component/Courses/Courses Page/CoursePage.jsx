@@ -189,7 +189,7 @@ const CoursePage = () => {
             style={{ width: "98%" }}
             className="comp button-85 row my-3 p-md-5 d-flex reverse-column flex-row-reverse justify-content-around"
           >
-            <div className="comp-heading col-md-7 ">
+            <div className="comp-heading col-md-7 ps-md-5">
               <h1>Django + Python Internship</h1>
               <p className="p-3">
                 🎓 Backend Developer Certificate by H2S Tech Solutions <br />
