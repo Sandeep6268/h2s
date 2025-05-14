@@ -81,14 +81,14 @@ const InternshipPrograms = () => {
                     <Card.Text className="flex-grow-1">
                       {program.description}
                     </Card.Text>
-                    <div className="mt-auto pt-3">
+                    {/* <div className="mt-auto pt-3">
                       <Button
                         variant="outline-primary"
                         className="w-100 internship-btn"
                       >
                         Learn More
                       </Button>
-                    </div>
+                    </div> */}
                   </Card.Body>
                 </Card>
               </Col>
