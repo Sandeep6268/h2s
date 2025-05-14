@@ -33,6 +33,16 @@ const Footer = () => {
       navigate("/register");
     }
   };
+  const scrollToTestimonials = () => {
+    if (window.location.pathname !== "/") {
+      navigate("/#testimonials");
+    } else {
+      const element = document.getElementById("testimonials");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   return (
     <footer className="footer-wrapper">
@@ -106,20 +116,9 @@ const Footer = () => {
                 </Link>
               </li>
               <li className="footer-link-item">
-                <Link
-                  to="/"
-                  onClick={(e) => {
-                    if (window.location.pathname === "/") {
-                      e.preventDefault();
-                      document
-                        .getElementById("testimonials")
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }
-                  }}
-                  className="footer-link"
-                >
+                <button onClick={scrollToTestimonials} className="footer-link">
                   Testimonials
-                </Link>
+                </button>
               </li>
               <li className="footer-link-item">
                 <button
