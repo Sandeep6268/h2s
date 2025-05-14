@@ -222,6 +222,14 @@ const Header = () => {
                     )}
                   </div>
                 </li>
+                <li className="nav-item mobile-dashboard-item">
+                  <button
+                    onClick={handleLogout}
+                    className={`text-decoration-none logout-btn`}
+                  >
+                    Logout
+                  </button>
+                </li>
               </>
             ) : (
               <>
