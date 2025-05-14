@@ -130,7 +130,7 @@ const Footer = () => {
                 </Modal.Header>
                 <Modal.Body className="terms-modal-body">
                   <div className="terms-content">
-                    <h3 className="terms-heading">
+                    <h3 className="text-primary">
                       Welcome to H2S TECH SOLUTIONS
                     </h3>
 
