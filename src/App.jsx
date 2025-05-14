@@ -27,7 +27,7 @@ export function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0); // हर navigation पर top पर स्क्रॉल करेगा
+    window.scrollTo(0, 0); 
   }, [pathname]);
 
   return null;

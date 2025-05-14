@@ -7,15 +7,16 @@ import { Context } from "../../Context";
 
 const Footer = () => {
   const [showSupportModal, setShowSupportModal] = useState(false);
-  const [showAlreadyRegisteredModal, setShowAlreadyRegisteredModal] =
-    useState(false);
+  const [showAlreadyRegisteredModal, setShowAlreadyRegisteredModal] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
   const { user } = useContext(Context);
   const navigate = useNavigate();
 
   const handleClose = () => setShowSupportModal(false);
   const handleShow = () => setShowSupportModal(true);
+  const handleTermsClose = () => setShowTermsModal(false);
+  const handleTermsShow = () => setShowTermsModal(true);
 
-  // Auto-hide the already registered modal after 3 seconds
   useEffect(() => {
     let timer;
     if (showAlreadyRegisteredModal) {
@@ -31,27 +32,6 @@ const Footer = () => {
       setShowAlreadyRegisteredModal(true);
     } else {
       navigate("/register");
-    }
-  };
-  // const navigate = useNavigate();
-
-  const handleTestimonialsClick = (e) => {
-    e.preventDefault();
-
-    if (window.location.pathname === "/") {
-      const testimonialsSection = document.getElementById("testimonials");
-      if (testimonialsSection) {
-        testimonialsSection.scrollIntoView({ behavior: "smooth" });
-      }
-    } else {
-      navigate("/");
-
-      setTimeout(() => {
-        const element = document.getElementById("testimonials");
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 1000);
     }
   };
 
@@ -127,14 +107,113 @@ const Footer = () => {
                 </Link>
               </li>
               <li className="footer-link-item">
-                <a
-                  href="#"
-                  onClick={handleTestimonialsClick}
-                  className="footer-link"
+                <button
+                  onClick={handleTermsShow}
+                  className="footer-link text-decoration-none"
+                  style={{ background: "none", border: "none", padding: 0 }}
                 >
-                  Testimonials
-                </a>
+                  Terms & Conditions
+                </button>
               </li>
+              <Modal
+                show={showTermsModal}
+                onHide={handleTermsClose}
+                className="terms-modal"
+                size="lg"
+                centered
+              >
+                <Modal.Header closeButton className="terms-modal-header">
+                  <Modal.Title className="terms-modal-title">
+                    <i className="fas fa-file-contract me-2"></i> Terms &
+                    Conditions
+                  </Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="terms-modal-body">
+                  <div className="terms-content">
+                    <h3 className="terms-heading">
+                      Welcome to H2S TECH SOLUTIONS
+                    </h3>
+
+                    <div className="terms-section">
+                      <h4 className="terms-subheading">
+                        1. Acceptance of Terms
+                      </h4>
+                      <p>
+                        By accessing or using our Website, you agree to comply
+                        with these Terms. If you do not agree, please refrain
+                        from using our services.
+                      </p>
+                    </div>
+
+                    <div className="terms-section">
+                      <h4 className="terms-subheading">
+                        2. Account Registration
+                      </h4>
+                      <p>
+                        You must provide accurate and complete registration
+                        details. You are responsible for maintaining account
+                        security and confidentiality.
+                      </p>
+                    </div>
+
+                    <div className="terms-section">
+                      <h4 className="terms-subheading">
+                        3. Course Access & Intellectual Property
+                      </h4>
+                      <p>
+                        All course materials are owned by H2S TECH SOLUTIONS or
+                        licensed partners. You may access content for personal,
+                        non-commercial use only.
+                      </p>
+                    </div>
+
+                    <div className="terms-section">
+                      <h4 className="terms-subheading">
+                        4. Payments & Refunds
+                      </h4>
+                      <p>
+                        We use Razorpay for secure payments. Refund requests
+                        must be made within 7 days of purchase if the course was
+                        not accessed.
+                      </p>
+                    </div>
+
+                    <div className="terms-section">
+                      <h4 className="terms-subheading">5. User Conduct</h4>
+                      <p>
+                        You agree not to share login credentials,
+                        reverse-engineer the platform, or upload harmful
+                        content.
+                      </p>
+                    </div>
+
+                    <div className="terms-section">
+                      <h4 className="terms-subheading">
+                        6. Contact Information
+                      </h4>
+                      <p>
+                        For any queries regarding these Terms, please contact us
+                        at:
+                      </p>
+                      <ul className="terms-contact-list">
+                        <li>
+                          <i className="fab fa-instagram me-2"></i>{" "}
+                          @h2stechsolutions
+                        </li>
+                        <li>
+                          <i className="fas fa-envelope me-2"></i>{" "}
+                          h2stechsolutions@gmail.com
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </Modal.Body>
+                <Modal.Footer className="terms-modal-footer">
+                  <Button variant="primary" onClick={handleTermsClose}>
+                    I Understand
+                  </Button>
+                </Modal.Footer>
+              </Modal>
               <li className="footer-link-item">
                 <button
                   onClick={handleShow}
