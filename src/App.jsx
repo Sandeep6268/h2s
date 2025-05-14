@@ -149,96 +149,96 @@ function App() {
     }
   );
   // with original api
-  // const handlePayment = (price, redirectUrl) => {
-  //   // Get user data for prefill
-  //   const user = JSON.parse(localStorage.getItem("user")) || {};
-
-  //   const options = {
-  //     key: "rzp_live_JZumJpdNJsE2Xb", // Live Key
-  //     amount: price * 100,
-  //     currency: "INR",
-  //     name: "H2S Tech Solutions",
-  //     description: "Course purchasing",
-  //     image: "https://yourdomain.com/path/to/logo.png", // पूरा URL डालें
-
-  //     // Dynamic Prefill
-  //     prefill: {
-  //       name: user.name || "",
-  //       email: user.email || "",
-  //       contact: user.phone || "",
-  //     },
-
-  //     handler: async (response) => {
-  //       try {
-  //         await FindUser.post(
-  //           "/purchase-course/",
-  //           { course_url: redirectUrl },
-  //           {
-  //             headers: {
-  //               Authorization: `Bearer ${localStorage.getItem("access")}`,
-  //             },
-  //           }
-  //         );
-  //         window.location.href = redirectUrl;
-  //       } catch (error) {
-  //         console.error("Failed to save course:", error);
-  //       }
-  //     },
-  //     theme: { color: "#3399cc" },
-  //   };
-
-  //   const rzp = new window.Razorpay(options);
-  //   rzp.open();
-  // };
-
-  // with test api
   const handlePayment = (price, redirectUrl) => {
+    // Get user data for prefill
+    const user = JSON.parse(localStorage.getItem("user")) || {};
+
     const options = {
-      key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
-      amount: price * 100, // Amount is in paise: 50000 paise = ₹500
+      key: "rzp_live_JZumJpdNJsE2Xb", // Live Key
+      amount: price * 100,
       currency: "INR",
       name: "H2S Tech Solutions",
       description: "Course purchasing",
-      image: logo, // optional
+      image: "https://yourdomain.com/path/to/logo.png", // पूरा URL डालें
 
-      handler: async function (response) {
+      // Dynamic Prefill
+      prefill: {
+        name: user.name || "",
+        email: user.email || "",
+        contact: user.phone || "",
+      },
+
+      handler: async (response) => {
         try {
-          // Save to backend
           await FindUser.post(
             "/purchase-course/",
-            {
-              course_url: redirectUrl,
-            },
+            { course_url: redirectUrl },
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("access")}`,
               },
             }
           );
-
-          // Redirect user
           window.location.href = redirectUrl;
         } catch (error) {
           console.error("Failed to save course:", error);
         }
       },
-
-      prefill: {
-        name: "Test User",
-        email: "test@example.com",
-        contact: "9999999999",
-      },
-      notes: {
-        address: "Test Address",
-      },
-      theme: {
-        color: "#3399cc",
-      },
+      theme: { color: "#3399cc" },
     };
 
     const rzp = new window.Razorpay(options);
     rzp.open();
   };
+
+  // with test api
+  // const handlePayment = (price, redirectUrl) => {
+  //   const options = {
+  //     key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
+  //     amount: price * 100, // Amount is in paise: 50000 paise = ₹500
+  //     currency: "INR",
+  //     name: "H2S Tech Solutions",
+  //     description: "Course purchasing",
+  //     image: logo, // optional
+
+  //     handler: async function (response) {
+  //       try {
+  //         // Save to backend
+  //         await FindUser.post(
+  //           "/purchase-course/",
+  //           {
+  //             course_url: redirectUrl,
+  //           },
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${localStorage.getItem("access")}`,
+  //             },
+  //           }
+  //         );
+
+  //         // Redirect user
+  //         window.location.href = redirectUrl;
+  //       } catch (error) {
+  //         console.error("Failed to save course:", error);
+  //       }
+  //     },
+
+  //     prefill: {
+  //       name: "Test User",
+  //       email: "test@example.com",
+  //       contact: "9999999999",
+  //     },
+  //     notes: {
+  //       address: "Test Address",
+  //     },
+  //     theme: {
+  //       color: "#3399cc",
+  //     },
+  //   };
+
+  //   const rzp = new window.Razorpay(options);
+  //   rzp.open();
+  // };
 
   return (
     <BrowserRouter>
