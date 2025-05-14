@@ -7,7 +7,8 @@ import { Context } from "../../Context";
 
 const Footer = () => {
   const [showSupportModal, setShowSupportModal] = useState(false);
-  const [showAlreadyRegisteredModal, setShowAlreadyRegisteredModal] = useState(false);
+  const [showAlreadyRegisteredModal, setShowAlreadyRegisteredModal] =
+    useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const { user } = useContext(Context);
   const navigate = useNavigate();
@@ -197,12 +198,26 @@ const Footer = () => {
                       </p>
                       <ul className="terms-contact-list">
                         <li>
-                          <i className="fab fa-instagram me-2"></i>{" "}
-                          @h2stechsolutions
+                          <i className="fab fa-instagram channel-icon"></i>
+                          <a
+                            href="https://www.instagram.com/h2stechsolutions?igsh=d3BkOTMxYWxpNjN5"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="channel-link"
+                          >
+                            @h2stechsolutions
+                          </a>
                         </li>
                         <li>
-                          <i className="fas fa-envelope me-2"></i>{" "}
-                          h2stechsolutions@gmail.com
+                          <i className="fas fa-envelope channel-icon"></i>
+                          <a
+                            href="https://mail.google.com/mail/?view=cm&fs=1&to=h2stechsolutions@gmail.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="channel-link"
+                          >
+                            support@h2sacademy.com
+                          </a>
                         </li>
                       </ul>
                     </div>
