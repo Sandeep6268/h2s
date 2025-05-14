@@ -171,7 +171,7 @@ const About = () => {
             >
               Get in Touch
             </Link>
-            <Link to = {'/course'} className='btn-outline-success'>
+            <Link to = {'/course'} className='btn btn-outline-success'>
               Explore Courses
             </Link>
           </div>
