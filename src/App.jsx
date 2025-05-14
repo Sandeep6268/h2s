@@ -159,7 +159,7 @@ function App() {
       currency: "INR",
       name: "H2S Tech Solutions",
       description: "Course purchasing",
-      image: "https://yourdomain.com/path/to/logo.png", // पूरा URL डालें
+      image: logo, 
 
       // Dynamic Prefill
       prefill: {
