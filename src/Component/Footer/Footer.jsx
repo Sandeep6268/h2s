@@ -33,6 +33,27 @@ const Footer = () => {
       navigate("/register");
     }
   };
+  // const navigate = useNavigate();
+
+  const handleTestimonialsClick = (e) => {
+    e.preventDefault();
+
+    if (window.location.pathname === "/") {
+      const testimonialsSection = document.getElementById("testimonials");
+      if (testimonialsSection) {
+        testimonialsSection.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      navigate("/");
+
+      setTimeout(() => {
+        const element = document.getElementById("testimonials");
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 500);
+    }
+  };
 
   return (
     <footer className="footer-wrapper">
@@ -106,21 +127,13 @@ const Footer = () => {
                 </Link>
               </li>
               <li className="footer-link-item">
-                <Link
-                  to="/#testimonials"
-                  onClick={(e) => {
-                    if (window.location.pathname === "/") {
-                      e.preventDefault();
-                      const element = document.getElementById("testimonials");
-                      if (element) {
-                        element.scrollIntoView({ behavior: "smooth" });
-                      }
-                    }
-                  }}
+                <a
+                  href="#"
+                  onClick={handleTestimonialsClick}
                   className="footer-link"
                 >
                   Testimonials
-                </Link>
+                </a>
               </li>
               <li className="footer-link-item">
                 <button
