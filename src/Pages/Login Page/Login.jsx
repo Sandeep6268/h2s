@@ -52,16 +52,26 @@ const Login = () => {
 
         // Update context
         setUser(userResponse.data);
-        navigate("/");
+        showCustomModal("success", "Login successful!");
+        setTimeout(() => navigate("/"), 2000);
       } catch (verifyError) {
         console.error("Token verification failed:", verifyError);
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
-        throw verifyError;
+        showCustomModal("error", "Login failed. Please try again.");
       }
     } catch (err) {
       console.error("Login failed:", err);
-      // Show error to user
+      let errorMessage = "Login failed. Please try again.";
+      if (err.response) {
+        if (err.response.status === 401) {
+          errorMessage = "Invalid email or password";
+        } else if (err.response.data) {
+          errorMessage =
+            err.response.data.detail || JSON.stringify(err.response.data);
+        }
+      }
+      showCustomModal("error", errorMessage);
     } finally {
       setIsLoading(false);
     }
