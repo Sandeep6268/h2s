@@ -107,13 +107,14 @@ const Footer = () => {
               </li>
               <li className="footer-link-item">
                 <Link
-                  to="/"
+                  to="/#testimonials"
                   onClick={(e) => {
                     if (window.location.pathname === "/") {
                       e.preventDefault();
-                      document
-                        .getElementById("testimonials")
-                        ?.scrollIntoView({ behavior: "smooth" });
+                      const element = document.getElementById("testimonials");
+                      if (element) {
+                        element.scrollIntoView({ behavior: "smooth" });
+                      }
                     }
                   }}
                   className="footer-link"

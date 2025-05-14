@@ -22,15 +22,13 @@ import { jwtDecode } from "jwt-decode";
 import PyandDJ from "./Component/Courses/Courses Page/Python/PyandDj";
 
 import { useLocation } from "react-router-dom";
+
 export function ScrollToTop() {
-  const { pathname, hash } = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    // अगर URL में hash नहीं है तो ही top पर scroll करे
-    if (!hash) {
-      window.scrollTo(0, 0);
-    }
-  }, [pathname, hash]);
+    window.scrollTo(0, 0); // हर navigation पर top पर स्क्रॉल करेगा
+  }, [pathname]);
 
   return null;
 }
@@ -161,7 +159,7 @@ function App() {
       currency: "INR",
       name: "H2S Tech Solutions",
       description: "Course purchasing",
-      image: logo,
+      image: logo, 
 
       // Dynamic Prefill
       prefill: {
