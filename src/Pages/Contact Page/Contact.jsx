@@ -79,13 +79,7 @@ const Contact = () => {
                       alt="Twitter"
                     />
                   </a>
-                  <a className="share-icon">
-                    <img
-                      className="img"
-                      src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-facebook.png"
-                      alt="Facebook"
-                    />
-                  </a>
+                  
                   <a
                     className="share-icon"
                     href="https://mail.google.com/mail/?view=cm&fs=1&to=h2stechsolutions@gmail.com"
