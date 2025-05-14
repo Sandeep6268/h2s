@@ -275,6 +275,7 @@ body.click-outside-handler.active::before {
   }
   .profile-dropdown-wrapper{
     height: 1px;
+    /* width: 53%; */
   }
 
   .course-link {
