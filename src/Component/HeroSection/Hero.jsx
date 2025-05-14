@@ -17,7 +17,7 @@ const Hero = () => {
             <img src={heroimg} className="w-100" alt="" />
           </div>
           <div className=" col-md-5  offset-md-1">
-            <h2>
+            <h2 className="font-change">
               We deliver smart tech solutions tailored for modern businesses.
             </h2>
           </div>
