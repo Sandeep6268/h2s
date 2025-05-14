@@ -106,9 +106,20 @@ const Footer = () => {
                 </Link>
               </li>
               <li className="footer-link-item">
-                <a href="#testimonials" className="footer-link">
+                <Link
+                  to="/"
+                  onClick={(e) => {
+                    if (window.location.pathname === "/") {
+                      e.preventDefault();
+                      document
+                        .getElementById("testimonials")
+                        ?.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="footer-link"
+                >
                   Testimonials
-                </a>
+                </Link>
               </li>
               <li className="footer-link-item">
                 <button
