@@ -5,6 +5,7 @@ import './About.css'; // We'll create this CSS file
 import Header from '../../Component/Header/Header';
 import Footer from '../../Component/Footer/Footer';
 import Counter from '../Counter Page/Counter';
+import { Link } from 'react-router-dom';
 
 const About = () => {
   return (
@@ -166,22 +167,13 @@ const About = () => {
             we're here to help you succeed.
           </p>
           <div className="d-flex flex-wrap justify-content-center gap-3">
-            <Button 
-              href="https://h2stechsolutions.netlify.app/contactus" 
-              variant="primary" 
-              size="lg"
-              className="px-4 py-2 fw-bold"
+            <Link to={'/contactus'}  className='btn btn-outline-primary'
             >
               Get in Touch
-            </Button>
-            <Button 
-              href="https://h2stechsolutions.netlify.app/course" 
-              variant="outline-light" 
-              size="lg"
-              className="px-4 py-2 fw-bold"
-            >
+            </Link>
+            <Link to = {'/course'} className='btn-outline-success'>
               Explore Courses
-            </Button>
+            </Link>
           </div>
         </Container>
       </section>
