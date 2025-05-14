@@ -167,7 +167,7 @@ const About = () => {
           </p>
           <div className="d-flex flex-wrap justify-content-center gap-3">
             <Button 
-              href="https://h2stechsolutions.netlify.app/contact" 
+              href="https://h2stechsolutions.netlify.app/contactus" 
               variant="primary" 
               size="lg"
               className="px-4 py-2 fw-bold"
@@ -175,7 +175,7 @@ const About = () => {
               Get in Touch
             </Button>
             <Button 
-              href="https://h2stechsolutions.netlify.app/courses" 
+              href="https://h2stechsolutions.netlify.app/course" 
               variant="outline-light" 
               size="lg"
               className="px-4 py-2 fw-bold"
