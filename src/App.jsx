@@ -20,6 +20,8 @@ import axios from "axios";
 import API, { FindUser } from "./api";
 import { jwtDecode } from "jwt-decode";
 import PyandDJ from "./Component/Courses/Courses Page/Python/PyandDj";
+  import AOS from 'aos';
+import 'aos/dist/aos.css'; // AOS styles
 
 import { useLocation } from "react-router-dom";
 
@@ -33,6 +35,16 @@ export function ScrollToTop() {
   return null;
 }
 function App() {
+
+
+// Initialize AOS
+useEffect(() => {
+  AOS.init({
+    duration: 800, // animation duration in milliseconds
+    easing: 'ease-in-out', // default easing
+    once: false, // whether animation should happen only once
+  });
+}, []);
   const [enrolledCourses, setEnrolledCourses] = useState(() => {
     try {
       const saved = localStorage.getItem("enrolledCourses");

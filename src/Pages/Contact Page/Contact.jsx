@@ -91,7 +91,7 @@ const Contact = () => {
             alt="background"
           />
           <div className="responsive-container-block container">
-            <div className="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12 left-one">
+            <div className="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12 left-one" data-aos='fade-down'>
               <div className="content-box">
                 <p className="text-blk section-head">H2S Tech Support</p>
                 <p className="text-light section-subhead">
@@ -151,8 +151,8 @@ const Contact = () => {
             </div>
             <div
               className="responsive-cell-block wk-ipadp-6 wk-tab-12 wk-mobile-12 wk-desk-6 right-one"
-              id="i1zj"
-            >
+              id="i1zj" data-aos='fade-up'
+              >
               <form className="form-box" onSubmit={handleSubmit}>
                 <div className="container-block form-wrapper">
                   <p className="text-blk contactus-head">

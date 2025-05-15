@@ -50,7 +50,7 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
+    <div className="register-container" data-aos='zoom-in'>
       {/* Loading Spinner */}
       {isLoading && (
         <div className="loader-container">

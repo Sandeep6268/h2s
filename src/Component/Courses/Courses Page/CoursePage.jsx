@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import "./CoursePage.css";
 import { Context } from "../../../Context";
 import banner2 from "../../../images/banner2.jpeg";
@@ -9,26 +9,44 @@ import django from "../../../images/django.jpg";
 import reactimg from "../../../images/react.jpg";
 import reactandjs from "../../../images/reactandjs.jpg";
 import { useNavigate } from "react-router-dom";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const CoursePage = () => {
   const { user } = useContext(Context);
   const { handlePayment } = useContext(Context);
   const navigate = useNavigate();
+
+  // Initialize AOS
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out-quad',
+      once: true,
+      mirror: false
+    });
+  }, []);
+
   return (
     <>
       <div className="course-section">
-        <div className="heading">
+        <div className="heading" data-aos="fade-down" data-aos-delay="100">
           <h5 className="text-center w-100">COURSES</h5>
           <h1 className="text-center w-100">BECOME SKILLED AT WHAT MATTERS</h1>
         </div>
         <div className="course-component text-dark d-flex align-items-center">
+          {/* Course 1 */}
           <div
             style={{ width: "98%" }}
             className="comp button-85 row my-3 p-md-5 d-flex justify-content-around"
+            data-aos="fade-up"
+            data-aos-delay="150"
           >
             <div
               className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
+              data-aos="zoom-in"
+              data-aos-delay="200"
             >
               <img
                 src={htmlcss}
@@ -37,7 +55,11 @@ const CoursePage = () => {
                 alt=""
               />
             </div>
-            <div className="comp-heading col-md-7 ps-md-5">
+            <div 
+              className="comp-heading col-md-7 ps-md-5"
+              data-aos="fade-up"
+              data-aos-delay="250"
+            >
               <h1>HTML & CSS Internship</h1>
               <p className="p-3">
                 🎓 Certified Internship from H2S Tech Solutions <br />
@@ -62,11 +84,19 @@ const CoursePage = () => {
               </div>
             </div>
           </div>
+
+          {/* Course 2 */}
           <div
             style={{ width: "98%" }}
             className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around"
+            data-aos="fade-up"
+            data-aos-delay="200"
           >
-            <div className="comp-heading col-md-7">
+            <div 
+              className="comp-heading col-md-7"
+              data-aos="fade-right"
+              data-aos-delay="250"
+            >
               <h1>HTML, CSS & JavaScript Internship</h1>
               <p className="p-3">
                 🎓 Verified Certificate from a registered IT firm <br />
@@ -91,8 +121,10 @@ const CoursePage = () => {
               </div>
             </div>
             <div
-              className="comp-img p-0 col-md-5 "
+              className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
+              data-aos="zoom-in"
+              data-aos-delay="300"
             >
               <img
                 src={htmlcssjs}
@@ -102,13 +134,19 @@ const CoursePage = () => {
               />
             </div>
           </div>
+
+          {/* Course 3 */}
           <div
             style={{ width: "98%" }}
-            className="comp button-85 row my-3 p-md-5 d-flex  justify-content-around"
+            className="comp button-85 row my-3 p-md-5 d-flex justify-content-around"
+            data-aos="fade-up"
+            data-aos-delay="250"
           >
             <div
               className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
+              data-aos="zoom-in"
+              data-aos-delay="300"
             >
               <img
                 src={python}
@@ -117,7 +155,11 @@ const CoursePage = () => {
                 alt=""
               />
             </div>
-            <div className="comp-heading col-md-7 ps-md-5">
+            <div 
+              className="comp-heading col-md-7 ps-md-5"
+              data-aos="fade-up"
+              data-aos-delay="350"
+            >
               <h1>Python Internship</h1>
               <p className="p-3">
                 🎓 Industry-recognized Certificate by H2S Tech Solutions <br />
@@ -142,14 +184,19 @@ const CoursePage = () => {
               </div>
             </div>
           </div>
-          {/* NOW POSITION 4: React JS (originally position 5) */}
+
+          {/* Course 4 */}
           <div
             style={{ width: "98%" }}
             className="comp button-85 row my-3 p-md-5 d-flex flex-row-reverse justify-content-around"
+            data-aos="fade-up"
+            data-aos-delay="300"
           >
             <div
               className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
+              data-aos="zoom-in"
+              data-aos-delay="350"
             >
               <img
                 src={reactimg}
@@ -158,7 +205,11 @@ const CoursePage = () => {
                 alt=""
               />
             </div>
-            <div className="comp-heading col-md-7 ps-md-5">
+            <div 
+              className="comp-heading col-md-7 ps-md-5"
+              data-aos="fade-right"
+              data-aos-delay="400"
+            >
               <h1>React JS Internship</h1>
               <p className="p-3">
                 🎓 Company-verified Certificate from H2S Tech Solutions <br />
@@ -184,12 +235,18 @@ const CoursePage = () => {
             </div>
           </div>
 
-          {/* NOW POSITION 5: Django + Python (originally position 4) */}
+          {/* Course 5 */}
           <div
             style={{ width: "98%" }}
             className="comp button-85 row my-3 p-md-5 d-flex reverse-column flex-row-reverse justify-content-around"
+            data-aos="fade-up"
+            data-aos-delay="350"
           >
-            <div className="comp-heading col-md-7 ps-md-5">
+            <div 
+              className="comp-heading col-md-7 ps-md-5"
+              data-aos="fade-up"
+              data-aos-delay="400"
+            >
               <h1>Django + Python Internship</h1>
               <p className="p-3">
                 🎓 Backend Developer Certificate by H2S Tech Solutions <br />
@@ -217,6 +274,8 @@ const CoursePage = () => {
             <div
               className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
+              data-aos="zoom-in"
+              data-aos-delay="450"
             >
               <img
                 src={django}
@@ -226,11 +285,19 @@ const CoursePage = () => {
               />
             </div>
           </div>
+
+          {/* Course 6 */}
           <div
             style={{ width: "98%" }}
             className="comp button-85 row my-3 p-md-5 d-flex reverse-column justify-content-around"
+            data-aos="fade-up"
+            data-aos-delay="400"
           >
-            <div className="comp-heading col-md-7">
+            <div 
+              className="comp-heading col-md-7"
+              data-aos="fade-right"
+              data-aos-delay="450"
+            >
               <h1>React JS + JavaScript Internship</h1>
               <p className="p-3">
                 🎓 Dual-Skill Certification by H2S Tech Solutions <br />
@@ -255,8 +322,10 @@ const CoursePage = () => {
               </div>
             </div>
             <div
-              className="comp-img p-0 col-md-5 "
+              className="comp-img p-0 col-md-5"
               style={{ marginBlock: "30px" }}
+              data-aos="zoom-in"
+              data-aos-delay="500"
             >
               <img
                 src={reactandjs}

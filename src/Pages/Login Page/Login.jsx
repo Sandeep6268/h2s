@@ -88,7 +88,7 @@ const Login = () => {
   };
 
   return (
-    <section className="container pt-5">
+    <section className="container pt-5" data-aos='zoom-in'>
       {/* Loading Spinner */}
       {isLoading && (
         <div className="loader-container">

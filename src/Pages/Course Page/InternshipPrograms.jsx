@@ -64,7 +64,7 @@ const InternshipPrograms = () => {
 
           <Row xs={1} md={2} lg={3} className="g-4">
             {programs.map((program) => (
-              <Col key={program.id}>
+              <Col key={program.id} data-aos='fade-right'>
                 <Card className="h-100 border-primary bg-dark text-white shadow-lg internship-card">
                   <Card.Body className="d-flex flex-column">
                     <div className="d-flex align-items-center mb-3">

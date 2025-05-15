@@ -13,7 +13,7 @@ const About = () => {
     <Header/>
     <div data-bs-theme="dark" style={{marginTop:'115px'}}>
       {/* Hero Section */}
-      <section className="hero-section position-relative overflow-hidden">
+      <section className="hero-section position-relative overflow-hidden" data-aos='zoom-in'>
         <div className="hero-overlay position-absolute w-100 h-100"></div>
         <Container className="position-relative z-index-1 py-6 text-center mt-5">
           <h1 className="display-3 fw-bold mb-4 text-white">
@@ -35,7 +35,7 @@ const About = () => {
       </section>
 
       {/* Intro + Features */}
-      <section className="py-6 mt-5">
+      <section className="py-6 mt-5" data-aos='fade-up'>
         <Container>
           <Row className="align-items-center gy-5">
             <Col lg={6} className="pe-lg-5">
@@ -89,7 +89,7 @@ const About = () => {
       <Counter/>
 
       {/* Portfolio Grid */}
-      <section className="py-5 bg-dark-gradient mt-5">
+      <section className="py-5 bg-dark-gradient mt-5" data-aos='fade-right'>
         <Container>
           <h3 className="fw-bold mb-5 text-center text-white">
             Our <span className="text-primary">Work</span> in Action
@@ -121,7 +121,7 @@ const About = () => {
       </section>
 
       {/* Core Values */}
-      <section id="values" className="py-6 mt-5">
+      <section id="values" className="py-6 mt-5" data-aos='fade-down'>
         <Container>
           <h2 className="fw-bold mb-5 text-center text-white">
             Our <span className="text-primary">Core</span> Values
@@ -157,7 +157,7 @@ const About = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-6 bg-dark-gradient-2 mt-5">
+      <section className="py-6 bg-dark-gradient-2 mt-5" data-aos='fade-right'>
         <Container className="text-center">
           <h3 className="fw-bold mb-4 text-white">
             Ready to <span className="text-primary">Level Up</span>?

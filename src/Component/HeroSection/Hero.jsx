@@ -9,14 +9,14 @@ const Hero = () => {
         <video src={video} className="w-100" autoPlay loop muted></video>
       </section>
       <section className="banner container-fluid d-sm-none d-md-block" style={{marginTop:'115px'}}>
-        <h1 className="text-center py-3">
+        <h1 className="text-center py-3" data-aos='zoom-in'>
           CODE | <span className="text-primary">CREATE</span> | CONQUER
         </h1>
         <div className="hero-container row w-100 p-2 py-md-5">
-          <div className=" col-md-3 offset-md-1">
+          <div className=" col-md-3 offset-md-1" data-aos='fade-up'>
             <img src={heroimg} className="w-100" alt="" />
           </div>
-          <div className=" col-md-5  offset-md-1">
+          <div className=" col-md-5  offset-md-1" data-aos='fade-down'>
             <h2 className="font-change">
               We deliver smart tech solutions tailored for modern businesses.
             </h2>
