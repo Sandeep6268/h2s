@@ -24,23 +24,56 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const getCsrfToken = () => {
+    const cookieValue = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('csrftoken='))
+      ?.split('=')[1];
+    return cookieValue;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      setShowSuccessModal(true);
-      // Reset form
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        message: "",
+    try {
+      const response = await fetch('https://h2s-backend-urrt.onrender.com/api/contact/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrfToken(),
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+        }),
       });
-    }, 2000);
+
+      if (response.ok) {
+        setShowSuccessModal(true);
+        // Reset form
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          message: "",
+        });
+      } else {
+        const errorData = await response.json();
+        console.error('Submission error:', errorData);
+        alert('There was an error submitting your form. Please try again.');
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      alert('There was a network error. Please check your connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleClose = () => setShowSuccessModal(false);
