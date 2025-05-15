@@ -39,7 +39,7 @@ const Footer = () => {
   return (
     <footer className="footer-wrapper">
       <div className="footer-container">
-        <div className="footer-brand-section" data-aos='fade-right'>
+        <div className="footer-brand-section">
           <div className="footer-logo-container">
             <img src={logo} alt="H2S Skills Academy" className="footer-logo" />
           </div>
@@ -59,7 +59,7 @@ const Footer = () => {
         </div>
 
         <div className="footer-links-section">
-          <div className="footer-links-group" data-aos='fade-right'>
+          <div className="footer-links-group">
             <h3 className="links-heading text-primary">Quick Links</h3>
             <ul className="footer-links-list">
               <li className="footer-link-item">
@@ -99,7 +99,7 @@ const Footer = () => {
               </div>
             </Modal.Body>
           </Modal>
-          <div className="footer-links-group" data-aos='fade-right'>
+          <div className="footer-links-group">
             <ul className="footer-links-list mt-5">
               <li></li>
               <li className="footer-link-item">
