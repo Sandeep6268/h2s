@@ -204,13 +204,13 @@ function App() {
   // };
 
   // In your payment component
-  const handlePayment = async (price, redirectUrl) => {
+  const handlePayment = async (price, courseUrl) => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/create-cashfree-order/`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/create-cashfree-order/`,
         {
-          course_url: redirectUrl,
           amount: price,
+          course_url: courseUrl,
         },
         {
           headers: {
@@ -222,8 +222,7 @@ function App() {
       // Redirect to Cashfree payment page
       window.location.href = response.data.payment_link;
     } catch (error) {
-      console.error("Payment initiation failed:", error);
-      // Show error to user
+      console.error("Payment error:", error);
       alert(error.response?.data?.error || "Payment initiation failed");
     }
   };
