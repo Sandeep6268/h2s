@@ -205,53 +205,50 @@ function App() {
 
   // In your payment component
   const handlePayment = async (price, courseUrl) => {
-    // 1. Check token existence and validity
-    const token = localStorage.getItem("access");
+  try {
+    // 1. Verify token exists
+    const token = localStorage.getItem('access');
     if (!token) {
-      alert("Please login first");
-      navigate("/login");
+      alert('Please login first');
+      navigate('/login');
       return;
     }
 
-    // 2. Verify token expiration
-    try {
-      const decoded = jwtDecode(token);
-      if (decoded.exp * 1000 < Date.now()) {
-        await refreshToken(); // Your token refresh function
-      }
-    } catch (e) {
-      console.error("Token invalid:", e);
-      localStorage.removeItem("access");
-      navigate("/login");
-      return;
-    }
+    // 2. Prepare request data
+    const requestData = {
+      amount: Number(price), // Ensure numeric value
+      course_url: String(courseUrl) // Ensure string value
+    };
 
-    // 3. Make the payment request
-    try {
-      const response = await axios.post(
-        `https://h2s-backend-urrt.onrender.com/api/create-cashfree-order/`,
-        {
-          amount: price,
-          course_url: courseUrl,
+    // 3. Make the API call with proper headers
+    const response = await axios.post(
+      `https://h2s-backend-urrt.onrender.com/api/create-cashfree-order/`,
+      requestData,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      window.location.href = response.data.payment_link;
-    } catch (error) {
-      if (error.response?.status === 401) {
-        // Token expired, try to refresh
-        await refreshToken();
-        return handlePayment(price, courseUrl); // Retry
+        validateStatus: (status) => status < 500 // Don't throw for 4xx errors
       }
-      alert(error.response?.data?.error || "Payment failed");
+    );
+
+    // 4. Handle response
+    if (response.status === 200) {
+      window.location.href = response.data.payment_link;
+    } else {
+      console.error('Payment error response:', response.data);
+      alert(response.data.error || 'Payment failed');
     }
-  };
+  } catch (error) {
+    console.error('Payment request failed:', {
+      config: error.config,
+      response: error.response?.data
+    });
+    alert('Payment processing error. Please try again.');
+  }
+};
 
   // Token refresh function
   
