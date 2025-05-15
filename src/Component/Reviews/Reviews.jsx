@@ -539,7 +539,7 @@ const Reviews = () => {
         )}
 
         {/* Review Form Section */}
-        <Card className="mb-5 border-primary shadow-lg" data-aos='zoom-in'>
+        <Card className="mb-5 border-primary shadow-lg">
           <Card.Header className="bg-dark text-primary border-primary">
             <h2 className="mb-0">Share Your Experience</h2>
           </Card.Header>
@@ -601,7 +601,7 @@ const Reviews = () => {
         </Card>
 
         {/* Reviews Display Section */}
-        <h2 className="text-center mb-4 text-primary py-3 bg-black rounded" data-aos='fade-right'>
+        <h2 className="text-center mb-4 text-primary py-3 bg-black rounded">
           <i className="fas fa-comments me-2"></i> User Testimonials
         </h2>
 
@@ -609,7 +609,7 @@ const Reviews = () => {
           {allReviews.map((r) => (
             <Card
               key={r.id}
-              className="review-card h-100 border-primary bg-dark text-white shadow-sm" data-aos='fade-up'
+              className="review-card h-100 border-primary bg-dark text-white shadow-sm"
             >
               <Card.Body>
                 <div className="d-flex justify-content-between align-items-start mb-3">
