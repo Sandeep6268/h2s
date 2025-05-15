@@ -224,8 +224,8 @@ function App() {
       // ✅ Safely use keys from .env
       const response = await cashfree.createOrder({
         orderData,
-        apiKey: process.env.REACT_APP_CASHFREE_APP_ID, // From .env
-        secretKey: process.env.REACT_APP_CASHFREE_SECRET_KEY, // From .env
+        apiKey: '97234949fe40abef14e420b3ac943279', // From .env
+        secretKey: 'cfsk_ma_prod_5dc29bb460e4a9a3ecfb2a1d04485c2a_57264cd5secert',
       });
 
       cashfree.redirect(response.payment_session_id);
