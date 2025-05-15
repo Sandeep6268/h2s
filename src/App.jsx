@@ -202,10 +202,7 @@ function App() {
   //   const rzp = new window.Razorpay(options);
   //   rzp.open();
   // };
-  console.log({
-    apiUrl: import.meta.env.VITE_API_URL,
-    env: import.meta.env.VITE_CASHFREE_ENV,
-  });
+  
   // In your payment component
   const handlePayment = async (price, courseUrl) => {
     try {
