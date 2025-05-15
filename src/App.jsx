@@ -202,12 +202,21 @@ function App() {
   //   const rzp = new window.Razorpay(options);
   //   rzp.open();
   // };
-  
+
   // In your payment component
   const handlePayment = async (price, courseUrl) => {
+    // First verify the API URL
+    const apiUrl = "https://h2s-backend-urrt.onrender.com";
+
+    if (!apiUrl) {
+      console.error("API URL is missing! Check your .env file");
+      alert("Payment system configuration error");
+      return;
+    }
+
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/create-cashfree-order/`,
+        `${apiUrl}/api/create-cashfree-order/`,
         {
           amount: price,
           course_url: courseUrl,
