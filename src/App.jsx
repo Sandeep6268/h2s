@@ -205,18 +205,31 @@ function App() {
 
   // In your payment component
   const handlePayment = async (price, courseUrl) => {
-    // First verify the API URL
-    const apiUrl = "https://h2s-backend-urrt.onrender.com";
-
-    if (!apiUrl) {
-      console.error("API URL is missing! Check your .env file");
-      alert("Payment system configuration error");
+    // 1. Check token existence and validity
+    const token = localStorage.getItem("access");
+    if (!token) {
+      alert("Please login first");
+      navigate("/login");
       return;
     }
 
+    // 2. Verify token expiration
+    try {
+      const decoded = jwtDecode(token);
+      if (decoded.exp * 1000 < Date.now()) {
+        await refreshToken(); // Your token refresh function
+      }
+    } catch (e) {
+      console.error("Token invalid:", e);
+      localStorage.removeItem("access");
+      navigate("/login");
+      return;
+    }
+
+    // 3. Make the payment request
     try {
       const response = await axios.post(
-        `${apiUrl}/api/create-cashfree-order/`,
+        `https://h2s-backend-urrt.onrender.com/api/create-cashfree-order/`,
         {
           amount: price,
           course_url: courseUrl,
@@ -224,16 +237,24 @@ function App() {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
+            "Content-Type": "application/json",
           },
         }
       );
 
       window.location.href = response.data.payment_link;
     } catch (error) {
-      console.error("Payment error:", error);
-      alert(error.response?.data?.error || "Payment initiation failed");
+      if (error.response?.status === 401) {
+        // Token expired, try to refresh
+        await refreshToken();
+        return handlePayment(price, courseUrl); // Retry
+      }
+      alert(error.response?.data?.error || "Payment failed");
     }
   };
+
+  // Token refresh function
+  
   // <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
 
   // Helper function to load script dynamically
