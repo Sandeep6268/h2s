@@ -200,39 +200,18 @@ function App() {
   //   const rzp = new window.Razorpay(options);
   //   rzp.open();
   // };
-  const handlePayment = async (price, redirectUrl) => {
-    const user = JSON.parse(localStorage.getItem("user")) || {};
+  <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
 
-    try {
-      const cashfree = new Cashfree();
-
-      const orderData = {
-        order_id: `order_${Date.now()}`,
-        order_amount: price,
-        order_currency: "INR",
-        customer_details: {
-          customer_id: user.id || "guest",
-          customer_name: user.name || "",
-          customer_email: user.email || "",
-          customer_phone: user.phone || "",
-        },
-        order_meta: {
-          return_url: redirectUrl,
-        },
-      };
-
-      // ✅ Safely use keys from .env
-      const response = await cashfree.createOrder({
-        orderData,
-        apiKey: '97234949fe40abef14e420b3ac943279', // From .env
-        secretKey: 'cfsk_ma_prod_5dc29bb460e4a9a3ecfb2a1d04485c2a_57264cd5secert',
-      });
-
-      cashfree.redirect(response.payment_session_id);
-    } catch (error) {
-      console.error("Payment failed:", error);
-    }
-  };
+  // Helper function to load script dynamically
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  }
   // with test api
   // const handlePayment = (price, redirectUrl) => {
   //   const options = {
@@ -308,6 +287,8 @@ function App() {
           <Route path="/pythondjango90" element={<PyandDJ />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-failed" element={<PaymentFailed />} />
         </Routes>
       </Context.Provider>
     </BrowserRouter>
