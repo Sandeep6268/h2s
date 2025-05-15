@@ -9,8 +9,8 @@ import django from "../../../images/django.jpg";
 import reactimg from "../../../images/react.jpg";
 import reactandjs from "../../../images/reactandjs.jpg";
 import { useNavigate } from "react-router-dom";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const CoursePage = () => {
   const { user } = useContext(Context);
@@ -21,9 +21,9 @@ const CoursePage = () => {
   useEffect(() => {
     AOS.init({
       duration: 800,
-      easing: 'ease-in-out-quad',
+      easing: "ease-in-out-quad",
       once: true,
-      mirror: false
+      mirror: false,
     });
   }, []);
 
@@ -55,7 +55,7 @@ const CoursePage = () => {
                 alt=""
               />
             </div>
-            <div 
+            <div
               className="comp-heading col-md-7 ps-md-5"
               data-aos="fade-up"
               data-aos-delay="250"
@@ -71,11 +71,15 @@ const CoursePage = () => {
               <div className="paybtn m-3 d-flex center-below-md ">
                 <button
                   className="button-85"
-                  onClick={() => {
+                  onClick={async () => {
                     if (!user) {
                       navigate("/login");
                     } else {
-                      handlePayment(1, "/htmlcss89");
+                      try {
+                        await handlePayment(1, "/htmlcss89");
+                      } catch (error) {
+                        console.error("Payment error:", error);
+                      }
                     }
                   }}
                 >
@@ -92,7 +96,7 @@ const CoursePage = () => {
             data-aos="fade-up"
             data-aos-delay="200"
           >
-            <div 
+            <div
               className="comp-heading col-md-7"
               data-aos="fade-right"
               data-aos-delay="250"
@@ -155,7 +159,7 @@ const CoursePage = () => {
                 alt=""
               />
             </div>
-            <div 
+            <div
               className="comp-heading col-md-7 ps-md-5"
               data-aos="fade-up"
               data-aos-delay="350"
@@ -205,7 +209,7 @@ const CoursePage = () => {
                 alt=""
               />
             </div>
-            <div 
+            <div
               className="comp-heading col-md-7 ps-md-5"
               data-aos="fade-right"
               data-aos-delay="400"
@@ -242,7 +246,7 @@ const CoursePage = () => {
             data-aos="fade-up"
             data-aos-delay="350"
           >
-            <div 
+            <div
               className="comp-heading col-md-7 ps-md-5"
               data-aos="fade-up"
               data-aos-delay="400"
@@ -293,7 +297,7 @@ const CoursePage = () => {
             data-aos="fade-up"
             data-aos-delay="400"
           >
-            <div 
+            <div
               className="comp-heading col-md-7"
               data-aos="fade-right"
               data-aos-delay="450"

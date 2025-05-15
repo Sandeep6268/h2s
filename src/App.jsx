@@ -202,56 +202,46 @@ function App() {
   //   const rzp = new window.Razorpay(options);
   //   rzp.open();
   // };
-
+  console.log("Environment variables:", {
+    apiUrl: import.meta.env.VITE_API_URL,
+    user: user,
+    token: localStorage.getItem("access"),
+  });
   // In your payment component
   const handlePayment = async (price, courseUrl) => {
-  try {
-    // 1. Verify token exists
-    const token = localStorage.getItem('access');
-    if (!token) {
-      alert('Please login first');
-      navigate('/login');
-      return;
-    }
+    try {
+      // Verify the API URL first
+      const apiUrl =
+        import.meta.env.VITE_API_URL || "https://h2s-backend-urrt.onrender.com";
 
-    // 2. Prepare request data
-    const requestData = {
-      amount: Number(price), // Ensure numeric value
-      course_url: String(courseUrl) // Ensure string value
-    };
-
-    // 3. Make the API call with proper headers
-    const response = await axios.post(
-      `https://h2s-backend-urrt.onrender.com/api/create-cashfree-order/`,
-      requestData,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+      const response = await axios.post(
+        `${apiUrl}/api/create-cashfree-order/`,
+        {
+          amount: price,
+          course_url: courseUrl,
         },
-        validateStatus: (status) => status < 500 // Don't throw for 4xx errors
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    // 4. Handle response
-    if (response.status === 200) {
-      window.location.href = response.data.payment_link;
-    } else {
-      console.error('Payment error response:', response.data);
-      alert(response.data.error || 'Payment failed');
+      // Verify the payment_link exists before redirecting
+      if (response.data?.payment_link) {
+        window.location.href = response.data.payment_link;
+      } else {
+        throw new Error("No payment link received");
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert(error.response?.data?.error || "Payment initiation failed");
     }
-  } catch (error) {
-    console.error('Payment request failed:', {
-      config: error.config,
-      response: error.response?.data
-    });
-    alert('Payment processing error. Please try again.');
-  }
-};
+  };
 
   // Token refresh function
-  
+
   // <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
 
   // Helper function to load script dynamically
