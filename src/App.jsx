@@ -200,7 +200,33 @@ function App() {
   //   const rzp = new window.Razorpay(options);
   //   rzp.open();
   // };
-  <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
+
+  const handlePayment = async (price, redirectUrl) => {
+  try {
+    // 1. First call your backend to create Cashfree order
+    const response = await FindUser.post(
+      '/create-cashfree-order/',
+      {
+        course_url: redirectUrl,
+        amount: price
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access')}`,
+        }
+      }
+    );
+
+    // 2. Redirect to Cashfree payment page
+    window.location.href = response.data.payment_link;
+
+  } catch (error) {
+    console.error('Payment initiation failed:', error);
+    // Show error to user (you might want to add a notification)
+    alert('Payment initiation failed. Please try again.');
+  }
+};
+  // <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
 
   // Helper function to load script dynamically
   function loadScript(src) {
