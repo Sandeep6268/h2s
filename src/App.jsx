@@ -20,31 +20,29 @@ import axios from "axios";
 import API, { FindUser } from "./api";
 import { jwtDecode } from "jwt-decode";
 import PyandDJ from "./Component/Courses/Courses Page/Python/PyandDj";
-  import AOS from 'aos';
-import 'aos/dist/aos.css'; // AOS styles
-
+import AOS from "aos";
+import "aos/dist/aos.css"; // AOS styles
+import { Cashfree } from "@cashfreepayments/cashfree-sdk";
 import { useLocation } from "react-router-dom";
 
 export function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0); 
+    window.scrollTo(0, 0);
   }, [pathname]);
 
   return null;
 }
 function App() {
-
-
-// Initialize AOS
-useEffect(() => {
-  AOS.init({
-    duration: 800, // animation duration in milliseconds
-    easing: 'ease-in-out', // default easing
-    once: false, // whether animation should happen only once
-  });
-}, []);
+  // Initialize AOS
+  useEffect(() => {
+    AOS.init({
+      duration: 800, // animation duration in milliseconds
+      easing: "ease-in-out", // default easing
+      once: false, // whether animation should happen only once
+    });
+  }, []);
   const [enrolledCourses, setEnrolledCourses] = useState(() => {
     try {
       const saved = localStorage.getItem("enrolledCourses");
@@ -161,48 +159,80 @@ useEffect(() => {
     }
   );
   // with original api
-  const handlePayment = (price, redirectUrl) => {
-    // Get user data for prefill
+  // const handlePayment = (price, redirectUrl) => {
+  //   // Get user data for prefill
+  //   const user = JSON.parse(localStorage.getItem("user")) || {};
+
+  //   const options = {
+  //     key: "rzp_live_JZumJpdNJsE2Xb", // Live Key
+  //     amount: price * 100,
+  //     currency: "INR",
+  //     name: "H2S Tech Solutions",
+  //     description: "Course purchasing",
+  //     image: logo,
+
+  //     // Dynamic Prefill
+  //     prefill: {
+  //       name: user.name || "",
+  //       email: user.email || "",
+  //       contact: user.phone || "",
+  //     },
+
+  //     handler: async (response) => {
+  //       try {
+  //         await FindUser.post(
+  //           "/purchase-course/",
+  //           { course_url: redirectUrl },
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${localStorage.getItem("access")}`,
+  //             },
+  //           }
+  //         );
+  //         window.location.href = redirectUrl;
+  //       } catch (error) {
+  //         console.error("Failed to save course:", error);
+  //       }
+  //     },
+  //     theme: { color: "#3399cc" },
+  //   };
+
+  //   const rzp = new window.Razorpay(options);
+  //   rzp.open();
+  // };
+  const handlePayment = async (price, redirectUrl) => {
     const user = JSON.parse(localStorage.getItem("user")) || {};
 
-    const options = {
-      key: "rzp_live_JZumJpdNJsE2Xb", // Live Key
-      amount: price * 100,
-      currency: "INR",
-      name: "H2S Tech Solutions",
-      description: "Course purchasing",
-      image: logo, 
+    try {
+      const cashfree = new Cashfree();
 
-      // Dynamic Prefill
-      prefill: {
-        name: user.name || "",
-        email: user.email || "",
-        contact: user.phone || "",
-      },
+      const orderData = {
+        order_id: `order_${Date.now()}`,
+        order_amount: price,
+        order_currency: "INR",
+        customer_details: {
+          customer_id: user.id || "guest",
+          customer_name: user.name || "",
+          customer_email: user.email || "",
+          customer_phone: user.phone || "",
+        },
+        order_meta: {
+          return_url: redirectUrl,
+        },
+      };
 
-      handler: async (response) => {
-        try {
-          await FindUser.post(
-            "/purchase-course/",
-            { course_url: redirectUrl },
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("access")}`,
-              },
-            }
-          );
-          window.location.href = redirectUrl;
-        } catch (error) {
-          console.error("Failed to save course:", error);
-        }
-      },
-      theme: { color: "#3399cc" },
-    };
+      // ✅ Safely use keys from .env
+      const response = await cashfree.createOrder({
+        orderData,
+        apiKey: process.env.REACT_APP_CASHFREE_APP_ID, // From .env
+        secretKey: process.env.REACT_APP_CASHFREE_SECRET_KEY, // From .env
+      });
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+      cashfree.redirect(response.payment_session_id);
+    } catch (error) {
+      console.error("Payment failed:", error);
+    }
   };
-
   // with test api
   // const handlePayment = (price, redirectUrl) => {
   //   const options = {
