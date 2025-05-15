@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cashfreepayments/cashfree-sdk": "^0.1.7",
     "aos": "^2.3.4",
     "axios": "^1.9.0",
     "bootstrap": "^5.3.6",
