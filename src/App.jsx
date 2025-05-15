@@ -25,6 +25,7 @@ import "aos/dist/aos.css"; // AOS styles
 import { Cashfree } from "@cashfreepayments/cashfree-sdk";
 import { useLocation } from "react-router-dom";
 import PaymentSuccess from "./Component/Payment/PaymentSuccess";
+import PaymentFailed from "./Component/Payment/PaymentFailed";
 
 export function ScrollToTop() {
   const { pathname } = useLocation();
