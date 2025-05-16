@@ -236,7 +236,7 @@ function App() {
             alert(
               "Payment successful but course activation may take a moment. Refresh the page if not visible."
             );
-            window.location.href = redirectUrl;
+            // window.location.href = redirectUrl;
           }
         },
 
