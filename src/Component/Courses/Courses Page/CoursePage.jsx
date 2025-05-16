@@ -133,7 +133,7 @@ const CoursePage = () => {
               </p>
               <div className="paybtn m-3 d-flex center-below-md ">
                 <button
-                  onClick={() => initiatePayment(99, "/htmlcssjs62")}
+                  onClick={() => initiatePayment(1, "/htmlcssjs62")}
                   disabled={
                     paymentState.processing || isEnrolled("/htmlcssjs62")
                   }
