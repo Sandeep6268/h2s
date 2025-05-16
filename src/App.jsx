@@ -259,14 +259,20 @@ function App() {
   // <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
 
   // Helper function to load script dynamically
-  function loadScript(src) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.body.appendChild(script);
-    });
+  useEffect(() => {
+    // Load Cashfree script dynamically
+    const script = document.createElement('script');
+    script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
+    script.async = true;
+    script.type = 'text/javascript';
+    
+    document.body.appendChild(script);
+    
+    return () => {
+      // Clean up
+      document.body.removeChild(script);
+    };
+  }, []);
   }
   // with test api
   // const handlePayment = (price, redirectUrl) => {
