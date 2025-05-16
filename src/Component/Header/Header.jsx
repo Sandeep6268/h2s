@@ -49,7 +49,36 @@ const Header = () => {
     const interval = setInterval(checkAuth, 60000);
     return () => clearInterval(interval);
   }, [user, setUser]);
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const token = localStorage.getItem("access");
+        if (!token) return;
 
+        const response = await FindUser.get("/my-courses/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const courseData = response.data;
+        if (Array.isArray(courseData)) {
+          setUserCourses(courseData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch courses:", error);
+        if (error.response?.status === 401) {
+          // Handle token expiration
+          localStorage.removeItem("access");
+          setUser(null);
+        }
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchCourses();
+    }
+  }, [isAuthenticated]);
   // useEffect(() => {
   //   const fetchCourses = async () => {
   //     try {
