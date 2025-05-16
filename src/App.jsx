@@ -22,10 +22,8 @@ import { jwtDecode } from "jwt-decode";
 import PyandDJ from "./Component/Courses/Courses Page/Python/PyandDj";
 import AOS from "aos";
 import "aos/dist/aos.css"; // AOS styles
-import { Cashfree } from "@cashfreepayments/cashfree-sdk";
+// import { Cashfree } from "@cashfreepayments/cashfree-sdk";
 import { useLocation } from "react-router-dom";
-import PaymentSuccess from "./Component/Payment/PaymentSuccess";
-import PaymentFailed from "./Component/Payment/PaymentFailed";
 
 export function ScrollToTop() {
   const { pathname } = useLocation();
@@ -202,45 +200,7 @@ function App() {
   //   const rzp = new window.Razorpay(options);
   //   rzp.open();
   // };
-  console.log("Environment variables:", {
-    apiUrl: import.meta.env.VITE_API_URL,
-    user: user,
-    token: localStorage.getItem("access"),
-  });
-  // In your payment component
-  const handlePayment = async (price, courseUrl) => {
-    try {
-      // Verify the API URL first
-      const apiUrl =
-        import.meta.env.VITE_API_URL || "https://h2s-backend-urrt.onrender.com";
-
-      const response = await axios.post(
-        `${apiUrl}/api/create-cashfree-order/`,
-        {
-          amount: price,
-          course_url: courseUrl,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      // Verify the payment_link exists before redirecting
-      if (response.data?.payment_link) {
-        window.location.href = response.data.payment_link;
-      } else {
-        throw new Error("No payment link received");
-      }
-    } catch (error) {
-      console.error("Payment error:", error);
-      alert(error.response?.data?.error || "Payment initiation failed");
-    }
-  };
-
-  // Token refresh function
+ 
 
   // <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
 
