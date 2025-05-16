@@ -55,7 +55,14 @@ function App() {
     redirectUrl: null,
     error: null,
   });
-
+  const stableSetUser = useCallback((newUser) => {
+    setUser((prev) => {
+      if (JSON.stringify(prev) !== JSON.stringify(newUser)) {
+        return newUser;
+      }
+      return prev;
+    });
+  }, []);
   // Auth initialization and token refresh logic remains the same...
 
   const handlePayment = async (price, redirectUrl) => {
@@ -104,11 +111,11 @@ function App() {
               paymentCompleted = true;
               setPaymentStatus({
                 show: true,
-                status: 'verifying',
+                status: "verifying",
                 orderId,
                 paymentId: data.paymentId,
                 redirectUrl,
-                error: null
+                error: null,
               });
               resolve(true);
             } catch (err) {
@@ -147,16 +154,16 @@ function App() {
 
   // Verify payment when status modal is shown
   useEffect(() => {
-    if (paymentStatus.show && paymentStatus.status === 'verifying') {
+    if (paymentStatus.show && paymentStatus.status === "verifying") {
       const verifyPayment = async () => {
         try {
           const token = localStorage.getItem("access");
-          
+
           await FindUser.post(
             "/verify-payment/",
-            { 
-              orderId: paymentStatus.orderId, 
-              paymentId: paymentStatus.paymentId 
+            {
+              orderId: paymentStatus.orderId,
+              paymentId: paymentStatus.paymentId,
             },
             { headers: { Authorization: `Bearer ${token}` } }
           );
@@ -176,21 +183,20 @@ function App() {
           });
           setEnrolledCourses(coursesResponse.data);
 
-          setPaymentStatus(prev => ({
+          setPaymentStatus((prev) => ({
             ...prev,
-            status: 'success'
+            status: "success",
           }));
 
           setTimeout(() => {
             window.location.href = `${paymentStatus.redirectUrl}?payment_id=${paymentStatus.paymentId}`;
           }, 2000);
-          
         } catch (err) {
           console.error("Payment verification failed:", err);
-          setPaymentStatus(prev => ({
+          setPaymentStatus((prev) => ({
             ...prev,
-            status: 'failed',
-            error: err.message
+            status: "failed",
+            error: err.message,
           }));
         }
       };
@@ -206,7 +212,7 @@ function App() {
       orderId: null,
       paymentId: null,
       redirectUrl: null,
-      error: null
+      error: null,
     });
   };
 
@@ -215,55 +221,60 @@ function App() {
     if (!paymentStatus.show) return null;
 
     return (
-      <div className="payment-status-modal" style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.7)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1000
-      }}>
-        <div style={{
-          backgroundColor: 'white',
-          padding: '2rem',
-          borderRadius: '8px',
-          textAlign: 'center',
-          maxWidth: '500px',
-          width: '90%'
-        }}>
-          {paymentStatus.status === 'verifying' && (
+      <div
+        className="payment-status-modal"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0,0,0,0.7)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1000,
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "2rem",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "500px",
+            width: "90%",
+          }}
+        >
+          {paymentStatus.status === "verifying" && (
             <div>
               <h3>Verifying Payment...</h3>
               <p>Please wait while we verify your payment details.</p>
               <div className="spinner"></div>
             </div>
           )}
-          
-          {paymentStatus.status === 'success' && (
+
+          {paymentStatus.status === "success" && (
             <div>
-              <h3 style={{color: 'green'}}>Payment Successful!</h3>
+              <h3 style={{ color: "green" }}>Payment Successful!</h3>
               <p>You will be redirected to your course shortly.</p>
             </div>
           )}
-          
-          {paymentStatus.status === 'failed' && (
+
+          {paymentStatus.status === "failed" && (
             <div>
-              <h3 style={{color: 'red'}}>Payment Verification Failed</h3>
-              <p>{paymentStatus.error || 'Unknown error occurred'}</p>
-              <button 
+              <h3 style={{ color: "red" }}>Payment Verification Failed</h3>
+              <p>{paymentStatus.error || "Unknown error occurred"}</p>
+              <button
                 onClick={closePaymentStatus}
                 style={{
-                  padding: '0.5rem 1rem',
-                  background: '#3399cc',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  marginTop: '1rem'
+                  padding: "0.5rem 1rem",
+                  background: "#3399cc",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  marginTop: "1rem",
                 }}
               >
                 Close
@@ -283,7 +294,7 @@ function App() {
           user: user,
           setUser: stableSetUser,
           enrolledCourses,
-          setEnrolledCourses
+          setEnrolledCourses,
         }}
       >
         <NotificationPopup />
