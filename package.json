@@ -17,6 +17,7 @@
     "aos": "^2.3.4",
     "axios": "^1.9.0",
     "bootstrap": "^5.3.6",
+    "cashfree-pg-sdk-javascript": "^2.0.8",
     "jwt-decode": "^4.0.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",

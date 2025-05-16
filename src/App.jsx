@@ -23,7 +23,7 @@ import PyandDJ from "./Component/Courses/Courses Page/Python/PyandDj";
 import AOS from "aos";
 import "aos/dist/aos.css"; // AOS styles
 // import { Cashfree } from "@cashfreepayments/cashfree-sdk";
-import { Cashfree } from '@cashfreepayments/cashfree-sdk';
+import { Cashfree } from "@cashfreepayments/cashfree-sdk";
 import { useLocation } from "react-router-dom";
 
 export function ScrollToTop() {
@@ -160,48 +160,61 @@ function App() {
     }
   );
   // with original api
-  const handlePayment = (price, redirectUrl) => {
-    // Get user data for prefill
-    const user = JSON.parse(localStorage.getItem("user")) || {};
+  const handlePayment = async (price, redirectUrl) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user")) || {};
 
-    const options = {
-      key: "rzp_live_2gII7HTGG7Mc05", // Live Key
-      amount: price * 100,
-      currency: "INR",
-      name: "H2S Tech Solutions",
-      description: "Course purchasing",
-      image: logo,
+      // 1. Create Cashfree order
+      const orderResponse = await FindUser.post("/create-cashfree-order/", {
+        amount: price,
+        course_url: redirectUrl,
+      });
 
-      // Dynamic Prefill
-      prefill: {
-        name: user.name || "",
-        email: user.email || "",
-        contact: user.phone || "",
-      },
+      const { orderId, paymentSessionId } = orderResponse.data;
 
-      handler: async (response) => {
-        try {
-          await FindUser.post(
-            "/purchase-course/",
-            { course_url: redirectUrl },
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("access")}`,
-              },
-            }
-          );
-          window.location.href = redirectUrl;
-        } catch (error) {
-          console.error("Failed to save course:", error);
-        }
-      },
-      theme: { color: "#3399cc" },
-    };
+      // 2. Initialize Cashfree
+      const cashfree = new Cashfree({ mode: "production" });
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+      // 3. Configure checkout
+      const checkoutOptions = {
+        paymentSessionId,
+        redirectTarget: "_self",
+        onSuccess: async (data) => {
+          // Directly call your existing purchase endpoint
+          try {
+            await FindUser.post(
+              "/purchase-course/",
+              { course_url: redirectUrl },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("access")}`,
+                },
+              }
+            );
+            window.location.href = redirectUrl;
+          } catch (error) {
+            console.error("Failed to save course:", error);
+            alert(
+              "Payment successful but course registration failed. Contact support."
+            );
+          }
+        },
+        onFailure: (data) => {
+          console.error("Payment Failed:", data);
+          alert("Payment failed. Please try again.");
+        },
+        onClose: () => {
+          console.log("Payment window closed");
+        },
+      };
+
+      // 4. Open checkout
+      cashfree.checkout(checkoutOptions);
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("Payment initialization failed. Please try again.");
+    }
   };
-
   //  const handlePayment = (price, redirectUrl) => {
   //   // Get user data for prefill
   //   const user = JSON.parse(localStorage.getItem("user")) || {};
