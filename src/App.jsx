@@ -25,6 +25,7 @@ import "aos/dist/aos.css"; // AOS styles
 // import { Cashfree } from "@cashfreepayments/cashfree-sdk";
 import { Cashfree } from "@cashfreepayments/cashfree-sdk";
 import { useLocation } from "react-router-dom";
+import PaymentStatus from "./PaymentStatus";
 
 export function ScrollToTop() {
   const { pathname } = useLocation();
@@ -44,14 +45,6 @@ function App() {
       once: false, // whether animation should happen only once
     });
   }, []);
-  const [enrolledCourses, setEnrolledCourses] = useState(() => {
-    try {
-      const saved = localStorage.getItem("enrolledCourses");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
 
   const [user, setUser] = useState(null); // Start with null instead of loading from localStorage
 
@@ -196,59 +189,23 @@ function App() {
         throw new Error("Cashfree SDK not loaded. Please refresh the page.");
       }
 
-      const cashfree = new window.Cashfree({ mode: "production" }); // use "sandbox" in testing
+      const cashfree = new window.Cashfree({ mode: "production" });
 
-      // 5. Define checkout options
+      // 5. Track payment status
+      let paymentCompleted = false;
+
+      // 6. Define checkout options
       const checkoutOptions = {
         paymentSessionId,
-        redirectTarget: "_self",
+        redirectTarget: "_blank", // Open in new tab to prevent navigation issues
 
         onSuccess: async (data) => {
-          try {
-            // 5a. Verify payment
-            await FindUser.post(
-              "/verify-payment/",
-              {
-                orderId,
-                paymentId: data.paymentId,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-
-            // 5b. Save purchased course
-            await FindUser.post(
-              "/purchase-course/",
-              {
-                course_url: redirectUrl,
-                payment_id: data.paymentId,
-                order_id: orderId,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-
-            // 5c. Refresh courses in context/state
-            const coursesResponse = await FindUser.get("/my-courses/", {
-              headers: { Authorization: `Bearer ${token}` },
-            });
-            setEnrolledCourses(coursesResponse.data); // make sure setEnrolledCourses is defined from context or props
-
-            // 5d. Redirect to course page
-            window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
-          } catch (err) {
-            console.error("Post-payment saving failed:", err);
-            alert(
-              "Payment was successful, but there was an error updating your courses. Please contact support."
-            );
-            window.location.href = redirectUrl;
-          }
+          paymentCompleted = true;
+          // Redirect to payment status page with order and payment IDs
+          window.open(
+            `/payment-status?orderId=${orderId}&paymentId=${data.paymentId}`,
+            "_self"
+          );
         },
 
         onFailure: (data) => {
@@ -256,19 +213,18 @@ function App() {
         },
 
         onClose: () => {
-          console.log("User closed the payment popup.");
+          if (!paymentCompleted) {
+            console.log(
+              "User closed the payment popup without completing payment."
+            );
+          }
         },
       };
 
-      // 6. Launch checkout
+      // 7. Launch checkout
       cashfree.checkout(checkoutOptions);
     } catch (error) {
-      console.error("Payment error:", {
-        message: error.message,
-        response: error.response?.data,
-        stack: error.stack,
-      });
-
+      console.error("Payment error:", error);
       let message = "Payment failed. Please try again.";
       if (error.response?.status === 401) {
         message = "Session expired. Please login again.";
@@ -277,7 +233,6 @@ function App() {
       } else if (error.response?.data?.error) {
         message += ` (${error.response.data.error})`;
       }
-
       alert(message);
     }
   };
@@ -397,7 +352,6 @@ function App() {
           handlePayment: handlePayment,
           user: user,
           setUser: stableSetUser,
-          enrolledCourses: enrolledCourses,
         }}
       >
         <NotificationPopup />
@@ -416,6 +370,7 @@ function App() {
           <Route path="/pythondjango90" element={<PyandDJ />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/payment-status" element={<PaymentStatus />} />
         </Routes>
       </Context.Provider>
     </BrowserRouter>
