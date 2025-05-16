@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FindUser } from "./api"; // Ensure this is correctly imported
+import { FindUser } from "./api";
+import "./PaymentStatus.css"; // Create this CSS file
 
 const PaymentStatus = () => {
   const [status, setStatus] = useState("Verifying payment...");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -15,7 +18,6 @@ const PaymentStatus = () => {
         const paymentId = searchParams.get("payment_id");
         const courseUrl = searchParams.get("course_url");
 
-        // Debugging: Log the parameters we received
         console.log({
           orderId,
           paymentId,
@@ -23,15 +25,16 @@ const PaymentStatus = () => {
           fullQuery: location.search
         });
 
-        if (!orderId || !paymentId) {
-          throw new Error("We couldn't find your payment details. Please contact support.");
+        if (!orderId) {
+          throw new Error("Missing order information. Please contact support.");
         }
 
-        setStatus("Verifying payment with bank...");
+        setStatus("Verifying payment details...");
+        setIsLoading(true);
 
         // 1. Verify payment with backend
         const verifyResponse = await FindUser.get(
-          `/verify-payment/?order_id=${orderId}&payment_id=${paymentId}`
+          `/verify-payment/?order_id=${orderId}&payment_id=${paymentId || ""}`
         );
 
         if (verifyResponse.data.status !== "SUCCESS") {
@@ -49,14 +52,19 @@ const PaymentStatus = () => {
 
         // 3. Redirect to course
         setStatus("Payment successful! Redirecting...");
+        setIsLoading(false);
         setTimeout(() => {
           window.location.href = courseUrl || "/my-courses";
         }, 1500);
+        console.log('courseee',courseUrl)
+        console.log('pay',paymentId)
 
       } catch (error) {
         console.error("Payment processing error:", error);
         setStatus(error.message || "Payment processing failed");
-        setTimeout(() => navigate("/"), 5000);
+        setIsLoading(false);
+        setIsError(true);
+        setTimeout(() => navigate("/"), 10000);
       }
     };
 
@@ -64,20 +72,62 @@ const PaymentStatus = () => {
   }, [location, navigate]);
 
   return (
-    <div className="payment-status-page">
+    <div className="payment-status-container">
       <div className="payment-status-card">
-        <h2>{status}</h2>
-        {status.includes("Verifying") && (
-          <div className="loading-spinner"></div>
+        <div className="status-header">
+          <h1>Payment Status</h1>
+          <div className={`status-icon ${isError ? "error" : isLoading ? "loading" : "success"}`}>
+            {isError ? (
+              <i className="fas fa-times-circle"></i>
+            ) : isLoading ? (
+              <div className="spinner"></div>
+            ) : (
+              <i className="fas fa-check-circle"></i>
+            )}
+          </div>
+        </div>
+        
+        <div className="status-message">
+          <p>{status}</p>
+          {isLoading && (
+            <p className="help-text">
+              This may take a few moments. Please don't close this page.
+            </p>
+          )}
+        </div>
+
+        {isError && (
+          <div className="action-buttons">
+            <button 
+              onClick={() => navigate("/")}
+              className="home-button"
+            >
+              Return to Home
+            </button>
+            <button 
+              onClick={() => navigate("/support")}
+              className="support-button"
+            >
+              Contact Support
+            </button>
+          </div>
         )}
-        {status.includes("failed") && (
-          <button 
-            onClick={() => navigate("/")}
-            className="retry-button"
-          >
-            Return to Home
-          </button>
-        )}
+
+        <div className="payment-details">
+          <h3>Transaction Details</h3>
+          <div className="details-grid">
+            <span>Order ID:</span>
+            <span>{new URLSearchParams(location.search).get("order_id") || "N/A"}</span>
+            
+            <span>Payment ID:</span>
+            <span>{new URLSearchParams(location.search).get("payment_id") || "Pending"}</span>
+            
+            <span>Status:</span>
+            <span className={`status-badge ${isError ? "error" : isLoading ? "pending" : "success"}`}>
+              {isError ? "Failed" : isLoading ? "Processing" : "Completed"}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -226,6 +226,7 @@ function App() {
             const verificationResponse = await FindUser.post(
               "/verify-payment/",
               { orderId, paymentId: data.paymentId },
+              
               { headers: { Authorization: `Bearer ${token}` } }
             );
 
