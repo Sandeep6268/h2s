@@ -171,7 +171,7 @@ function App() {
         "/create-cashfree-order/",
         {
           amount: price,
-          course_url: redirectUrl,
+          // course_url: redirectUrl,
           phone: phone,
         },
         {
@@ -209,7 +209,7 @@ function App() {
             const saveCourse = async () => {
               try {
                 await FindUser.post("/purchase-course/", {
-                  course_url: redirectUrl,
+                  // course_url: redirectUrl,
                   payment_id: data.paymentId,
                   order_id: orderId,
                 });
