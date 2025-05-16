@@ -230,7 +230,7 @@ function App() {
             setEnrolledCourses(coursesResponse.data);
 
             // Redirect to course page with payment info
-            window.location.href = `${redirectUrl}`;
+            // window.location.href = `${redirectUrl}`;
           } catch (err) {
             console.error("Post-payment process failed:", err);
             alert(
