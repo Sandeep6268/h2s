@@ -3,42 +3,41 @@
 }
 /* For WebKit browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
+  width: 12px;
+  height: 12px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #1a1a1a;
-    border-radius: 10px;
+  background: #1a1a1a;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #4a4a4a;
-    border-radius: 10px;
-    border: 2px solid #1a1a1a;
+  background: #4a4a4a;
+  border-radius: 10px;
+  border: 2px solid #1a1a1a;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #5e5e5e;
+  background: #5e5e5e;
 }
 
 /* For Firefox */
 * {
-    scrollbar-width: thin;
-    scrollbar-color: #4a4a4a #1a1a1a;
-    scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #4a4a4a #1a1a1a;
+  scroll-behavior: smooth;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #4a4a4a;
-    border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+  background: #4a4a4a;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
 }
-
 
 /* Add to your App.css */
 .payment-success-container {
@@ -70,6 +69,51 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.payment-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.payment-modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #3498db;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

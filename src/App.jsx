@@ -46,6 +46,11 @@ function App() {
     });
   }, []);
   const [enrolledCourses, setEnrolledCourses] = useState();
+  const [paymentStatus, setPaymentStatus] = useState({
+    processing: false,
+    message: "",
+    showModal: false,
+  });
 
   const [user, setUser] = useState(null); // Start with null instead of loading from localStorage
 
@@ -155,97 +160,154 @@ function App() {
   );
   // with original api
   const handlePayment = async (price, redirectUrl) => {
-  try {
-    // 1. Authentication check
-    const token = localStorage.getItem("access");
-    if (!token) {
-      alert("Please login first.");
-      return;
-    }
+    try {
+      // Show processing modal
+      setPaymentStatus({
+        processing: true,
+        message: "Preparing payment...",
+        showModal: true,
+      });
 
-    // 2. Create payment order
-    const orderResponse = await FindUser.post(
-      "/create-cashfree-order/",
-      {
-        amount: price,
-        course_url: redirectUrl,
-        phone: JSON.parse(localStorage.getItem("user"))?.phone || "9999999999",
-      },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
-    const { orderId, paymentSessionId } = orderResponse.data;
-
-    // 3. SDK check
-    if (!window.Cashfree) {
-      throw new Error("Payment system not ready. Please refresh the page.");
-    }
-
-    // 4. Track payment status
-    let paymentVerified = false;
-    const cashfree = new window.Cashfree({ mode: "production" });
-
-    // Show processing UI (you can implement this)
-    setPaymentStatus({ processing: true, message: "Processing payment..." });
-
-    // 5. Configure payment options
-    const checkoutOptions = {
-      paymentSessionId,
-      redirectTarget: "_blank", // Open in new tab
-
-      onSuccess: async (data) => {
-        try {
-          // Verify payment with backend
-          await FindUser.post(
-            "/verify-payment/",
-            { orderId, paymentId: data.paymentId },
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
-
-          // Save course purchase
-          await FindUser.post(
-            "/purchase-course/",
-            {
-              course_url: redirectUrl,
-              payment_id: data.paymentId,
-              order_id: orderId,
-            },
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
-
-          paymentVerified = true;
-          window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
-        } catch (err) {
-          console.error("Post-payment error:", err);
-          alert("Payment verification failed. Please contact support.");
-        }
-      },
-
-      onFailure: (data) => {
-        alert(`Payment failed: ${data?.message || "Unknown error"}`);
-      },
-
-      onClose: () => {
-        if (!paymentVerified) {
-          console.log("Payment was cancelled");
-        }
+      const token = localStorage.getItem("access");
+      if (!token) {
+        setPaymentStatus({
+          processing: false,
+          message: "Please login first",
+          showModal: true,
+        });
+        return;
       }
-    };
 
-    // 6. Launch payment
-    cashfree.checkout(checkoutOptions);
+      const orderResponse = await FindUser.post(
+        "/create-cashfree-order/",
+        {
+          amount: price,
+          course_url: redirectUrl,
+          phone:
+            JSON.parse(localStorage.getItem("user"))?.phone || "9999999999",
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-  } catch (error) {
-    console.error("Payment error:", error);
-    let message = "Payment failed. Please try again.";
-    if (error.response?.status === 401) {
-      message = "Session expired. Please login again.";
-      localStorage.removeItem("access");
-      window.location.reload();
+      const { orderId, paymentSessionId } = orderResponse.data;
+
+      if (!window.Cashfree) {
+        setPaymentStatus({
+          processing: false,
+          message: "Payment system loading. Please refresh...",
+          showModal: true,
+        });
+        return;
+      }
+
+      const cashfree = new window.Cashfree({ mode: "production" });
+      let paymentCompleted = false;
+
+      cashfree.checkout({
+        paymentSessionId,
+        redirectTarget: "_blank",
+
+        onSuccess: async (data) => {
+          try {
+            setPaymentStatus({
+              processing: true,
+              message: "Verifying payment...",
+              showModal: true,
+            });
+
+            await FindUser.post(
+              "/verify-payment/",
+              { orderId, paymentId: data.paymentId },
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            await FindUser.post(
+              "/purchase-course/",
+              {
+                course_url: redirectUrl,
+                payment_id: data.paymentId,
+                order_id: orderId,
+              },
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            setPaymentStatus({
+              processing: false,
+              message: "Payment successful! Redirecting...",
+              showModal: true,
+            });
+
+            setTimeout(() => {
+              window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
+            }, 1500);
+          } catch (err) {
+            setPaymentStatus({
+              processing: false,
+              message: "Payment verification failed. Please contact support.",
+              showModal: true,
+            });
+          }
+        },
+
+        onFailure: (data) => {
+          setPaymentStatus({
+            processing: false,
+            message: data?.message || "Payment failed",
+            showModal: true,
+          });
+        },
+
+        onClose: () => {
+          if (!paymentCompleted) {
+            setPaymentStatus({
+              processing: false,
+              message: "Payment cancelled",
+              showModal: true,
+            });
+          }
+        },
+      });
+    } catch (error) {
+      setPaymentStatus({
+        processing: false,
+        message:
+          error.response?.data?.error || "Payment failed. Please try again.",
+        showModal: true,
+      });
     }
-    alert(message);
-  }
-};
+  };
+  const PaymentModal = () => {
+    if (!paymentStatus.showModal) return null;
+
+    return (
+      <div className="payment-modal-overlay">
+        <div className="payment-modal">
+          {paymentStatus.processing ? (
+            <>
+              <div className="spinner"></div>
+              <p>{paymentStatus.message}</p>
+            </>
+          ) : (
+            <>
+              <h3>
+                {paymentStatus.message.includes("success")
+                  ? "Success!"
+                  : "Notice"}
+              </h3>
+              <p>{paymentStatus.message}</p>
+              <button
+                onClick={() =>
+                  setPaymentStatus((prev) => ({ ...prev, showModal: false }))
+                }
+              >
+                Close
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   //  const handlePayment = (price, redirectUrl) => {
   //   // Get user data for prefill
