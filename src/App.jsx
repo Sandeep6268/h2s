@@ -159,48 +159,47 @@ function App() {
     }
   );
   // with original api
-  // const handlePayment = (price, redirectUrl) => {
-  //   // Get user data for prefill
-  //   const user = JSON.parse(localStorage.getItem("user")) || {};
+  const handlePayment = (price, redirectUrl) => {
+    // Get user data for prefill
+    const user = JSON.parse(localStorage.getItem("user")) || {};
 
-  //   const options = {
-  //     key: "rzp_live_JZumJpdNJsE2Xb", // Live Key
-  //     amount: price * 100,
-  //     currency: "INR",
-  //     name: "H2S Tech Solutions",
-  //     description: "Course purchasing",
-  //     image: logo,
+    const options = {
+      key: "rzp_live_JZumJpdNJsE2Xb", // Live Key
+      amount: price * 100,
+      currency: "INR",
+      name: "H2S Tech Solutions",
+      description: "Course purchasing",
+      image: logo,
 
-  //     // Dynamic Prefill
-  //     prefill: {
-  //       name: user.name || "",
-  //       email: user.email || "",
-  //       contact: user.phone || "",
-  //     },
+      // Dynamic Prefill
+      prefill: {
+        name: user.name || "",
+        email: user.email || "",
+        contact: user.phone || "",
+      },
 
-  //     handler: async (response) => {
-  //       try {
-  //         await FindUser.post(
-  //           "/purchase-course/",
-  //           { course_url: redirectUrl },
-  //           {
-  //             headers: {
-  //               Authorization: `Bearer ${localStorage.getItem("access")}`,
-  //             },
-  //           }
-  //         );
-  //         window.location.href = redirectUrl;
-  //       } catch (error) {
-  //         console.error("Failed to save course:", error);
-  //       }
-  //     },
-  //     theme: { color: "#3399cc" },
-  //   };
+      handler: async (response) => {
+        try {
+          await FindUser.post(
+            "/purchase-course/",
+            { course_url: redirectUrl },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access")}`,
+              },
+            }
+          );
+          window.location.href = redirectUrl;
+        } catch (error) {
+          console.error("Failed to save course:", error);
+        }
+      },
+      theme: { color: "#3399cc" },
+    };
 
-  //   const rzp = new window.Razorpay(options);
-  //   rzp.open();
-  // };
- 
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
 
   // <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
 
