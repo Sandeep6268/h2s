@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./CoursePage.css";
 import { Context } from "../../../Context";
 import banner2 from "../../../images/banner2.jpeg";
