@@ -10,7 +10,8 @@ import API, { FindUser } from "../../api";
 const Header = () => {
   const location = useLocation();
   const [navActive, setNavActive] = useState(false);
-  const { user, setUser } = useContext(Context);
+  const { user } = useContext(Context);
+  const { enrolledCourses, setUser, setEnrolledCourses } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const navigate = useNavigate();
@@ -49,29 +50,44 @@ const Header = () => {
     return () => clearInterval(interval);
   }, [user, setUser]);
 
+  // useEffect(() => {
+  //   const fetchCourses = async () => {
+  //     try {
+  //       const response = await FindUser.get("/my-courses/", {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("access")}`,
+  //         },
+  //       });
+  //       const courseData = response.data;
+  //       if (Array.isArray(courseData)) {
+  //         setUserCourses(courseData);
+  //       } else {
+  //         console.error("Unexpected data format:", courseData);
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to fetch courses:", error);
+  //     }
+  //   };
+
+  //   if (isAuthenticated) {
+  //     fetchCourses();
+  //   }
+  // }, [isAuthenticated]);
+
   useEffect(() => {
-    const fetchCourses = async () => {
+    const refreshCourses = async () => {
       try {
-        const response = await FindUser.get("/my-courses/", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-          },
-        });
-        const courseData = response.data;
-        if (Array.isArray(courseData)) {
-          setUserCourses(courseData);
-        } else {
-          console.error("Unexpected data format:", courseData);
-        }
+        const response = await FindUser.get("/my-courses/");
+        setEnrolledCourses(response.data);
       } catch (error) {
-        console.error("Failed to fetch courses:", error);
+        console.error("Failed to refresh courses:", error);
       }
     };
 
-    if (isAuthenticated) {
-      fetchCourses();
+    if (showModal) {
+      refreshCourses();
     }
-  }, [isAuthenticated]);
+  }, [showModal]);
 
   const handleLogout = () => {
     setUser(null);
@@ -185,9 +201,7 @@ const Header = () => {
                       className="profile-avatar"
                       onClick={toggleProfileDropdown}
                     >
-                      <span className="avatar-circle">
-                        {getAvatarLetter()}
-                      </span>
+                      <span className="avatar-circle">{getAvatarLetter()}</span>
                     </button>
 
                     {showProfileDropdown && (
@@ -265,10 +279,7 @@ const Header = () => {
               onClick={() => setShowModal(false)}
             ></div>
             <div className="modal-content-1">
-              <button
-                className="close-btn"
-                onClick={() => setShowModal(false)}
-              >
+              <button className="close-btn" onClick={() => setShowModal(false)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -286,8 +297,8 @@ const Header = () => {
               </button>
               <h3 className="modal-title">Your Purchased Courses</h3>
               <ul className="courses-list">
-                {userCourses.length > 0 ? (
-                  userCourses.map((course) => (
+                {enrolledCourses?.length > 0 ? (
+                  enrolledCourses.map((course) => (
                     <li key={course.course_url}>
                       <Link to={course.course_url} className="course-link">
                         {COURSE_NAMES[course.course_url] || course.course_url}

@@ -44,7 +44,7 @@ function App() {
       once: false, // whether animation should happen only once
     });
   }, []);
- 
+
   const [user, setUser] = useState(null); // Start with null instead of loading from localStorage
 
   // Single source of truth for user state
@@ -197,49 +197,43 @@ function App() {
 
         onSuccess: async (data) => {
           try {
-            // 5a. Verify payment
-            await FindUser.post(
-              "/verify-payment/",
-              {
-                orderId,
-                paymentId: data.paymentId,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-
-            // 5b. Save purchased course
-            await FindUser.post(
-              "/purchase-course/",
-              {
-                course_url: redirectUrl,
-                payment_id: data.paymentId,
-                order_id: orderId,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            ).then((response) => {
-              console.log("Purchase response:", response.data); // Add this to verify
+            // 1. Verify payment
+            await FindUser.post("/verify-payment/", {
+              orderId,
+              paymentId: data.paymentId,
             });
 
-            // 5c. Refresh courses in context/state
-            const coursesResponse = await FindUser.get("/my-courses/", {
-              headers: { Authorization: `Bearer ${token}` },
-            });
-            setEnrolledCourses(coursesResponse.data); // make sure setEnrolledCourses is defined from context or props
+            // 2. Attempt to save course (retry logic)
+            let attempts = 0;
+            const saveCourse = async () => {
+              try {
+                await FindUser.post("/purchase-course/", {
+                  course_url: redirectUrl,
+                  payment_id: data.paymentId,
+                  order_id: orderId,
+                });
+              } catch (err) {
+                if (attempts < 3) {
+                  attempts++;
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
+                  return saveCourse();
+                }
+                throw err;
+              }
+            };
 
-            // 5d. Redirect to course page
+            await saveCourse();
+
+            // 3. Force refresh courses
+            const coursesResponse = await FindUser.get("/my-courses/");
+            setEnrolledCourses(coursesResponse.data);
+
+            // 4. Redirect
             window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
           } catch (err) {
-            console.error("Post-payment saving failed:", err);
+            console.error("Post-payment process failed:", err);
             alert(
-              "Payment was successful, but there was an error updating your courses. Please contact support."
+              "Payment successful but course activation may take a moment. Refresh the page if not visible."
             );
             window.location.href = redirectUrl;
           }
@@ -392,6 +386,7 @@ function App() {
           user: user,
           setUser: stableSetUser,
           enrolledCourses: enrolledCourses,
+          setEnrolledCourses:setEnrolledCourses,
         }}
       >
         <NotificationPopup />
