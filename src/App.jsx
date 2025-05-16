@@ -178,11 +178,17 @@ function App() {
         return;
       }
 
+      // Ensure courseUrl is properly encoded
+      const encodedCourseUrl = encodeURIComponent(
+        courseUrl || window.location.href
+      );
+      console.log('handle',encodedCourseUrl)
+      console.log('handle',courseUrl)
       const response = await FindUser.post(
         "/create-cashfree-order/",
         {
           amount: price,
-          course_url: courseUrl,
+          course_url: encodedCourseUrl,
           phone:
             JSON.parse(localStorage.getItem("user"))?.phone || "9999999999",
         },
@@ -206,24 +212,28 @@ function App() {
       cashfree.checkout({
         paymentSessionId,
         redirectTarget: "_blank",
+
         onSuccess: async (data) => {
           try {
+            paymentCompleted = true;
             setPaymentStatus({
               processing: true,
               message: "Verifying payment...",
               showModal: true,
             });
 
-            await FindUser.post(
+            // First verify the payment
+            const verificationResponse = await FindUser.post(
               "/verify-payment/",
               { orderId, paymentId: data.paymentId },
               { headers: { Authorization: `Bearer ${token}` } }
             );
 
+            // Then record the purchase
             await FindUser.post(
               "/purchase-course/",
               {
-                course_url: courseUrl,
+                course_url: encodedCourseUrl,
                 payment_id: data.paymentId,
                 order_id: orderId,
               },
@@ -236,10 +246,13 @@ function App() {
               showModal: true,
             });
 
+            // Redirect with all necessary parameters
             setTimeout(() => {
-              window.location.href = `/payment-status?order_id=${orderId}&payment_id=${data.paymentId}&course_url=${courseUrl}`;
+              const redirectUrl = `/payment-status?order_id=${orderId}&payment_id=${data.paymentId}&course_url=${encodedCourseUrl}`;
+              window.location.href = redirectUrl;
             }, 1500);
           } catch (err) {
+            console.error("Payment verification error:", err);
             setPaymentStatus({
               processing: false,
               message: "Payment verification failed. Please contact support.",
@@ -247,13 +260,19 @@ function App() {
             });
           }
         },
+
         onFailure: (data) => {
           setPaymentStatus({
             processing: false,
             message: data?.message || "Payment failed",
             showModal: true,
           });
+          // Redirect back with failure status
+          setTimeout(() => {
+            window.location.href = `/payment-status?order_id=${orderId}&payment_status=failed`;
+          }, 1500);
         },
+
         onClose: () => {
           if (!paymentCompleted) {
             setPaymentStatus({
@@ -261,16 +280,25 @@ function App() {
               message: "Payment cancelled",
               showModal: true,
             });
+            // Redirect back with cancelled status
+            setTimeout(() => {
+              window.location.href = `/payment-status?order_id=${orderId}&payment_status=cancelled`;
+            }, 1500);
           }
         },
       });
     } catch (error) {
+      console.error("Payment error:", error);
       setPaymentStatus({
         processing: false,
         message:
           error.response?.data?.error || "Payment failed. Please try again.",
         showModal: true,
       });
+      // Redirect back with error status
+      setTimeout(() => {
+        window.location.href = `/payment-status?payment_status=error`;
+      }, 1500);
     }
   };
   const PaymentModal = () => {
