@@ -23,9 +23,8 @@ import PyandDJ from "./Component/Courses/Courses Page/Python/PyandDj";
 import AOS from "aos";
 import "aos/dist/aos.css"; // AOS styles
 // import { Cashfree } from "@cashfreepayments/cashfree-sdk";
-import { Cashfree } from "@cashfreepayments/cashfree-sdk";
+import { Cashfree } from '@cashfreepayments/cashfree-sdk';
 import { useLocation } from "react-router-dom";
-import PaymentSuccess from "./PaymentSuccess";
 
 export function ScrollToTop() {
   const { pathname } = useLocation();
@@ -161,74 +160,47 @@ function App() {
     }
   );
   // with original api
-  // 1. First, add this to your public/index.html head section
-<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
-
-// 2. Modify your handlePayment function
-const handlePayment = async (price, redirectUrl) => {
-  try {
-    // Check if Cashfree is loaded
-    if (!window.Cashfree) {
-      throw new Error("Cashfree SDK not loaded");
-    }
-
+  const handlePayment = (price, redirectUrl) => {
+    // Get user data for prefill
     const user = JSON.parse(localStorage.getItem("user")) || {};
-    
-    // Initialize with your test credentials
-    const cashfree = new window.Cashfree({
-      mode: "sandbox" // or "production" for live
-    });
 
-    // Create order details
     const options = {
-      paymentSessionId: `temp_session_${Date.now()}`, // In production, get this from backend
-      orderDetails: {
-        orderId: `order_${Date.now()}`,
-        orderAmount: price,
-        orderCurrency: "INR"
+      key: "rzp_live_2gII7HTGG7Mc05", // Live Key
+      amount: price * 100,
+      currency: "INR",
+      name: "H2S Tech Solutions",
+      description: "Course purchasing",
+      image: logo,
+
+      // Dynamic Prefill
+      prefill: {
+        name: user.name || "",
+        email: user.email || "",
+        contact: user.phone || "",
       },
-      customerDetails: {
-        customerId: user.id || "guest",
-        customerName: user.name || "Guest",
-        customerEmail: user.email || "guest@example.com",
-        customerPhone: user.phone || "9999999999"
+
+      handler: async (response) => {
+        try {
+          await FindUser.post(
+            "/purchase-course/",
+            { course_url: redirectUrl },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access")}`,
+              },
+            }
+          );
+          window.location.href = redirectUrl;
+        } catch (error) {
+          console.error("Failed to save course:", error);
+        }
       },
-      theme: {
-        color: "#3399cc" // Match your brand
-      },
-      returnUrl: `${window.location.origin}/payment-success?redirect=${encodeURIComponent(redirectUrl)}`
+      theme: { color: "#3399cc" },
     };
 
-    // Open checkout
-    cashfree.checkout(options).then(async (result) => {
-      if (result.error) {
-        console.error("Payment error:", result.error.message);
-        return;
-      }
-      
-      // Simulate successful payment (in production, this comes from webhook)
-      try {
-        await FindUser.post(
-          "/purchase-course/", 
-          { course_url: redirectUrl },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access")}`,
-            },
-          }
-        );
-        window.location.href = `/payment-success?redirect=${encodeURIComponent(redirectUrl)}`;
-      } catch (error) {
-        console.error("Failed to save course:", error);
-      }
-    });
-
-  } catch (error) {
-    console.error("Payment failed:", error);
-    // Show error to user
-    alert("Payment initialization failed. Please try again.");
-  }
-};
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
 
   //  const handlePayment = (price, redirectUrl) => {
   //   // Get user data for prefill
@@ -356,7 +328,6 @@ const handlePayment = async (price, redirectUrl) => {
           <Route path="/reactandjs43" element={<ReactandJs />} />
           {/* <Route path="/pythondjango90" element={<PythonDjango />} /> */}
           <Route path="/pythondjango90" element={<PyandDJ />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
