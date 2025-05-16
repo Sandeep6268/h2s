@@ -179,9 +179,7 @@ function App() {
       }
 
       // Ensure courseUrl is properly encoded
-      const encodedCourseUrl = encodeURIComponent(
-        courseUrl || window.location.href
-      );
+      const encodedCourseUrl =courseUrl;
       console.log('handle',encodedCourseUrl)
       console.log('handle',courseUrl)
       const response = await FindUser.post(
@@ -196,6 +194,7 @@ function App() {
       );
 
       const { orderId, paymentSessionId } = response.data;
+      console.log(paymentSessionId)
 
       if (!window.Cashfree) {
         setPaymentStatus({
@@ -226,7 +225,7 @@ function App() {
             const verificationResponse = await FindUser.post(
               "/verify-payment/",
               { orderId, paymentId: data.paymentId },
-              
+
               { headers: { Authorization: `Bearer ${token}` } }
             );
 
