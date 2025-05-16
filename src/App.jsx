@@ -161,81 +161,118 @@ function App() {
   );
   // with original api
   const handlePayment = async (price, redirectUrl) => {
-    try {
-      // 1. Create order on backend
-      const orderResponse = await FindUser.post("/create-cashfree-order/", {
+  try {
+    // 1. Get authentication token
+    const token = localStorage.getItem("access");
+    if (!token) {
+      alert("Please login first");
+      return;
+    }
+
+    // 2. Get logged-in user info (update this if stored differently)
+    const userData = JSON.parse(localStorage.getItem("user")); // Assumes user info stored at login
+    const phone = userData?.phone || "9999999999"; // Fallback phone if not available
+
+    // 3. Create Cashfree order
+    const orderResponse = await FindUser.post(
+      "/create-cashfree-order/",
+      {
         amount: price,
         course_url: redirectUrl,
-      });
+        phone: phone  // ✅ Send phone to backend
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
 
-      const { orderId, paymentSessionId } = orderResponse.data;
+    const { orderId, paymentSessionId } = orderResponse.data;
 
-      // 2. Initialize Cashfree
-      const cashfree = new window.Cashfree({
-        mode: "production", // or "sandbox" for testing
-      });
-
-      // 3. Configure checkout
-      const checkoutOptions = {
-        paymentSessionId,
-        redirectTarget: "_self",
-        onSuccess: async (data) => {
-          try {
-            // 1. First verify payment with backend
-            const verification = await FindUser.post("/verify-payment/", {
-              orderId: orderId,
-              paymentId: data.paymentId,
-            });
-
-            // 2. Only if verification succeeds, save the course
-            if (verification.data.status === "success") {
-              // Save course purchase using your existing endpoint
-              await FindUser.post(
-                "/purchase-course/",
-                {
-                  course_url: redirectUrl,
-                  payment_id: data.paymentId,
-                  order_id: orderId,
-                },
-                {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("access")}`,
-                  },
-                }
-              );
-
-              // Redirect to course page with success parameters
-              window.location.href = `${redirectUrl}?payment_id=${data.paymentId}&status=success`;
-            } else {
-              alert(
-                "Payment verification failed. Contact support with order ID: " +
-                  orderId
-              );
-            }
-          } catch (error) {
-            console.error("Course purchase failed:", error);
-            alert(
-              "Payment succeeded but course registration failed. Contact support with order ID: " +
-                orderId
-            );
-          }
-        },
-        onFailure: (data) => {
-          console.error("Payment Failed:", data);
-          alert(`Payment failed: ${data.message || "Please try again"}`);
-        },
-        onClose: () => {
-          console.log("Payment window closed by user");
-        },
-      };
-
-      // 4. Open checkout
-      cashfree.checkout(checkoutOptions);
-    } catch (error) {
-      console.error("Payment initialization error:", error);
-      alert("Payment initialization failed. Please try again.");
+    // 4. Initialize Cashfree SDK
+    if (!window.Cashfree) {
+      throw new Error("Cashfree SDK not loaded");
     }
-  };
+
+    const cashfree = new window.Cashfree({
+      mode: "production" // Use "sandbox" during testing
+    });
+
+    // 5. Configure checkout
+    const checkoutOptions = {
+      paymentSessionId,
+      redirectTarget: "_self",
+      onSuccess: async (data) => {
+        try {
+          // Verify payment
+          await FindUser.post(
+            "/verify-payment/",
+            {
+              orderId,
+              paymentId: data.paymentId
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }
+          );
+
+          // Save course purchase
+          await FindUser.post(
+            "/purchase-course/",
+            {
+              course_url: redirectUrl,
+              payment_id: data.paymentId,
+              order_id: orderId
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }
+          );
+
+          window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
+        } catch (error) {
+          console.error("Post-payment error:", error);
+          alert("Payment successful! Your course will be activated shortly.");
+          window.location.href = redirectUrl;
+        }
+      },
+      onFailure: (data) => {
+        alert(`Payment failed: ${data.message || "Please try again"}`);
+      },
+      onClose: () => {
+        console.log("Payment window closed");
+      }
+    };
+
+    // 6. Open checkout
+    cashfree.checkout(checkoutOptions);
+
+  } catch (error) {
+    console.error("Payment error details:", {
+      message: error.message,
+      response: error.response?.data,
+      config: error.config
+    });
+
+    let errorMessage = "Payment failed. Please try again.";
+    if (error.response?.status === 401) {
+      errorMessage = "Session expired. Please login again.";
+      localStorage.removeItem("access");
+      window.location.reload();
+    } else if (error.response?.data?.error) {
+      errorMessage += ` (${error.response.data.error})`;
+    }
+
+    alert(errorMessage);
+  }
+};
+
   //  const handlePayment = (price, redirectUrl) => {
   //   // Get user data for prefill
   //   const user = JSON.parse(localStorage.getItem("user")) || {};
