@@ -154,55 +154,124 @@ function App() {
   );
   // with original api
   const handlePayment = async (price, redirectUrl) => {
-    const user = JSON.parse(localStorage.getItem("user")) || {};
-
-    const orderId = "order_" + Math.random().toString(36).substring(2, 12);
-
     try {
-      // Step 1: Create order and get paymentSessionId from Cashfree (TEST MODE)
-      const res = await fetch("https://sandbox.cashfree.com/pg/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-version": "2022-09-01",
-          "x-client-id": "TEST1234567890", // 🔁 Your test client ID here
-          "x-client-secret": "TEST9876543210", // 🔁 Your test secret key here
-        },
-        body: JSON.stringify({
-          order_id: orderId,
-          order_amount: price,
-          order_currency: "INR",
-          customer_details: {
-            customer_id: user?.id || "guest_123",
-            customer_email: user?.email || "test@example.com",
-            customer_phone: user?.phone || "9999999999",
-            customer_name: user?.name || "Guest User",
-          },
-        }),
-      });
-
-      const data = await res.json();
-      const sessionId = data.payment_session_id;
-
-      if (!sessionId) {
-        alert("Failed to create payment session");
+      // 1. Get token
+      const token = localStorage.getItem("access");
+      if (!token) {
+        alert("Please login first.");
         return;
       }
 
-      // Step 2: Load Cashfree SDK and start Drop-in flow
-      const cashfree = await import(
-        "https://sdk.cashfree.com/js/ui/2.0.0/dropin.min.js"
+      // 2. Get user data
+      const user = JSON.parse(localStorage.getItem("user"));
+      const phone = user?.phone || "9999999999";
+
+      // 3. Create order
+      const orderResponse = await FindUser.post(
+        "/create-cashfree-order/",
+        {
+          amount: price,
+          course_url: redirectUrl,
+          phone: phone,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
-      cashfree.initializeDropin({
-        paymentSessionId: sessionId,
-        redirectTarget: "_self", // or "_blank"
-        returnUrl: window.location.href, // optional for success redirect
+
+      const { orderId, paymentSessionId } = orderResponse.data;
+
+      // 4. Check SDK
+      if (!window.Cashfree) {
+        throw new Error("Cashfree SDK not loaded. Please refresh the page.");
+      }
+
+      const cashfree = new window.Cashfree({ mode: "production" }); // use "sandbox" in testing
+
+      // 5. Define checkout options
+      const checkoutOptions = {
+        paymentSessionId,
+        redirectTarget: "_self",
+
+        onSuccess: async (data) => {
+          try {
+            // 5a. Verify payment
+            await FindUser.post(
+              "/verify-payment/",
+              {
+                orderId,
+                paymentId: data.paymentId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            // 5b. Save purchased course
+            await FindUser.post(
+              "/purchase-course/",
+              {
+                course_url: redirectUrl,
+                payment_id: data.paymentId,
+                order_id: orderId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            // 5c. Refresh courses in context/state
+            const coursesResponse = await FindUser.get("/my-courses/", {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            setEnrolledCourses(coursesResponse.data); // make sure setEnrolledCourses is defined from context or props
+
+            // 5d. Redirect to course page
+            window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
+          } catch (err) {
+            console.error("Post-payment saving failed:", err);
+            alert(
+              "Payment was successful, but there was an error updating your courses. Please contact support."
+            );
+            window.location.href = redirectUrl;
+          }
+        },
+
+        onFailure: (data) => {
+          alert(`Payment failed: ${data?.message || "Unknown error"}`);
+        },
+
+        onClose: () => {
+          console.log("User closed the payment popup.");
+        },
+      };
+
+      // 6. Launch checkout
+      cashfree.checkout(checkoutOptions);
+    } catch (error) {
+      console.error("Payment error:", {
+        message: error.message,
+        response: error.response?.data,
+        stack: error.stack,
       });
 
-      // Optional: You can also listen for Drop-in events here
-    } catch (error) {
-      console.error("Cashfree error:", error);
-      alert("Something went wrong during payment");
+      let message = "Payment failed. Please try again.";
+      if (error.response?.status === 401) {
+        message = "Session expired. Please login again.";
+        localStorage.removeItem("access");
+        window.location.reload();
+      } else if (error.response?.data?.error) {
+        message += ` (${error.response.data.error})`;
+      }
+
+      alert(message);
     }
   };
 
@@ -250,20 +319,20 @@ function App() {
   // <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
 
   // Helper function to load script dynamically
-  // useEffect(() => {
-  //   // Load Cashfree script dynamically
-  //   const script = document.createElement("script");
-  //   script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
-  //   script.async = true;
-  //   script.type = "text/javascript";
+  useEffect(() => {
+    // Load Cashfree script dynamically
+    const script = document.createElement("script");
+    script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
+    script.async = true;
+    script.type = "text/javascript";
 
-  //   document.body.appendChild(script);
+    document.body.appendChild(script);
 
-  //   return () => {
-  //     // Clean up
-  //     document.body.removeChild(script);
-  //   };
-  // }, []);
+    return () => {
+      // Clean up
+      document.body.removeChild(script);
+    };
+  }, []);
 
   // with test api
   // const handlePayment = (price, redirectUrl) => {
