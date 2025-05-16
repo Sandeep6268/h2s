@@ -164,7 +164,7 @@ function App() {
     const user = JSON.parse(localStorage.getItem("user")) || {};
 
     const options = {
-      key: "rzp_live_JZumJpdNJsE2Xb", // Live Key
+      key: "rzp_live_2gII7HTGG7Mc05", // Live Key
       amount: price * 100,
       currency: "INR",
       name: "H2S Tech Solutions",
