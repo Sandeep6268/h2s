@@ -21,8 +21,9 @@ import API, { FindUser } from "./api";
 import { jwtDecode } from "jwt-decode";
 import PyandDJ from "./Component/Courses/Courses Page/Python/PyandDj";
 import AOS from "aos";
-import "aos/dist/aos.css";
-import { Cashfree } from "@cashfreepayments/cashfree-sdk";
+import "aos/dist/aos.css"; // AOS styles
+// import { Cashfree } from "@cashfreepayments/cashfree-sdk";
+// import { Cashfree } from "@cashfreepayments/cashfree-sdk";
 import { useLocation } from "react-router-dom";
 
 export function ScrollToTop() {
@@ -34,48 +35,139 @@ export function ScrollToTop() {
 
   return null;
 }
-
 function App() {
   // Initialize AOS
   useEffect(() => {
     AOS.init({
-      duration: 800,
-      easing: "ease-in-out",
-      once: false,
+      duration: 800, // animation duration in milliseconds
+      easing: "ease-in-out", // default easing
+      once: false, // whether animation should happen only once
     });
   }, []);
+ 
 
-  const [user, setUser] = useState(null);
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
-  const [paymentStatus, setPaymentStatus] = useState({
-    show: false,
-    status: null, // 'verifying', 'success', 'failed'
-    orderId: null,
-    paymentId: null,
-    redirectUrl: null,
-    error: null,
-  });
+  const [user, setUser] = useState(null); // Start with null instead of loading from localStorage
+  
+
+  // Single source of truth for user state
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const token = localStorage.getItem("access");
+      if (!token) {
+        setUser(null);
+        return;
+      }
+
+      try {
+        // Verify token first
+        await API.post("jwt/verify/", { token });
+
+        const decoded = jwtDecode(token);
+        const userResponse = await axios.get(
+          `https://h2s-backend-urrt.onrender.com/api/user/${decoded.user_id}/`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        setUser(userResponse.data);
+      } catch (error) {
+        console.error("Auth initialization failed:", error);
+        localStorage.removeItem("access");
+        setUser(null);
+      }
+    };
+
+    initializeAuth();
+  }, []);
+
+  // Persist user to localStorage when it changes
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
+
+  // Token refresh logic
+
+  useEffect(() => {
+    const refreshToken = async () => {
+      try {
+        const refresh = localStorage.getItem("refresh");
+        if (!refresh) return;
+
+        // 1. Get new access token
+        const { data } = await API.post("jwt/refresh/", { refresh });
+        const newAccessToken = data.access;
+
+        // 2. Save it
+        localStorage.setItem("access", newAccessToken);
+
+        // 3. Decode to get user ID
+        const decoded = jwtDecode(newAccessToken);
+
+        // 4. Fetch user info again
+        const userResponse = await axios.get(
+          `https://h2s-backend-urrt.onrender.com/api/user/${decoded.user_id}/`,
+          { headers: { Authorization: `Bearer ${newAccessToken}` } }
+        );
+
+        setUser(userResponse.data);
+      } catch (error) {
+        console.log("Token refresh failed - logging out", error);
+
+        // Logout user safely
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        localStorage.removeItem("user");
+        setUser(null);
+      }
+    };
+
+    const interval = setInterval(refreshToken, 1 * 60 * 1000); // 4.5 min
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    // console.log("User state updated:", user);
+  }, [user]);
   const stableSetUser = useCallback((newUser) => {
     setUser((prev) => {
+      // Only update if something actually changed
       if (JSON.stringify(prev) !== JSON.stringify(newUser)) {
         return newUser;
       }
       return prev;
     });
   }, []);
-  // Auth initialization and token refresh logic remains the same...
+  // In App.js
 
+  // In your API interceptors (add to your api.js)
+  API.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response?.status === 401) {
+        console.error("Unauthorized request - possible token issue");
+        // You might want to logout here
+      }
+      return Promise.reject(error);
+    }
+  );
+  // with original api
   const handlePayment = async (price, redirectUrl) => {
     try {
+      // 1. Get token
       const token = localStorage.getItem("access");
       if (!token) {
         alert("Please login first.");
         return;
       }
 
+      // 2. Get user data
       const user = JSON.parse(localStorage.getItem("user"));
       const phone = user?.phone || "9999999999";
 
+      // 3. Create order
       const orderResponse = await FindUser.post(
         "/create-cashfree-order/",
         {
@@ -93,53 +185,83 @@ function App() {
 
       const { orderId, paymentSessionId } = orderResponse.data;
 
+      // 4. Check SDK
       if (!window.Cashfree) {
         throw new Error("Cashfree SDK not loaded. Please refresh the page.");
       }
 
-      const cashfree = new window.Cashfree({ mode: "production" });
+      const cashfree = new window.Cashfree({ mode: "production" }); // use "sandbox" in testing
 
-      return new Promise((resolve, reject) => {
-        let paymentCompleted = false;
+      // 5. Define checkout options
+      const checkoutOptions = {
+        paymentSessionId,
+        redirectTarget: "_self",
 
-        const checkoutOptions = {
-          paymentSessionId,
-          redirectTarget: "_blank",
-
-          onSuccess: async (data) => {
-            try {
-              paymentCompleted = true;
-              setPaymentStatus({
-                show: true,
-                status: "verifying",
+        onSuccess: async (data) => {
+          try {
+            // 5a. Verify payment
+            await FindUser.post(
+              "/verify-payment/",
+              {
                 orderId,
                 paymentId: data.paymentId,
-                redirectUrl,
-                error: null,
-              });
-              resolve(true);
-            } catch (err) {
-              console.error("Payment success handler error:", err);
-              reject(err);
-            }
-          },
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
 
-          onFailure: (data) => {
-            paymentCompleted = false;
-            reject(new Error(data?.message || "Payment failed"));
-          },
+            // 5b. Save purchased course
+            await FindUser.post(
+              "/purchase-course/",
+              {
+                course_url: redirectUrl,
+                payment_id: data.paymentId,
+                order_id: orderId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
 
-          onClose: () => {
-            if (!paymentCompleted) {
-              reject(new Error("Payment window closed without completion"));
-            }
-          },
-        };
+            // 5c. Refresh courses in context/state
+            const coursesResponse = await FindUser.get("/my-courses/", {
+              headers: { Authorization: `Bearer ${token}` },
+            });
 
-        cashfree.checkout(checkoutOptions);
-      });
+            // 5d. Redirect to course page
+            window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
+          } catch (err) {
+            console.error("Post-payment saving failed:", err);
+            alert(
+              "Payment was successful, but there was an error updating your courses. Please contact support."
+            );
+            window.location.href = redirectUrl;
+          }
+        },
+
+        onFailure: (data) => {
+          alert(`Payment failed: ${data?.message || "Unknown error"}`);
+        },
+
+        onClose: () => {
+          console.log("User closed the payment popup.");
+        },
+      };
+
+      // 6. Launch checkout
+      cashfree.checkout(checkoutOptions);
     } catch (error) {
-      console.error("Payment initialization error:", error);
+      console.error("Payment error:", {
+        message: error.message,
+        response: error.response?.data,
+        stack: error.stack,
+      });
+
       let message = "Payment failed. Please try again.";
       if (error.response?.status === 401) {
         message = "Session expired. Please login again.";
@@ -148,143 +270,118 @@ function App() {
       } else if (error.response?.data?.error) {
         message += ` (${error.response.data.error})`;
       }
-      throw new Error(message);
+
+      alert(message);
     }
   };
 
-  // Verify payment when status modal is shown
+  //  const handlePayment = (price, redirectUrl) => {
+  //   // Get user data for prefill
+  //   const user = JSON.parse(localStorage.getItem("user")) || {};
+
+  //   const options = {
+  //     key: "rzp_live_JZumJpdNJsE2Xb", // Live Key
+  //     amount: price * 100,
+  //     currency: "INR",
+  //     name: "H2S Tech Solutions",
+  //     description: "Course purchasing",
+  //     image: logo,
+
+  //     // Dynamic Prefill
+  //     prefill: {
+  //       name: user.name || "",
+  //       email: user.email || "",
+  //       contact: user.phone || "",
+  //     },
+
+  //     handler: async (response) => {
+  //       try {
+  //         await FindUser.post(
+  //           "/purchase-course/",
+  //           { course_url: redirectUrl },
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${localStorage.getItem("access")}`,
+  //             },
+  //           }
+  //         );
+  //         window.location.href = redirectUrl;
+  //       } catch (error) {
+  //         console.error("Failed to save course:", error);
+  //       }
+  //     },
+  //     theme: { color: "#3399cc" },
+  //   };
+
+  //   const rzp = new window.Razorpay(options);
+  //   rzp.open();
+  // };
+  // <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
+
+  // Helper function to load script dynamically
   useEffect(() => {
-    if (paymentStatus.show && paymentStatus.status === "verifying") {
-      const verifyPayment = async () => {
-        try {
-          const token = localStorage.getItem("access");
+    // Load Cashfree script dynamically
+    const script = document.createElement("script");
+    script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
+    script.async = true;
+    script.type = "text/javascript";
 
-          await FindUser.post(
-            "/verify-payment/",
-            {
-              orderId: paymentStatus.orderId,
-              paymentId: paymentStatus.paymentId,
-            },
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
+    document.body.appendChild(script);
 
-          await FindUser.post(
-            "/purchase-course/",
-            {
-              course_url: paymentStatus.redirectUrl,
-              payment_id: paymentStatus.paymentId,
-              order_id: paymentStatus.orderId,
-            },
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
+    return () => {
+      // Clean up
+      document.body.removeChild(script);
+    };
+  }, []);
 
-          const coursesResponse = await FindUser.get("/my-courses/", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setEnrolledCourses(coursesResponse.data);
+  // with test api
+  // const handlePayment = (price, redirectUrl) => {
+  //   const options = {
+  //     key: "rzp_test_9laFgTaGBY10xm", // Your Key ID
+  //     amount: price * 100, // Amount is in paise: 50000 paise = ₹500
+  //     currency: "INR",
+  //     name: "H2S Tech Solutions",
+  //     description: "Course purchasing",
+  //     image: logo, // optional
 
-          setPaymentStatus((prev) => ({
-            ...prev,
-            status: "success",
-          }));
+  //     handler: async function (response) {
+  //       try {
+  //         // Save to backend
+  //         await FindUser.post(
+  //           "/purchase-course/",
+  //           {
+  //             course_url: redirectUrl,
+  //           },
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${localStorage.getItem("access")}`,
+  //             },
+  //           }
+  //         );
 
-          setTimeout(() => {
-            window.location.href = `${paymentStatus.redirectUrl}?payment_id=${paymentStatus.paymentId}`;
-          }, 2000);
-        } catch (err) {
-          console.error("Payment verification failed:", err);
-          setPaymentStatus((prev) => ({
-            ...prev,
-            status: "failed",
-            error: err.message,
-          }));
-        }
-      };
+  //         // Redirect user
+  //         window.location.href = redirectUrl;
+  //       } catch (error) {
+  //         console.error("Failed to save course:", error);
+  //       }
+  //     },
 
-      verifyPayment();
-    }
-  }, [paymentStatus.show, paymentStatus.status]);
+  //     prefill: {
+  //       name: "Test User",
+  //       email: "test@example.com",
+  //       contact: "9999999999",
+  //     },
+  //     notes: {
+  //       address: "Test Address",
+  //     },
+  //     theme: {
+  //       color: "#3399cc",
+  //     },
+  //   };
 
-  const closePaymentStatus = () => {
-    setPaymentStatus({
-      show: false,
-      status: null,
-      orderId: null,
-      paymentId: null,
-      redirectUrl: null,
-      error: null,
-    });
-  };
-
-  // Payment Status Modal component
-  const PaymentStatusModal = () => {
-    if (!paymentStatus.show) return null;
-
-    return (
-      <div
-        className="payment-status-modal"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0,0,0,0.7)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          zIndex: 1000,
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: "white",
-            padding: "2rem",
-            borderRadius: "8px",
-            textAlign: "center",
-            maxWidth: "500px",
-            width: "90%",
-          }}
-        >
-          {paymentStatus.status === "verifying" && (
-            <div>
-              <h3>Verifying Payment...</h3>
-              <p>Please wait while we verify your payment details.</p>
-              <div className="spinner"></div>
-            </div>
-          )}
-
-          {paymentStatus.status === "success" && (
-            <div>
-              <h3 style={{ color: "green" }}>Payment Successful!</h3>
-              <p>You will be redirected to your course shortly.</p>
-            </div>
-          )}
-
-          {paymentStatus.status === "failed" && (
-            <div>
-              <h3 style={{ color: "red" }}>Payment Verification Failed</h3>
-              <p>{paymentStatus.error || "Unknown error occurred"}</p>
-              <button
-                onClick={closePaymentStatus}
-                style={{
-                  padding: "0.5rem 1rem",
-                  background: "#3399cc",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  marginTop: "1rem",
-                }}
-              >
-                Close
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
+  //   const rzp = new window.Razorpay(options);
+  //   rzp.open();
+  // };
 
   return (
     <BrowserRouter>
@@ -293,13 +390,10 @@ function App() {
           handlePayment: handlePayment,
           user: user,
           setUser: stableSetUser,
-          enrolledCourses,
-          setEnrolledCourses,
         }}
       >
         <NotificationPopup />
         <ScrollToTop />
-        <PaymentStatusModal />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -310,6 +404,7 @@ function App() {
           <Route path="/python24" element={<Python />} />
           <Route path="/react79" element={<Reactjs />} />
           <Route path="/reactandjs43" element={<ReactandJs />} />
+          {/* <Route path="/pythondjango90" element={<PythonDjango />} /> */}
           <Route path="/pythondjango90" element={<PyandDJ />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -320,3 +415,7 @@ function App() {
 }
 
 export default App;
+{
+  /* <Route path="/login" element={<LoginForm />} />
+<Route path="/register" element={<RegisterForm />} /> */
+}
