@@ -159,7 +159,7 @@ function App() {
     }
   );
   // with original api
-  const handlePayment = async (price, redirectUrl) => {
+  const handlePayment = async (price, courseUrl) => {
     try {
       // Show processing modal
       setPaymentStatus({
@@ -178,18 +178,18 @@ function App() {
         return;
       }
 
-      const orderResponse = await FindUser.post(
+      const response = await FindUser.post(
         "/create-cashfree-order/",
         {
           amount: price,
-          course_url: redirectUrl,
+          course_url: courseUrl,
           phone:
             JSON.parse(localStorage.getItem("user"))?.phone || "9999999999",
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const { orderId, paymentSessionId } = orderResponse.data;
+      const { orderId, paymentSessionId } = response.data;
 
       if (!window.Cashfree) {
         setPaymentStatus({
@@ -206,7 +206,6 @@ function App() {
       cashfree.checkout({
         paymentSessionId,
         redirectTarget: "_blank",
-
         onSuccess: async (data) => {
           try {
             setPaymentStatus({
@@ -224,7 +223,7 @@ function App() {
             await FindUser.post(
               "/purchase-course/",
               {
-                course_url: redirectUrl,
+                course_url: courseUrl,
                 payment_id: data.paymentId,
                 order_id: orderId,
               },
@@ -238,7 +237,7 @@ function App() {
             });
 
             setTimeout(() => {
-              window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
+              window.location.href = `/payment-status?order_id=${orderId}&payment_id=${data.paymentId}&course_url=${courseUrl}`;
             }, 1500);
           } catch (err) {
             setPaymentStatus({
@@ -248,7 +247,6 @@ function App() {
             });
           }
         },
-
         onFailure: (data) => {
           setPaymentStatus({
             processing: false,
@@ -256,7 +254,6 @@ function App() {
             showModal: true,
           });
         },
-
         onClose: () => {
           if (!paymentCompleted) {
             setPaymentStatus({
