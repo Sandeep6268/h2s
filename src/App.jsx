@@ -198,34 +198,19 @@ function App() {
             try {
               paymentCompleted = true;
 
-              await FindUser.post(
-                "/verify-payment/",
-                { orderId, paymentId: data.paymentId },
-                { headers: { Authorization: `Bearer ${token}` } }
-              );
-
-              await FindUser.post(
-                "/purchase-course/",
-                {
-                  course_url: redirectUrl,
-                  payment_id: data.paymentId,
-                  order_id: orderId,
-                },
-                { headers: { Authorization: `Bearer ${token}` } }
-              );
-
-              const coursesResponse = await FindUser.get("/my-courses/", {
-                headers: { Authorization: `Bearer ${token}` },
+              // Store payment data for verification
+              setPaymentData({
+                orderId,
+                paymentId: data.paymentId,
+                redirectUrl,
               });
-              setEnrolledCourses(coursesResponse.data);
 
-              resolve(true); // Payment successful
-              window.open(
-                `${redirectUrl}?payment_id=${data.paymentId}`,
-                "_self"
-              );
+              // Show payment status component
+              setShowPaymentStatus(true);
+
+              resolve(true);
             } catch (err) {
-              console.error("Post-payment error:", err);
+              console.error("Payment success handler error:", err);
               reject(err);
             }
           },
@@ -233,7 +218,6 @@ function App() {
           onFailure: (data) => {
             paymentCompleted = false;
             reject(new Error(data?.message || "Payment failed"));
-            alert(`Payment failed: ${data?.message || "Unknown error"}`);
           },
 
           onClose: () => {
@@ -246,7 +230,7 @@ function App() {
         cashfree.checkout(checkoutOptions);
       });
     } catch (error) {
-      console.error("Payment error:", error);
+      console.error("Payment initialization error:", error);
       let message = "Payment failed. Please try again.";
       if (error.response?.status === 401) {
         message = "Session expired. Please login again.";
@@ -255,10 +239,9 @@ function App() {
       } else if (error.response?.data?.error) {
         message += ` (${error.response.data.error})`;
       }
-      alert(message);
-      throw error;
+      throw new Error(message);
     }
-  };
+  };  
 
   //  const handlePayment = (price, redirectUrl) => {
   //   // Get user data for prefill
