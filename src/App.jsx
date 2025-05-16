@@ -232,7 +232,9 @@ function App() {
                   Authorization: `Bearer ${token}`,
                 },
               }
-            );
+            ).then((response) => {
+              console.log("Purchase response:", response.data); // Add this to verify
+            });
 
             // 5c. Refresh courses in context/state
             const coursesResponse = await FindUser.get("/my-courses/", {
