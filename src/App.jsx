@@ -44,9 +44,16 @@ function App() {
       once: false, // whether animation should happen only once
     });
   }, []);
+  const [enrolledCourses, setEnrolledCourses] = useState(() => {
+    try {
+      const saved = localStorage.getItem("enrolledCourses");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
   const [user, setUser] = useState(null); // Start with null instead of loading from localStorage
-  const [enrolledCourses, setEnrolledCourses] = useState();
 
   // Single source of truth for user state
   useEffect(() => {
@@ -184,74 +191,76 @@ function App() {
 
       const { orderId, paymentSessionId } = orderResponse.data;
 
-      // 4. Check if Cashfree SDK is available
+      // 4. Check SDK
       if (!window.Cashfree) {
         throw new Error("Cashfree SDK not loaded. Please refresh the page.");
       }
 
-      const cashfree = new window.Cashfree({ mode: "production" }); // Use "sandbox" while testing
+      const cashfree = new window.Cashfree({ mode: "production" }); // use "sandbox" in testing
 
       // 5. Define checkout options
       const checkoutOptions = {
         paymentSessionId,
-        redirectTarget: "cashfree", // use popup instead of redirect
+        redirectTarget: "_self",
 
         onSuccess: async (data) => {
           try {
-            // Verify payment
-            await FindUser.post("/verify-payment/", {
-              orderId,
-              paymentId: data.paymentId,
-            });
-
-            // Save purchased course (retry logic)
-            let attempts = 0;
-            const saveCourse = async () => {
-              try {
-                await FindUser.post("/purchase-course/", {
-                  course_url: redirectUrl,
-                  payment_id: data.paymentId,
-                  order_id: orderId,
-                });
-              } catch (err) {
-                if (attempts < 3) {
-                  attempts++;
-                  await new Promise((resolve) => setTimeout(resolve, 1000));
-                  return saveCourse();
-                }
-                throw err;
+            // 5a. Verify payment
+            await FindUser.post(
+              "/verify-payment/",
+              {
+                orderId,
+                paymentId: data.paymentId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
               }
-            };
-
-            await saveCourse();
-
-            // Refresh course list
-            const coursesResponse = await FindUser.get("/my-courses/");
-            setEnrolledCourses(coursesResponse.data);
-
-            // Redirect to course page with payment info
-            // window.location.href = `${redirectUrl}`;
-          } catch (err) {
-            console.error("Post-payment process failed:", err);
-            alert(
-              "Payment was successful but course activation may take a moment. Please refresh if not visible."
             );
-            // window.location.href = redirectUrl;
+
+            // 5b. Save purchased course
+            await FindUser.post(
+              "/purchase-course/",
+              {
+                course_url: redirectUrl,
+                payment_id: data.paymentId,
+                order_id: orderId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            // 5c. Refresh courses in context/state
+            const coursesResponse = await FindUser.get("/my-courses/", {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            setEnrolledCourses(coursesResponse.data); // make sure setEnrolledCourses is defined from context or props
+
+            // 5d. Redirect to course page
+            window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
+          } catch (err) {
+            console.error("Post-payment saving failed:", err);
+            alert(
+              "Payment was successful, but there was an error updating your courses. Please contact support."
+            );
+            window.location.href = redirectUrl;
           }
         },
 
         onFailure: (data) => {
-          alert(
-            `Payment failed: ${data?.message || "Unknown error occurred."}`
-          );
+          alert(`Payment failed: ${data?.message || "Unknown error"}`);
         },
 
         onClose: () => {
-          alert("You closed the payment popup. Payment was not completed.");
+          console.log("User closed the payment popup.");
         },
       };
 
-      // 6. Launch Cashfree Checkout
+      // 6. Launch checkout
       cashfree.checkout(checkoutOptions);
     } catch (error) {
       console.error("Payment error:", {
@@ -389,7 +398,6 @@ function App() {
           user: user,
           setUser: stableSetUser,
           enrolledCourses: enrolledCourses,
-          setEnrolledCourses: setEnrolledCourses,
         }}
       >
         <NotificationPopup />
