@@ -46,6 +46,7 @@ function App() {
   }, []);
 
   const [user, setUser] = useState(null); // Start with null instead of loading from localStorage
+  const [enrolledCourses,setEnrolledCourses] = useState()
 
   // Single source of truth for user state
   useEffect(() => {
