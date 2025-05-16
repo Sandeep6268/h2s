@@ -23,7 +23,9 @@ import PyandDJ from "./Component/Courses/Courses Page/Python/PyandDj";
 import AOS from "aos";
 import "aos/dist/aos.css"; // AOS styles
 // import { Cashfree } from "@cashfreepayments/cashfree-sdk";
+import { Cashfree } from "@cashfreepayments/cashfree-sdk";
 import { useLocation } from "react-router-dom";
+import PaymentSuccess from "./PaymentSuccess";
 
 export function ScrollToTop() {
   const { pathname } = useLocation();
@@ -159,46 +161,78 @@ function App() {
     }
   );
   // with original api
-  const handlePayment = (price, redirectUrl) => {
-    // Get user data for prefill
-    const user = JSON.parse(localStorage.getItem("user")) || {};
+  const handlePayment = async (price, redirectUrl) => {
+    try {
+      // Get user data
+      const user = JSON.parse(localStorage.getItem("user")) || {};
 
-    const options = {
-      key: "rzp_live_2gII7HTGG7Mc05", // Live Key
-      amount: price * 100,
-      currency: "INR",
-      name: "H2S Tech Solutions",
-      description: "Course purchasing",
-      image: logo,
+      // Initialize Cashfree
+      const cashfree = new Cashfree({
+        mode: "sandbox", // Change to "production" for live payments
+      });
 
-      // Dynamic Prefill
-      prefill: {
-        name: user.name || "",
-        email: user.email || "",
-        contact: user.phone || "",
-      },
+      // Generate a unique order ID (in production, this should come from backend)
+      const orderId = `ORDER_${Date.now()}`;
 
-      handler: async (response) => {
-        try {
-          await FindUser.post(
-            "/purchase-course/",
-            { course_url: redirectUrl },
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("access")}`,
-              },
-            }
-          );
-          window.location.href = redirectUrl;
-        } catch (error) {
-          console.error("Failed to save course:", error);
+      // Create payment session (in production, this should come from backend)
+      const paymentSessionId = `SESSION_${Date.now()}`;
+
+      const options = {
+        paymentSessionId,
+        redirectTarget: "_self",
+        customerDetails: {
+          customerId: user.id || "guest",
+          customerName: user.name || "Guest User",
+          customerEmail: user.email || "guest@example.com",
+          customerPhone: user.phone || "9999999999",
+        },
+        orderDetails: {
+          orderId,
+          orderAmount: price,
+          orderCurrency: "INR",
+          orderNote: `Course purchase: ${redirectUrl}`,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+        returnUrl: `${
+          window.location.origin
+        }/payment-success?redirect=${encodeURIComponent(redirectUrl)}`,
+      };
+
+      // Open Cashfree checkout
+      cashfree.checkout(options).then(async function (result) {
+        if (result.error) {
+          console.error("Payment error:", result.error.message);
+          return;
         }
-      },
-      theme: { color: "#3399cc" },
-    };
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+        // Payment succeeded (simulated)
+        if (result.redirect) {
+          // Save course to backend (mimicking your existing Razorpay flow)
+          try {
+            await FindUser.post(
+              "/purchase-course/",
+              { course_url: redirectUrl },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("access")}`,
+                },
+              }
+            );
+
+            // Redirect to success page which will then redirect to course
+            window.location.href = `/payment-success?redirect=${encodeURIComponent(
+              redirectUrl
+            )}`;
+          } catch (error) {
+            console.error("Failed to save course:", error);
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Payment failed:", error);
+    }
   };
 
   //  const handlePayment = (price, redirectUrl) => {
@@ -327,6 +361,7 @@ function App() {
           <Route path="/reactandjs43" element={<ReactandJs />} />
           {/* <Route path="/pythondjango90" element={<PythonDjango />} /> */}
           <Route path="/pythondjango90" element={<PyandDJ />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
