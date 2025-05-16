@@ -15,12 +15,15 @@ const PaymentStatus = () => {
         const orderId = searchParams.get("order_id");
         const paymentId = searchParams.get("payment_id");
         const courseUrl = searchParams.get("course_url");
+        const payment_status = searchParams.get("payment_status");
 
         console.log({
           orderId,
           paymentId,
           courseUrl,
+          payment_status,
           fullQuery: location.search
+
         });
 
         if (!orderId) {
