@@ -154,18 +154,15 @@ function App() {
   // with original api
   const handlePayment = async (price, redirectUrl) => {
     try {
-      // 1. Get token
       const token = localStorage.getItem("access");
       if (!token) {
         alert("Please login first.");
         return;
       }
 
-      // 2. Get user data
       const user = JSON.parse(localStorage.getItem("user"));
       const phone = user?.phone || "9999999999";
 
-      // 3. Create order
       const orderResponse = await FindUser.post(
         "/create-cashfree-order/",
         {
@@ -183,26 +180,19 @@ function App() {
 
       const { orderId, paymentSessionId } = orderResponse.data;
 
-      // 4. Check SDK
       if (!window.Cashfree) {
         throw new Error("Cashfree SDK not loaded. Please refresh the page.");
       }
 
-      const cashfree = new window.Cashfree({ mode: "production" });
+      const cashfree = new window.Cashfree({ mode: "production" }); // use "sandbox" for testing
 
-      // Track payment completion status
-      let paymentCompleted = false;
-
-      // 5. Define checkout options
       const checkoutOptions = {
         paymentSessionId,
         redirectTarget: "_self",
 
         onSuccess: async (data) => {
           try {
-            paymentCompleted = true;
-
-            // 5a. Verify payment
+            // Verify payment
             await FindUser.post(
               "/verify-payment/",
               {
@@ -216,7 +206,7 @@ function App() {
               }
             );
 
-            // 5b. Save purchased course
+            // Save purchased course
             await FindUser.post(
               "/purchase-course/",
               {
@@ -231,39 +221,34 @@ function App() {
               }
             );
 
-            // 5c. Refresh courses in context/state
-            const coursesResponse = await FindUser.get("/my-courses/", {
+            // Refresh user courses
+            await FindUser.get("/my-courses/", {
               headers: { Authorization: `Bearer ${token}` },
             });
 
-            // 5d. Only redirect if payment was successful
+            // Redirect to course page
             window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
           } catch (err) {
             console.error("Post-payment saving failed:", err);
             alert(
               "Payment was successful, but there was an error updating your courses. Please contact support."
             );
-            // Don't redirect if there's an error in verification
           }
         },
 
         onFailure: (data) => {
-          paymentCompleted = false;
+          console.warn("Payment failed:", data);
           alert(`Payment failed: ${data?.message || "Unknown error"}`);
-          // No redirect on failure
         },
 
         onClose: () => {
-          if (!paymentCompleted) {
-            console.log(
-              "User closed the payment popup without completing payment."
-            );
-            // No redirect when user closes the popup
-          }
+          console.log(
+            "User closed the payment popup without completing payment."
+          );
+          alert("Payment was cancelled.");
         },
       };
 
-      // 6. Launch checkout
       cashfree.checkout(checkoutOptions);
     } catch (error) {
       console.error("Payment error:", {
@@ -282,7 +267,6 @@ function App() {
       }
 
       alert(message);
-      // No redirect on initialization errors
     }
   };
 
