@@ -230,13 +230,13 @@ function App() {
             setEnrolledCourses(coursesResponse.data);
 
             // Redirect to course page with payment info
-            window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
+            window.location.href = `${redirectUrl}`;
           } catch (err) {
             console.error("Post-payment process failed:", err);
             alert(
               "Payment was successful but course activation may take a moment. Please refresh if not visible."
             );
-            window.location.href = redirectUrl;
+            // window.location.href = redirectUrl;
           }
         },
 
