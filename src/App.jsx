@@ -44,10 +44,8 @@ function App() {
       once: false, // whether animation should happen only once
     });
   }, []);
- 
 
   const [user, setUser] = useState(null); // Start with null instead of loading from localStorage
-  
 
   // Single source of truth for user state
   useEffect(() => {
@@ -190,7 +188,10 @@ function App() {
         throw new Error("Cashfree SDK not loaded. Please refresh the page.");
       }
 
-      const cashfree = new window.Cashfree({ mode: "production" }); // use "sandbox" in testing
+      const cashfree = new window.Cashfree({ mode: "production" });
+
+      // Track payment completion status
+      let paymentCompleted = false;
 
       // 5. Define checkout options
       const checkoutOptions = {
@@ -199,6 +200,8 @@ function App() {
 
         onSuccess: async (data) => {
           try {
+            paymentCompleted = true;
+
             // 5a. Verify payment
             await FindUser.post(
               "/verify-payment/",
@@ -233,23 +236,30 @@ function App() {
               headers: { Authorization: `Bearer ${token}` },
             });
 
-            // 5d. Redirect to course page
+            // 5d. Only redirect if payment was successful
             window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
           } catch (err) {
             console.error("Post-payment saving failed:", err);
             alert(
               "Payment was successful, but there was an error updating your courses. Please contact support."
             );
-            window.location.href = redirectUrl;
+            // Don't redirect if there's an error in verification
           }
         },
 
         onFailure: (data) => {
+          paymentCompleted = false;
           alert(`Payment failed: ${data?.message || "Unknown error"}`);
+          // No redirect on failure
         },
 
         onClose: () => {
-          console.log("User closed the payment popup.");
+          if (!paymentCompleted) {
+            console.log(
+              "User closed the payment popup without completing payment."
+            );
+            // No redirect when user closes the popup
+          }
         },
       };
 
@@ -272,6 +282,7 @@ function App() {
       }
 
       alert(message);
+      // No redirect on initialization errors
     }
   };
 
