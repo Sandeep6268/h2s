@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FindUser } from "./api";
-import "./PaymentStatus.css"; // Create this CSS file
-
 const PaymentStatus = () => {
   const [status, setStatus] = useState("Verifying payment...");
   const [isLoading, setIsLoading] = useState(true);
