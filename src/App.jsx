@@ -162,7 +162,7 @@ function App() {
   // with original api
   const handlePayment = async (price, redirectUrl) => {
     try {
-      // 1. Get user token
+      // 1. Get token
       const token = localStorage.getItem("access");
       if (!token) {
         alert("Please login first.");
@@ -170,10 +170,10 @@ function App() {
       }
 
       // 2. Get user data
-      const userData = JSON.parse(localStorage.getItem("user"));
-      const phone = userData?.phone || "9999999999";
+      const user = JSON.parse(localStorage.getItem("user"));
+      const phone = user?.phone || "9999999999";
 
-      // 3. Create order on backend
+      // 3. Create order
       const orderResponse = await FindUser.post(
         "/create-cashfree-order/",
         {
@@ -191,25 +191,21 @@ function App() {
 
       const { orderId, paymentSessionId } = orderResponse.data;
 
-      // 4. Check Cashfree SDK
+      // 4. Check SDK
       if (!window.Cashfree) {
-        throw new Error(
-          "Cashfree SDK not loaded. Please refresh and try again."
-        );
+        throw new Error("Cashfree SDK not loaded. Please refresh the page.");
       }
 
-      // 5. Initialize SDK
-      const cashfree = new window.Cashfree({
-        mode: "production", // Change to "sandbox" for testing
-      });
+      const cashfree = new window.Cashfree({ mode: "production" }); // use "sandbox" in testing
 
-      // 6. Setup checkout options
+      // 5. Define checkout options
       const checkoutOptions = {
         paymentSessionId,
         redirectTarget: "_self",
+
         onSuccess: async (data) => {
           try {
-            // 6a. Verify payment on server
+            // 5a. Verify payment
             await FindUser.post(
               "/verify-payment/",
               {
@@ -223,7 +219,7 @@ function App() {
               }
             );
 
-            // 6b. Save purchased course
+            // 5b. Save purchased course
             await FindUser.post(
               "/purchase-course/",
               {
@@ -238,28 +234,36 @@ function App() {
               }
             );
 
-            // 6c. Redirect to course
+            // 5c. Refresh courses in context/state
+            const coursesResponse = await FindUser.get("/my-courses/", {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            setEnrolledCourses(coursesResponse.data); // make sure setEnrolledCourses is defined from context or props
+
+            // 5d. Redirect to course page
             window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
           } catch (err) {
             console.error("Post-payment saving failed:", err);
             alert(
-              "Payment was successful, but an error occurred while saving your course. Please contact support."
+              "Payment was successful, but there was an error updating your courses. Please contact support."
             );
             window.location.href = redirectUrl;
           }
         },
+
         onFailure: (data) => {
-          alert(`Payment failed: ${data?.message || "Unknown error occurred"}`);
+          alert(`Payment failed: ${data?.message || "Unknown error"}`);
         },
+
         onClose: () => {
-          console.log("Payment popup closed by user.");
+          console.log("User closed the payment popup.");
         },
       };
 
-      // 7. Launch checkout
+      // 6. Launch checkout
       cashfree.checkout(checkoutOptions);
     } catch (error) {
-      console.error("handlePayment error:", {
+      console.error("Payment error:", {
         message: error.message,
         response: error.response?.data,
         stack: error.stack,
