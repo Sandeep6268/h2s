@@ -44,15 +44,7 @@ function App() {
       once: false, // whether animation should happen only once
     });
   }, []);
-  const [enrolledCourses, setEnrolledCourses] = useState(() => {
-    try {
-      const saved = localStorage.getItem("enrolledCourses");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
+ 
   const [user, setUser] = useState(null); // Start with null instead of loading from localStorage
 
   // Single source of truth for user state
