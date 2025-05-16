@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import "./CoursePage.css";
 import { Context } from "../../../Context";
 import banner2 from "../../../images/banner2.jpeg";
@@ -11,12 +11,10 @@ import reactandjs from "../../../images/reactandjs.jpg";
 import { useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { FindUser } from "../../../api";
 
 const CoursePage = () => {
-  const { user, handlePayment, paymentState, setPaymentState } =
-    useContext(Context);
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const { user } = useContext(Context);
+  const { handlePayment } = useContext(Context);
   const navigate = useNavigate();
 
   // Initialize AOS
@@ -28,67 +26,6 @@ const CoursePage = () => {
       mirror: false,
     });
   }, []);
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const token = localStorage.getItem("access");
-        if (token && user) {
-          const response = await FindUser.get("/my-courses/", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setEnrolledCourses(response.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch courses:", error);
-      }
-    };
-
-    fetchCourses();
-  }, [user]);
-
-  const initiatePayment = async (price, courseUrl) => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-
-    // Check if already enrolled
-    if (enrolledCourses.some((course) => course.course_url === courseUrl)) {
-      alert("You've already purchased this course!");
-      return;
-    }
-
-    const result = await handlePayment(price, courseUrl);
-
-    setPaymentState({
-      processing: false,
-      showModal: true,
-      success: result.success,
-      message: result.success
-        ? "Payment successful! Redirecting..."
-        : result.error || "Payment failed",
-    });
-
-    if (result.success) {
-      // Refresh courses after successful payment
-      const response = await FindUser.get("/my-courses/", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      });
-      setEnrolledCourses(response.data);
-
-      // Redirect after delay
-      setTimeout(() => {
-        window.location.href = `${result.redirectUrl}?payment_id=${result.paymentId}`;
-      }, 1500);
-    }
-  };
-
-  // Check if course is enrolled
-  const isEnrolled = (courseUrl) => {
-    return enrolledCourses.some((course) => course.course_url === courseUrl);
-  };
 
   return (
     <>
@@ -133,16 +70,20 @@ const CoursePage = () => {
               </p>
               <div className="paybtn m-3 d-flex center-below-md ">
                 <button
-                  onClick={() => initiatePayment(1, "/htmlcssjs62")}
-                  disabled={
-                    paymentState.processing || isEnrolled("/htmlcssjs62")
-                  }
+                  className="button-85"
+                  onClick={async () => {
+                    if (!user) {
+                      navigate("/login");
+                    } else {
+                      try {
+                        await handlePayment(1, "/htmlcss89");
+                      } catch (error) {
+                        console.error("Payment error:", error);
+                      }
+                    }
+                  }}
                 >
-                  {isEnrolled("/htmlcssjs62")
-                    ? "Already Enrolled"
-                    : paymentState.processing
-                    ? "Processing..."
-                    : "Pay ₹99"}
+                  Pay ₹1
                 </button>
               </div>
             </div>
