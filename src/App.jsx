@@ -153,126 +153,133 @@ function App() {
     }
   );
   // with original api
+  const [paymentState, setPaymentState] = useState({
+    processing: false,
+    showModal: false,
+    message: "",
+    success: false,
+  });
+
   const handlePayment = async (price, redirectUrl) => {
     try {
-      // 1. Get token
+      setPaymentState({
+        processing: true,
+        showModal: true,
+        message: "Preparing payment...",
+        success: false,
+      });
+
       const token = localStorage.getItem("access");
       if (!token) {
-        alert("Please login first.");
-        return;
+        throw new Error("Please login first");
       }
 
-      // 2. Get user data
-      const user = JSON.parse(localStorage.getItem("user"));
-      const phone = user?.phone || "9999999999";
-
-      // 3. Create order
       const orderResponse = await FindUser.post(
         "/create-cashfree-order/",
         {
           amount: price,
           course_url: redirectUrl,
-          phone: phone,
+          phone:
+            JSON.parse(localStorage.getItem("user"))?.phone || "9999999999",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const { orderId, paymentSessionId } = orderResponse.data;
 
-      // 4. Check SDK
       if (!window.Cashfree) {
-        throw new Error("Cashfree SDK not loaded. Please refresh the page.");
+        throw new Error("Payment system loading. Please wait...");
       }
 
-      const cashfree = new window.Cashfree({ mode: "production" }); // use "sandbox" in testing
+      return new Promise((resolve) => {
+        const cashfree = new window.Cashfree({ mode: "production" });
+        let paymentCompleted = false;
 
-      // 5. Define checkout options
-      const checkoutOptions = {
-        paymentSessionId,
-        redirectTarget: "_self",
+        const checkoutOptions = {
+          paymentSessionId,
+          redirectTarget: "_blank", // Open in new tab
 
-        onSuccess: async (data) => {
-          try {
-            // 5a. Verify payment
-            await FindUser.post(
-              "/verify-payment/",
-              {
-                orderId,
-                paymentId: data.paymentId,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+          onSuccess: async (data) => {
+            try {
+              paymentCompleted = true;
+
+              // Verify payment with backend
+              const verification = await FindUser.post(
+                "/verify-payment/",
+                { orderId, paymentId: data.paymentId },
+                { headers: { Authorization: `Bearer ${token}` } }
+              );
+
+              if (verification.data.status === "success") {
+                resolve({
+                  success: true,
+                  paymentId: data.paymentId,
+                  redirectUrl,
+                });
+              } else {
+                resolve({
+                  success: false,
+                  error: "Payment verification failed",
+                });
               }
-            );
+            } catch (error) {
+              resolve({ success: false, error: "Verification error" });
+            }
+          },
 
-            // 5b. Save purchased course
-            await FindUser.post(
-              "/purchase-course/",
-              {
-                course_url: redirectUrl,
-                payment_id: data.paymentId,
-                order_id: orderId,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
+          onFailure: () => {
+            resolve({ success: false, error: "Payment failed" });
+          },
 
-            // 5c. Refresh courses in context/state
-            const coursesResponse = await FindUser.get("/my-courses/", {
-              headers: { Authorization: `Bearer ${token}` },
-            });
-            setEnrolledCourses(coursesResponse.data); // make sure setEnrolledCourses is defined from context or props
-            
-            // 5d. Redirect to course page
-            window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
-          } catch (err) {
-            console.error("Post-payment saving failed:", err);
-            alert(
-              "Payment was successful, but there was an error updating your courses. Please contact support."
-            );
-            window.location.href = redirectUrl;
-          }
-        },
+          onClose: () => {
+            if (!paymentCompleted) {
+              resolve({ success: false, error: "Payment cancelled" });
+            }
+          },
+        };
 
-        onFailure: (data) => {
-          alert(`Payment failed: ${data?.message || "Unknown error"}`);
-        },
-
-        onClose: () => {
-          console.log("User closed the payment popup.");
-        },
-      };
-
-      // 6. Launch checkout
-      cashfree.checkout(checkoutOptions);
-    } catch (error) {
-      console.error("Payment error:", {
-        message: error.message,
-        response: error.response?.data,
-        stack: error.stack,
+        cashfree.checkout(checkoutOptions);
       });
-
-      let message = "Payment failed. Please try again.";
-      if (error.response?.status === 401) {
-        message = "Session expired. Please login again.";
-        localStorage.removeItem("access");
-        window.location.reload();
-      } else if (error.response?.data?.error) {
-        message += ` (${error.response.data.error})`;
-      }
-
-      alert(message);
+    } catch (error) {
+      console.error("Payment error:", error);
+      return {
+        success: false,
+        error: error.message || "Payment failed",
+      };
     }
+  };
+
+  // Payment Modal Component
+  const PaymentModal = () => {
+    if (!paymentState.showModal) return null;
+
+    return (
+      <div className="payment-modal-overlay">
+        <div className="payment-modal">
+          {paymentState.processing ? (
+            <>
+              <div className="spinner"></div>
+              <p>{paymentState.message}</p>
+            </>
+          ) : (
+            <>
+              <h3>{paymentState.success ? "Success!" : "Error"}</h3>
+              <p>{paymentState.message}</p>
+              <button
+                onClick={() =>
+                  setPaymentState((prev) => ({
+                    ...prev,
+                    showModal: false,
+                  }))
+                }
+              >
+                Close
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    );
   };
 
   //  const handlePayment = (price, redirectUrl) => {
@@ -387,13 +394,15 @@ function App() {
     <BrowserRouter>
       <Context.Provider
         value={{
-          handlePayment: handlePayment,
-          user: user,
+          handlePayment,
+          user,
           setUser: stableSetUser,
-          enrolledCourses: enrolledCourses,
+          paymentState,
+          setPaymentState,
         }}
       >
         <NotificationPopup />
+        <PaymentModal />
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
