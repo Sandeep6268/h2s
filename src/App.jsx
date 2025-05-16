@@ -273,7 +273,7 @@ function App() {
       document.body.removeChild(script);
     };
   }, []);
-  }
+  
   // with test api
   // const handlePayment = (price, redirectUrl) => {
   //   const options = {
