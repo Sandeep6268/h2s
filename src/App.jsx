@@ -155,18 +155,15 @@ function App() {
   // with original api
   const handlePayment = async (price, redirectUrl) => {
     try {
-      // 1. Get token
       const token = localStorage.getItem("access");
       if (!token) {
         alert("Please login first.");
         return;
       }
 
-      // 2. Get user data
       const user = JSON.parse(localStorage.getItem("user"));
       const phone = user?.phone || "9999999999";
 
-      // 3. Create order
       const orderResponse = await FindUser.post(
         "/create-cashfree-order/",
         {
@@ -184,45 +181,70 @@ function App() {
 
       const { orderId, paymentSessionId } = orderResponse.data;
 
-      // 4. Check SDK
       if (!window.Cashfree) {
         throw new Error("Cashfree SDK not loaded. Please refresh the page.");
       }
 
       const cashfree = new window.Cashfree({ mode: "production" });
 
-      // 5. Track payment status
-      let paymentCompleted = false;
+      return new Promise((resolve, reject) => {
+        let paymentCompleted = false;
 
-      // 6. Define checkout options
-      const checkoutOptions = {
-        paymentSessionId,
-        redirectTarget: "_blank", // Open in new tab to prevent navigation issues
+        const checkoutOptions = {
+          paymentSessionId,
+          redirectTarget: "_blank",
 
-        onSuccess: async (data) => {
-          paymentCompleted = true;
-          // Redirect to payment status page with order and payment IDs
-          window.open(
-            `/payment-status?orderId=${orderId}&paymentId=${data.paymentId}`,
-            "_self"
-          );
-        },
+          onSuccess: async (data) => {
+            try {
+              paymentCompleted = true;
 
-        onFailure: (data) => {
-          alert(`Payment failed: ${data?.message || "Unknown error"}`);
-        },
+              await FindUser.post(
+                "/verify-payment/",
+                { orderId, paymentId: data.paymentId },
+                { headers: { Authorization: `Bearer ${token}` } }
+              );
 
-        onClose: () => {
-          if (!paymentCompleted) {
-            console.log(
-              "User closed the payment popup without completing payment."
-            );
-          }
-        },
-      };
+              await FindUser.post(
+                "/purchase-course/",
+                {
+                  course_url: redirectUrl,
+                  payment_id: data.paymentId,
+                  order_id: orderId,
+                },
+                { headers: { Authorization: `Bearer ${token}` } }
+              );
 
-      // 7. Launch checkout
-      cashfree.checkout(checkoutOptions);
+              const coursesResponse = await FindUser.get("/my-courses/", {
+                headers: { Authorization: `Bearer ${token}` },
+              });
+              setEnrolledCourses(coursesResponse.data);
+
+              resolve(true); // Payment successful
+              window.open(
+                `${redirectUrl}?payment_id=${data.paymentId}`,
+                "_self"
+              );
+            } catch (err) {
+              console.error("Post-payment error:", err);
+              reject(err);
+            }
+          },
+
+          onFailure: (data) => {
+            paymentCompleted = false;
+            reject(new Error(data?.message || "Payment failed"));
+            alert(`Payment failed: ${data?.message || "Unknown error"}`);
+          },
+
+          onClose: () => {
+            if (!paymentCompleted) {
+              reject(new Error("Payment window closed without completion"));
+            }
+          },
+        };
+
+        cashfree.checkout(checkoutOptions);
+      });
     } catch (error) {
       console.error("Payment error:", error);
       let message = "Payment failed. Please try again.";
@@ -234,6 +256,7 @@ function App() {
         message += ` (${error.response.data.error})`;
       }
       alert(message);
+      throw error;
     }
   };
 
