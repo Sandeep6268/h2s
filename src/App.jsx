@@ -46,7 +46,7 @@ function App() {
   }, []);
 
   const [user, setUser] = useState(null); // Start with null instead of loading from localStorage
-  const [enrolledCourses,setEnrolledCourses] = useState()
+  const [enrolledCourses, setEnrolledCourses] = useState();
 
   // Single source of truth for user state
   useEffect(() => {
@@ -184,27 +184,27 @@ function App() {
 
       const { orderId, paymentSessionId } = orderResponse.data;
 
-      // 4. Check SDK
+      // 4. Check if Cashfree SDK is available
       if (!window.Cashfree) {
         throw new Error("Cashfree SDK not loaded. Please refresh the page.");
       }
 
-      const cashfree = new window.Cashfree({ mode: "production" }); // use "sandbox" in testing
+      const cashfree = new window.Cashfree({ mode: "production" }); // Use "sandbox" while testing
 
       // 5. Define checkout options
       const checkoutOptions = {
         paymentSessionId,
-        redirectTarget: "_self",
+        redirectTarget: "cashfree", // use popup instead of redirect
 
         onSuccess: async (data) => {
           try {
-            // 1. Verify payment
+            // Verify payment
             await FindUser.post("/verify-payment/", {
               orderId,
               paymentId: data.paymentId,
             });
 
-            // 2. Attempt to save course (retry logic)
+            // Save purchased course (retry logic)
             let attempts = 0;
             const saveCourse = async () => {
               try {
@@ -225,31 +225,33 @@ function App() {
 
             await saveCourse();
 
-            // 3. Force refresh courses
+            // Refresh course list
             const coursesResponse = await FindUser.get("/my-courses/");
             setEnrolledCourses(coursesResponse.data);
 
-            // 4. Redirect
+            // Redirect to course page with payment info
             window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
           } catch (err) {
             console.error("Post-payment process failed:", err);
             alert(
-              "Payment successful but course activation may take a moment. Refresh the page if not visible."
+              "Payment was successful but course activation may take a moment. Please refresh if not visible."
             );
-            // window.location.href = redirectUrl;
+            window.location.href = redirectUrl;
           }
         },
 
         onFailure: (data) => {
-          alert(`Payment failed: ${data?.message || "Unknown error"}`);
+          alert(
+            `Payment failed: ${data?.message || "Unknown error occurred."}`
+          );
         },
 
         onClose: () => {
-          console.log("User closed the payment popup.");
+          alert("You closed the payment popup. Payment was not completed.");
         },
       };
 
-      // 6. Launch checkout
+      // 6. Launch Cashfree Checkout
       cashfree.checkout(checkoutOptions);
     } catch (error) {
       console.error("Payment error:", {
@@ -387,7 +389,7 @@ function App() {
           user: user,
           setUser: stableSetUser,
           enrolledCourses: enrolledCourses,
-          setEnrolledCourses:setEnrolledCourses,
+          setEnrolledCourses: setEnrolledCourses,
         }}
       >
         <NotificationPopup />
