@@ -1,46 +1,36 @@
-import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { FindUser } from './api';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const PaymentStatusPage = () => {
-  const location = useLocation();
+const PaymentStatus = () => {
+  const [status, setStatus] = useState("Verifying payment...");
   const navigate = useNavigate();
-  const searchParams = new URLSearchParams(location.search);
-  const orderId = searchParams.get('order_id');
 
   useEffect(() => {
-    const verifyPayment = async () => {
-      try {
-        const response = await FindUser.post('/verify-payment/', {
-          orderId
-        });
-        
-        if (response.data.status === 'success') {
-          // Get course URL from order details
-          const orderDetails = await FindUser.get(`/order-details/${orderId}/`);
-          navigate(orderDetails.data.course_url);
+    const orderId = new URLSearchParams(window.location.search).get("order_id");
+
+    fetch(`https://h2s-backend-urrt.onrender.com/api/check-payment-status/?order_id=${orderId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "PAID") {
+          // Redirect to the actual course page
+          window.location.href = data.redirect_url; // e.g. /python24
         } else {
-          navigate('/'); // Redirect to home if payment failed
+          setStatus("Payment failed or cancelled.");
+          setTimeout(() => navigate("/"), 3000); // Redirect to home
         }
-      } catch (error) {
-        console.error('Payment verification error:', error);
-        navigate('/');
-      }
-    };
+      })
+      .catch(err => {
+        console.error(err);
+        setStatus("Something went wrong. Redirecting to homepage...");
+        setTimeout(() => navigate("/"), 3000);
+      });
+  }, []);
 
-    if (orderId) {
-      verifyPayment();
-    } else {
-      navigate('/');
-    }
-  }, [orderId, navigate]);
-
-  return (
-    <div className="payment-status-container">
-      <h2>Verifying your payment...</h2>
-      <p>Please wait while we confirm your payment details.</p>
-    </div>
-  );
+  return <div>{status}</div>;
 };
 
-export default PaymentStatusPage;
+export default PaymentStatus;
