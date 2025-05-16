@@ -288,8 +288,6 @@ function App() {
           <Route path="/pythondjango90" element={<PyandDJ />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/payment-failed" element={<PaymentFailed />} />
         </Routes>
       </Context.Provider>
     </BrowserRouter>
