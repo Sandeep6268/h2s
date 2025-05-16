@@ -11,6 +11,7 @@ import reactandjs from "../../../images/reactandjs.jpg";
 import { useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { FindUser } from "../../../api";
 
 const CoursePage = () => {
   const { user, handlePayment, paymentState, setPaymentState } =
