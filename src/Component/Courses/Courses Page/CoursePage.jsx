@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./CoursePage.css";
 import { Context } from "../../../Context";
 import banner2 from "../../../images/banner2.jpeg";
@@ -13,9 +13,13 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 const CoursePage = () => {
-  const { user } = useContext(Context);
-  const { handlePayment } = useContext(Context);
+  const { user, handlePayment } = useContext(Context);
   const navigate = useNavigate();
+  const [paymentState, setPaymentState] = useState({
+    processing: false,
+    message: "",
+    showModal: false,
+  });
 
   // Initialize AOS
   useEffect(() => {
@@ -26,6 +30,86 @@ const CoursePage = () => {
       mirror: false,
     });
   }, []);
+
+  const initiatePayment = async (price, redirectUrl) => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    setPaymentState({
+      processing: true,
+      message: "Opening payment gateway...",
+      showModal: true,
+    });
+
+    try {
+      const result = await handlePayment(price, redirectUrl);
+
+      if (result.success) {
+        setPaymentState({
+          processing: false,
+          message: "Payment successful! Redirecting...",
+          showModal: true,
+        });
+        setTimeout(() => {
+          window.location.href = `${redirectUrl}?payment_id=${result.paymentId}`;
+        }, 1500);
+      } else {
+        setPaymentState({
+          processing: false,
+          message: result.error || "Payment failed",
+          showModal: true,
+        });
+      }
+    } catch (error) {
+      setPaymentState({
+        processing: false,
+        message: "An unexpected error occurred",
+        showModal: true,
+      });
+      console.error("Payment error:", error);
+    }
+  };
+
+  const closePaymentModal = () => {
+    setPaymentState((prev) => ({
+      ...prev,
+      showModal: false,
+    }));
+  };
+
+  // Payment Modal Component
+  const PaymentModal = () => {
+    if (!paymentState.showModal) return null;
+
+    return (
+      <div className="payment-modal-overlay">
+        <div className="payment-modal">
+          {paymentState.processing ? (
+            <>
+              <div className="spinner"></div>
+              <p>{paymentState.message}</p>
+            </>
+          ) : (
+            <>
+              <h3>
+                {paymentState.message.includes("success")
+                  ? "🎉 Success!"
+                  : "⚠️ Error"}
+              </h3>
+              <p>{paymentState.message}</p>
+              <button onClick={closePaymentModal}>
+                {paymentState.message.includes("success")
+                  ? "Continue"
+                  : "Try Again"}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -52,7 +136,7 @@ const CoursePage = () => {
                 src={htmlcss}
                 className="w-100 com-img-height"
                 style={{ height: "370px" }}
-                alt=""
+                alt="HTML CSS Course"
               />
             </div>
             <div
@@ -71,19 +155,10 @@ const CoursePage = () => {
               <div className="paybtn m-3 d-flex center-below-md ">
                 <button
                   className="button-85"
-                  onClick={async () => {
-                    if (!user) {
-                      navigate("/login");
-                    } else {
-                      try {
-                        await handlePayment(1, "/htmlcss89");
-                      } catch (error) {
-                        console.error("Payment error:", error);
-                      }
-                    }
-                  }}
+                  onClick={() => initiatePayment(1, "/htmlcss89")}
+                  disabled={paymentState.processing}
                 >
-                  Pay ₹1
+                  {paymentState.processing ? "Processing..." : "Pay ₹1"}
                 </button>
               </div>
             </div>

@@ -152,80 +152,82 @@ function App() {
     }
   );
   // with original api
+  const [paymentStatus, setPaymentStatus] = useState({
+    processing: false,
+    message: null,
+    success: false,
+    showModal: false,
+  });
+
   const handlePayment = async (price, redirectUrl) => {
     try {
+      setPaymentStatus({
+        processing: true,
+        message: "Processing payment...",
+        success: false,
+        showModal: true,
+      });
+
       const token = localStorage.getItem("access");
       if (!token) {
-        alert("Please login first.");
-        return false;
+        throw new Error("Please login first.");
       }
 
-      const user = JSON.parse(localStorage.getItem("user"));
-      const phone = user?.phone || "9999999999";
-
-      // Create order
       const orderResponse = await FindUser.post(
         "/create-cashfree-order/",
-        { amount: price, course_url: redirectUrl, phone },
+        {
+          amount: price,
+          course_url: redirectUrl,
+          phone:
+            JSON.parse(localStorage.getItem("user"))?.phone || "9999999999",
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const { orderId, paymentSessionId } = orderResponse.data;
 
       if (!window.Cashfree) {
-        throw new Error(
-          "Payment system not ready. Please refresh and try again."
-        );
+        throw new Error("Payment system loading. Please wait...");
       }
 
       return new Promise((resolve) => {
         const cashfree = new window.Cashfree({ mode: "production" });
-        let paymentCompleted = false;
+        let paymentVerified = false;
 
         const checkoutOptions = {
           paymentSessionId,
-          redirectTarget: "_blank", // Open in new tab
+          redirectTarget: "_blank",
 
           onSuccess: async (data) => {
             try {
-              paymentCompleted = true;
-              // Verify payment with backend
               await FindUser.post(
                 "/verify-payment/",
                 { orderId, paymentId: data.paymentId },
                 { headers: { Authorization: `Bearer ${token}` } }
               );
 
-              // Save course purchase
-              await FindUser.post(
-                "/purchase-course/",
-                {
-                  course_url: redirectUrl,
-                  payment_id: data.paymentId,
-                  order_id: orderId,
-                },
-                { headers: { Authorization: `Bearer ${token}` } }
-              );
-
-              resolve(true);
-              window.location.href = `${redirectUrl}?payment_id=${data.paymentId}`;
+              paymentVerified = true;
+              resolve({
+                success: true,
+                paymentId: data.paymentId,
+                redirectUrl,
+              });
             } catch (error) {
-              console.error("Post-payment error:", error);
-              alert("Payment verification failed. Please contact support.");
-              resolve(false);
+              console.error("Verification failed:", error);
+              resolve({ success: false, error: "Payment verification failed" });
             }
           },
 
           onFailure: () => {
-            paymentCompleted = false;
-            alert("Payment failed or was cancelled");
-            resolve(false);
+            resolve({
+              success: false,
+              error: "Payment failed or was declined",
+            });
           },
 
           onClose: () => {
-            if (!paymentCompleted) {
-              console.log("User closed payment window");
-              resolve(false);
+            if (!paymentVerified) {
+              resolve({ success: false, error: "Payment window closed" });
             }
           },
         };
@@ -234,15 +236,44 @@ function App() {
       });
     } catch (error) {
       console.error("Payment error:", error);
-      let message = "Payment failed. Please try again.";
-      if (error.response?.status === 401) {
-        message = "Session expired. Please login again.";
-        localStorage.removeItem("access");
-        window.location.reload();
-      }
-      alert(message);
-      return false;
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message,
+      };
     }
+  };
+
+  // Payment processing modal component
+  const PaymentModal = () => {
+    if (!paymentStatus.showModal) return null;
+
+    return (
+      <div className="payment-modal-overlay">
+        <div className="payment-modal">
+          {paymentStatus.processing ? (
+            <>
+              <div className="spinner"></div>
+              <p>{paymentStatus.message}</p>
+            </>
+          ) : (
+            <>
+              <h3>{paymentStatus.success ? "Success!" : "Error"}</h3>
+              <p>{paymentStatus.message}</p>
+              <button
+                onClick={() =>
+                  setPaymentStatus((prev) => ({
+                    ...prev,
+                    showModal: false,
+                  }))
+                }
+              >
+                Close
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    );
   };
 
   //  const handlePayment = (price, redirectUrl) => {
@@ -357,12 +388,15 @@ function App() {
     <BrowserRouter>
       <Context.Provider
         value={{
-          handlePayment: handlePayment,
-          user: user,
+          handlePayment,
+          user,
           setUser: stableSetUser,
+          paymentStatus,
+          setPaymentStatus,
         }}
       >
         <NotificationPopup />
+        <PaymentModal />
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
