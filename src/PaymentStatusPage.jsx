@@ -14,7 +14,7 @@ const PaymentStatus = () => {
         const orderId = searchParams.get("order_id");
         const paymentId = searchParams.get("payment_id");
         const courseUrl = searchParams.get("course_url");
-
+        console.log(response.data)
         if (!orderId || !paymentId) {
           throw new Error("Missing payment parameters");
         }
