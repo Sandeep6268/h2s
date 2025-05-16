@@ -274,7 +274,6 @@ function App() {
       alert(message);
     }
   };
-  console.log(enrolledCourses)
 
   //  const handlePayment = (price, redirectUrl) => {
   //   // Get user data for prefill
