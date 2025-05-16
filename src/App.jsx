@@ -161,79 +161,74 @@ function App() {
     }
   );
   // with original api
-  const handlePayment = async (price, redirectUrl) => {
-    try {
-      // Get user data
-      const user = JSON.parse(localStorage.getItem("user")) || {};
+  // 1. First, add this to your public/index.html head section
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
 
-      // Initialize Cashfree
-      const cashfree = new Cashfree({
-        mode: "sandbox", // Change to "production" for live payments
-      });
-
-      // Generate a unique order ID (in production, this should come from backend)
-      const orderId = `ORDER_${Date.now()}`;
-
-      // Create payment session (in production, this should come from backend)
-      const paymentSessionId = `SESSION_${Date.now()}`;
-
-      const options = {
-        paymentSessionId,
-        redirectTarget: "_self",
-        customerDetails: {
-          customerId: user.id || "guest",
-          customerName: user.name || "Guest User",
-          customerEmail: user.email || "guest@example.com",
-          customerPhone: user.phone || "9999999999",
-        },
-        orderDetails: {
-          orderId,
-          orderAmount: price,
-          orderCurrency: "INR",
-          orderNote: `Course purchase: ${redirectUrl}`,
-        },
-        theme: {
-          color: "#3399cc",
-        },
-        returnUrl: `${
-          window.location.origin
-        }/payment-success?redirect=${encodeURIComponent(redirectUrl)}`,
-      };
-
-      // Open Cashfree checkout
-      cashfree.checkout(options).then(async function (result) {
-        if (result.error) {
-          console.error("Payment error:", result.error.message);
-          return;
-        }
-
-        // Payment succeeded (simulated)
-        if (result.redirect) {
-          // Save course to backend (mimicking your existing Razorpay flow)
-          try {
-            await FindUser.post(
-              "/purchase-course/",
-              { course_url: redirectUrl },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("access")}`,
-                },
-              }
-            );
-
-            // Redirect to success page which will then redirect to course
-            window.location.href = `/payment-success?redirect=${encodeURIComponent(
-              redirectUrl
-            )}`;
-          } catch (error) {
-            console.error("Failed to save course:", error);
-          }
-        }
-      });
-    } catch (error) {
-      console.error("Payment failed:", error);
+// 2. Modify your handlePayment function
+const handlePayment = async (price, redirectUrl) => {
+  try {
+    // Check if Cashfree is loaded
+    if (!window.Cashfree) {
+      throw new Error("Cashfree SDK not loaded");
     }
-  };
+
+    const user = JSON.parse(localStorage.getItem("user")) || {};
+    
+    // Initialize with your test credentials
+    const cashfree = new window.Cashfree({
+      mode: "sandbox" // or "production" for live
+    });
+
+    // Create order details
+    const options = {
+      paymentSessionId: `temp_session_${Date.now()}`, // In production, get this from backend
+      orderDetails: {
+        orderId: `order_${Date.now()}`,
+        orderAmount: price,
+        orderCurrency: "INR"
+      },
+      customerDetails: {
+        customerId: user.id || "guest",
+        customerName: user.name || "Guest",
+        customerEmail: user.email || "guest@example.com",
+        customerPhone: user.phone || "9999999999"
+      },
+      theme: {
+        color: "#3399cc" // Match your brand
+      },
+      returnUrl: `${window.location.origin}/payment-success?redirect=${encodeURIComponent(redirectUrl)}`
+    };
+
+    // Open checkout
+    cashfree.checkout(options).then(async (result) => {
+      if (result.error) {
+        console.error("Payment error:", result.error.message);
+        return;
+      }
+      
+      // Simulate successful payment (in production, this comes from webhook)
+      try {
+        await FindUser.post(
+          "/purchase-course/", 
+          { course_url: redirectUrl },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+          }
+        );
+        window.location.href = `/payment-success?redirect=${encodeURIComponent(redirectUrl)}`;
+      } catch (error) {
+        console.error("Failed to save course:", error);
+      }
+    });
+
+  } catch (error) {
+    console.error("Payment failed:", error);
+    // Show error to user
+    alert("Payment initialization failed. Please try again.");
+  }
+};
 
   //  const handlePayment = (price, redirectUrl) => {
   //   // Get user data for prefill
