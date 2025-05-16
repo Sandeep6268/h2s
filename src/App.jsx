@@ -161,61 +161,81 @@ function App() {
   );
   // with original api
   const handlePayment = async (price, redirectUrl) => {
-  try {
-    const accessToken = localStorage.getItem("access");
+    try {
+      // 1. Create order on backend
+      const orderResponse = await FindUser.post("/create-cashfree-order/", {
+        amount: price,
+        course_url: redirectUrl,
+      });
 
-    const orderResponse = await FindUser.post(
-      "/create-cashfree-order/",
-      {
-        amount: parseFloat(price), // ✅ Make sure it's a number
-        course_url: redirectUrl,   // ✅ Should be a valid route string
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+      const { orderId, paymentSessionId } = orderResponse.data;
 
-    const { orderId, paymentSessionId } = orderResponse.data;
+      // 2. Initialize Cashfree
+      const cashfree = new window.Cashfree({
+        mode: "production", // or "sandbox" for testing
+      });
 
-    const cashfree = new Cashfree({ mode: "production" });
+      // 3. Configure checkout
+      const checkoutOptions = {
+        paymentSessionId,
+        redirectTarget: "_self",
+        onSuccess: async (data) => {
+          try {
+            // 1. First verify payment with backend
+            const verification = await FindUser.post("/verify-payment/", {
+              orderId: orderId,
+              paymentId: data.paymentId,
+            });
 
-    const checkoutOptions = {
-      paymentSessionId,
-      redirectTarget: "_self",
-      onSuccess: async () => {
-        await FindUser.post(
-          "/purchase-course/",
-          { course_url: redirectUrl },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
+            // 2. Only if verification succeeds, save the course
+            if (verification.data.status === "success") {
+              // Save course purchase using your existing endpoint
+              await FindUser.post(
+                "/purchase-course/",
+                {
+                  course_url: redirectUrl,
+                  payment_id: data.paymentId,
+                  order_id: orderId,
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access")}`,
+                  },
+                }
+              );
+
+              // Redirect to course page with success parameters
+              window.location.href = `${redirectUrl}?payment_id=${data.paymentId}&status=success`;
+            } else {
+              alert(
+                "Payment verification failed. Contact support with order ID: " +
+                  orderId
+              );
+            }
+          } catch (error) {
+            console.error("Course purchase failed:", error);
+            alert(
+              "Payment succeeded but course registration failed. Contact support with order ID: " +
+                orderId
+            );
           }
-        );
-        window.location.href = redirectUrl;
-      },
-      onFailure: (data) => {
-        console.error("Payment Failed:", data);
-        alert("Payment failed. Please try again.");
-      },
-      onClose: () => {
-        console.log("Payment window closed");
-      },
-    };
+        },
+        onFailure: (data) => {
+          console.error("Payment Failed:", data);
+          alert(`Payment failed: ${data.message || "Please try again"}`);
+        },
+        onClose: () => {
+          console.log("Payment window closed by user");
+        },
+      };
 
-    cashfree.checkout(checkoutOptions);
-  } catch (error) {
-    console.error("Payment error:", error);
-    alert(
-      error.response?.data?.error ||
-        "Payment initialization failed. Please try again."
-    );
-  }
-};
-
-
+      // 4. Open checkout
+      cashfree.checkout(checkoutOptions);
+    } catch (error) {
+      console.error("Payment initialization error:", error);
+      alert("Payment initialization failed. Please try again.");
+    }
+  };
   //  const handlePayment = (price, redirectUrl) => {
   //   // Get user data for prefill
   //   const user = JSON.parse(localStorage.getItem("user")) || {};
@@ -262,19 +282,19 @@ function App() {
   // Helper function to load script dynamically
   useEffect(() => {
     // Load Cashfree script dynamically
-    const script = document.createElement('script');
-    script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
+    const script = document.createElement("script");
+    script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
     script.async = true;
-    script.type = 'text/javascript';
-    
+    script.type = "text/javascript";
+
     document.body.appendChild(script);
-    
+
     return () => {
       // Clean up
       document.body.removeChild(script);
     };
   }, []);
-  
+
   // with test api
   // const handlePayment = (price, redirectUrl) => {
   //   const options = {
