@@ -158,163 +158,64 @@ function App() {
     }
   );
   // with original api
-  const handlePayment = async (price, redirectUrl) => {
+  const handlePayment = async (price, courseUrl) => {
     try {
-      // Validate inputs
-      if (!price || isNaN(price) || price <= 0) {
-        throw new Error("Invalid price amount");
-      }
-      if (!redirectUrl || typeof redirectUrl !== "string") {
-        throw new Error("Invalid course URL");
-      }
-
-      setPaymentStatus({
-        processing: true,
-        message: "Initializing payment...",
-        showModal: true,
-      });
-
-      // Verify authentication
-      const token = localStorage.getItem("access");
-      if (!token) {
-        throw new Error("Please login to proceed with payment");
-      }
-
-      // Debug logging
-      console.log("Creating order with:", {
-        amount: price,
-        course_url: redirectUrl,
-      });
-
-      // 1. Create Razorpay order
-      const { data: order } = await FindUser.post(
-        "create-razorpay-order/",
+      // Step 1: Create order on backend
+      const orderResponse = await FindUser.post(
+        "/create-order/",
         {
-          amount: Number(price), // Ensure number type
-          course_url: String(redirectUrl), // Ensure string type
+          amount: price,
+          course_url: courseUrl,
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         }
-      ).catch((error) => {
-        console.error(
-          "Order creation failed:",
-          error.response?.data || error.message
-        );
-        throw new Error(
-          error.response?.data?.error || "Failed to create payment order"
-        );
-      });
+      );
 
-      if (!order?.id) {
-        throw new Error("Invalid order response from server");
-      }
+      const order = orderResponse.data;
 
-      // 2. Setup Razorpay options
+      // Step 2: Open Razorpay checkout
       const options = {
-        key: "rzp_live_Hs9twWPT8yzKjH", // Consider using env variable
+        key: "rzp_live_Hs9twWPT8yzKjH",
         amount: order.amount,
-        currency: "INR",
-        name: "H2S Tech Solutions",
+        currency: order.currency,
+        name: "Your Company Name",
+        description: "Course Purchase",
         order_id: order.id,
-        description: "Course Enrollment",
-        image: logo,
-        prefill: {
-          name: user?.name?.trim() || "",
-          email: user?.email?.trim() || "",
-          contact: user?.phone?.trim() || "",
-        },
         handler: async (response) => {
           try {
-            setPaymentStatus({
-              processing: true,
-              message: "Verifying payment...",
-              showModal: true,
-            });
-
-            // 3. Verify payment with backend
+            // Step 3: Verify payment on backend
             await FindUser.post(
-              "verify-payment/",
+              "/verify-payment/",
               {
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_signature: response.razorpay_signature,
-                amount: price,
-                course_url: redirectUrl,
+                payment_id: response.razorpay_payment_id,
+                order_id: response.razorpay_order_id,
+                signature: response.razorpay_signature,
               },
               {
                 headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("access")}`,
                 },
               }
-            ).catch((error) => {
-              console.error(
-                "Payment verification failed:",
-                error.response?.data || error.message
-              );
-              throw new Error(
-                error.response?.data?.error || "Payment verification failed"
-              );
-            });
+            );
 
-            setPaymentStatus({
-              processing: false,
-              message: "Payment successful! Redirecting...",
-              showModal: true,
-              isSuccess: true,
-            });
-
-            // Redirect after short delay
-            setTimeout(() => {
-              window.location.href = redirectUrl;
-            }, 1500);
+            // Redirect to course page on success
+            window.location.href = courseUrl;
           } catch (error) {
-            setPaymentStatus({
-              processing: false,
-              message: `Payment verification failed: ${error.message}`,
-              showModal: true,
-              isError: true,
-            });
+            console.error("Payment verification failed:", error);
           }
         },
-        theme: { color: "#3399cc" },
-        modal: {
-          ondismiss: () => {
-            setPaymentStatus({
-              showModal: false,
-              message: "Payment window closed",
-              isWarning: true,
-            });
-          },
+        theme: {
+          color: "#3399cc",
         },
       };
 
-      // Initialize Razorpay
       const rzp = new window.Razorpay(options);
-
-      rzp.on("payment.failed", (response) => {
-        console.error("Payment failed:", response.error);
-        setPaymentStatus({
-          processing: false,
-          message: `Payment failed: ${response.error.description}`,
-          showModal: true,
-          isError: true,
-        });
-      });
-
       rzp.open();
     } catch (error) {
-      console.error("Payment error:", error);
-      setPaymentStatus({
-        processing: false,
-        message: `Payment error: ${error.message}`,
-        showModal: true,
-        isError: true,
-      });
+      console.error("Payment failed:", error);
     }
   };
 
