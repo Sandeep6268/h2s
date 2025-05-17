@@ -26,9 +26,9 @@ const Contact = () => {
 
   const getCsrfToken = () => {
     const cookieValue = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('csrftoken='))
-      ?.split('=')[1];
+      .split("; ")
+      .find((row) => row.startsWith("csrftoken="))
+      ?.split("=")[1];
     return cookieValue;
   };
 
@@ -37,21 +37,24 @@ const Contact = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://h2s-backend-urrt.onrender.com/api/contact/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCsrfToken(),
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          message: formData.message,
-        }),
-      });
+      const response = await fetch(
+        "https://h2s-backend-urrt.onrender.com/api/contact/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCsrfToken(),
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            message: formData.message,
+          }),
+        }
+      );
 
       if (response.ok) {
         setShowSuccessModal(true);
@@ -65,12 +68,14 @@ const Contact = () => {
         });
       } else {
         const errorData = await response.json();
-        console.error('Submission error:', errorData);
-        alert('There was an error submitting your form. Please try again.');
+        console.error("Submission error:", errorData);
+        alert("There was an error submitting your form. Please try again.");
       }
     } catch (error) {
-      console.error('Network error:', error);
-      alert('There was a network error. Please check your connection and try again.');
+      console.error("Network error:", error);
+      alert(
+        "There was a network error. Please check your connection and try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +96,10 @@ const Contact = () => {
             alt="background"
           />
           <div className="responsive-container-block container">
-            <div className="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12 left-one" data-aos='fade-down'>
+            <div
+              className="responsive-cell-block wk-desk-6 wk-ipadp-6 wk-tab-12 wk-mobile-12 left-one"
+              data-aos="fade-down"
+            >
               <div className="content-box">
                 <p className="text-blk section-head">H2S Tech Support</p>
                 <p className="text-light section-subhead">
@@ -112,7 +120,7 @@ const Contact = () => {
                       alt="Twitter"
                     />
                   </a>
-                  
+
                   <a
                     className="share-icon"
                     href="https://mail.google.com/mail/?view=cm&fs=1&to=h2stechsolutions@gmail.com"
@@ -138,21 +146,21 @@ const Contact = () => {
                     />
                   </a>
                 </div>
-                <p className="mt-4 text-light">
+                < className="mt-4 text-light">
                   <span className="fw-bolder fs-4 text-white">
                     Head Quarter At :-
                   </span>
                   <br />
-                  91Springboard, 4th Floor, Salarpuria Tower-I,
-                  <br /> No. 22, Hosur Road, Koramangala, <br />
-                  Bengaluru, Karnataka – 560095
+                  Shayam Plaza, Patwardhan marg, Just,<br />
+                  behind Grace Church, Dewas, Madhya Pradesh 455001
                 </p>
               </div>
             </div>
             <div
               className="responsive-cell-block wk-ipadp-6 wk-tab-12 wk-mobile-12 wk-desk-6 right-one"
-              id="i1zj" data-aos='fade-up'
-              >
+              id="i1zj"
+              data-aos="fade-up"
+            >
               <form className="form-box" onSubmit={handleSubmit}>
                 <div className="container-block form-wrapper">
                   <p className="text-blk contactus-head">
