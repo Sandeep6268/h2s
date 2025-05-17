@@ -162,11 +162,10 @@ function App() {
     try {
       console.log("Creating order with:", { price, courseUrl });
 
+      // 1. Create Razorpay order
       const orderResponse = await FindUser.post(
         "/create-order/",
-        {
-          amount: price,
-        },
+        { amount: price },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -180,7 +179,7 @@ function App() {
       const order = orderResponse.data;
 
       const options = {
-        key: "rzp_live_Hs9twWPT8yzKjH", // Your Razorpay key
+        key: "rzp_live_Hs9twWPT8yzKjH",
         amount: order.amount,
         currency: "INR",
         name: "H2S Tech Solutions",
@@ -190,13 +189,13 @@ function App() {
           try {
             console.log("Payment response:", response);
 
-            // 1. First verify the payment with backend
+            // 1. Verify payment with backend
             await verifyPayment(response);
 
-            // 2. Then record the course purchase
+            // 2. Record course purchase
             const purchaseResponse = await FindUser.post(
               "/purchase-course/",
-              { course_url: courseUrl }, // Using the original courseUrl parameter
+              { course_url: courseUrl },
               {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -207,40 +206,29 @@ function App() {
 
             console.log("Course purchase recorded:", purchaseResponse.data);
 
-            // 3. Only redirect after both operations succeed
+            // Show success message before redirect
+            alert("Payment successful! You now have access to the course.");
             window.location.href = courseUrl;
           } catch (error) {
             console.error("Payment processing failed:", error);
 
-            // More specific error messages
             if (error.response) {
               if (error.response.status === 401) {
                 alert("Session expired. Please login again.");
+              } else if (error.response.status === 400) {
+                alert(error.response.data.error || "Invalid request");
               } else {
-                alert(
-                  `Failed to record purchase: ${
-                    error.response.data?.error || "Please contact support"
-                  }`
-                );
+                alert("Failed to record purchase. Please contact support.");
               }
             } else {
-              alert(
-                "Payment verification failed. Please contact support with your payment ID."
-              );
+              alert("Payment verification failed. Please contact support.");
             }
-
-            // Optionally: redirect to a failure page or stay on current page
-            // window.location.href = "/payment-failed";
           }
         },
-        theme: {
-          color: "#3399cc",
-        },
-        // Add these for better error handling
+        theme: { color: "#3399cc" },
         modal: {
           ondismiss: () => {
             console.log("Payment modal dismissed");
-            // You can add any cleanup logic here if needed
           },
         },
       };
@@ -248,7 +236,6 @@ function App() {
       const rzp = new window.Razorpay(options);
       rzp.open();
 
-      // Handle payment failure cases
       rzp.on("payment.failed", (response) => {
         console.error("Payment failed:", response.error);
         alert(`Payment failed: ${response.error.description}`);
@@ -258,7 +245,7 @@ function App() {
       let errorMessage = "Payment processing failed. Please try again.";
 
       if (error.response) {
-        errorMessage = error.response.data.error || errorMessage;
+        errorMessage = error.response.data?.error || errorMessage;
       } else if (error.request) {
         errorMessage = "No response from server. Please check your connection.";
       }
