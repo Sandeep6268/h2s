@@ -208,8 +208,8 @@ function App() {
 
             // // Show success message before redirect
             // alert("Payment successful! You now have access to the course.");
-            window.location.href = courseUrl;
             await recordCoursePurchase(courseUrl);
+            window.location.href = courseUrl;
           } catch (error) {
             console.error("Payment processing failed:", error);
 
