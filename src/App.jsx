@@ -160,7 +160,8 @@ function App() {
   // with original api
   const handlePayment = async (price, courseUrl) => {
     try {
-      // Step 1: Create order on backend
+      console.log("Creating order with:", { price, courseUrl });
+
       const orderResponse = await FindUser.post(
         "/create-order/",
         {
@@ -170,41 +171,30 @@ function App() {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
+            "Content-Type": "application/json",
           },
         }
       );
 
+      console.log("Order created:", orderResponse.data);
+
       const order = orderResponse.data;
 
-      // Step 2: Open Razorpay checkout
       const options = {
-        key: "rzp_live_Hs9twWPT8yzKjH",
+        key: "rzp_live_Hs9twWPT8yzKjH", // Your Razorpay key
         amount: order.amount,
-        currency: order.currency,
-        name: "Your Company Name",
+        currency: "INR",
+        name: "H2S Tech Solutions",
         description: "Course Purchase",
         order_id: order.id,
         handler: async (response) => {
           try {
-            // Step 3: Verify payment on backend
-            await FindUser.post(
-              "/verify-payment/",
-              {
-                payment_id: response.razorpay_payment_id,
-                order_id: response.razorpay_order_id,
-                signature: response.razorpay_signature,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("access")}`,
-                },
-              }
-            );
-
-            // Redirect to course page on success
+            console.log("Payment response:", response);
+            await verifyPayment(response);
             window.location.href = courseUrl;
           } catch (error) {
             console.error("Payment verification failed:", error);
+            alert("Payment verification failed. Please contact support.");
           }
         },
         theme: {
@@ -216,6 +206,45 @@ function App() {
       rzp.open();
     } catch (error) {
       console.error("Payment failed:", error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+        alert(`Payment failed: ${error.response.data.error || error.message}`);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received:", error.request);
+        alert("No response from server. Please check your connection.");
+      } else {
+        // Something happened in setting up the request
+        console.error("Request setup error:", error.message);
+        alert("Payment setup failed. Please try again.");
+      }
+    }
+  };
+
+  const verifyPayment = async (response) => {
+    try {
+      const verification = await FindUser.post(
+        "/verify-payment/",
+        {
+          payment_id: response.razorpay_payment_id,
+          order_id: response.razorpay_order_id,
+          signature: response.razorpay_signature,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Payment verified:", verification.data);
+      return verification.data;
+    } catch (error) {
+      console.error("Verification error:", error);
+      throw error;
     }
   };
 
