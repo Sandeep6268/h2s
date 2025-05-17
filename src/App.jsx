@@ -160,17 +160,27 @@ function App() {
   // with original api
   const handlePayment = async (price, redirectUrl) => {
     try {
-      // 1. Check authentication
-      const token = localStorage.getItem("access");
-      if (!token) {
-        alert("Please login to make a purchase");
-        return;
+      // Validate inputs
+      if (!price || price <= 0) {
+        throw new Error("Invalid price amount");
+      }
+      if (!redirectUrl) {
+        throw new Error("Missing redirect URL");
       }
 
-      // 2. Create order with auth header
+      // Get auth token
+      const token = localStorage.getItem("access");
+      if (!token) {
+        throw new Error("User not authenticated");
+      }
+
+      // Create order
       const orderResponse = await FindUser.post(
-        "/create-razorpay-order/",
-        { amount: price, course_url: redirectUrl },
+        "/api/create-razorpay-order/",
+        {
+          amount: price,
+          course_url: redirectUrl,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -179,18 +189,25 @@ function App() {
         }
       );
 
-      // 3. Setup Razorpay options
+      // Setup Razorpay options
       const options = {
         key: "rzp_live_Hs9twWPT8yzKjH",
         amount: orderResponse.data.amount,
         currency: "INR",
         name: "H2S Tech Solutions",
         order_id: orderResponse.data.id,
+        description: "Course Enrollment",
+        image: logo,
+        prefill: {
+          name: user?.name || "",
+          email: user?.email || "",
+          contact: user?.phone || "",
+        },
         handler: async (response) => {
           try {
-            // 4. Verify payment with auth
+            // Verify payment
             await FindUser.post(
-              "/verify-payment/",
+              "/api/verify-payment/",
               {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
@@ -205,26 +222,26 @@ function App() {
                 },
               }
             );
-
             window.location.href = redirectUrl;
           } catch (error) {
             console.error("Payment verification failed:", error);
-            alert("Payment verification failed. Please contact support.");
+            alert(
+              `Payment failed: ${error.response?.data?.error || error.message}`
+            );
           }
         },
         theme: { color: "#3399cc" },
       };
 
       const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", (response) => {
+        alert(`Payment failed: ${response.error.description}`);
+        console.error("Payment failed:", response.error);
+      });
       rzp.open();
     } catch (error) {
       console.error("Payment error:", error);
-      if (error.response?.status === 401) {
-        alert("Session expired. Please login again.");
-        // Optionally redirect to login
-      } else {
-        alert("Payment initialization failed. Please try again.");
-      }
+      alert(`Payment error: ${error.message}`);
     }
   };
 
