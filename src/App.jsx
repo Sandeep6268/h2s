@@ -195,6 +195,15 @@ function App() {
 
             // Redirect to course URL on successful payment
             window.location.href = courseUrl;
+            await FindUser.post(
+              "/purchase-course/",
+              { course_url: redirectUrl },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("access")}`,
+                },
+              }
+            );
           } catch (error) {
             console.error("Payment verification failed:", error);
             alert("Payment verification failed. Please contact support.");
