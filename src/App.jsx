@@ -160,12 +160,20 @@ function App() {
   // with original api
   const handlePayment = async (price, courseUrl) => {
     try {
-      console.log("Creating order with:", { price, courseUrl });
+      // Get current user data
+      const user = JSON.parse(localStorage.getItem("user")) || {};
 
       // 1. Create Razorpay order
       const orderResponse = await FindUser.post(
         "/create-order/",
-        { amount: price },
+        {
+          amount: price,
+          notes: {
+            // Add notes to backend order creation if needed
+            course_url: courseUrl,
+            user_id: user.id,
+          },
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -173,8 +181,6 @@ function App() {
           },
         }
       );
-
-      console.log("Order created:", orderResponse.data);
 
       const order = orderResponse.data;
 
@@ -185,6 +191,11 @@ function App() {
         name: "H2S Tech Solutions",
         description: "Course Purchase",
         order_id: order.id,
+        // Add notes here (IMPORTANT FOR WEBHOOK)
+        notes: {
+          course_url: courseUrl, // The course being purchased
+          user_id: user.id, // User who made the purchase
+        },
         handler: async (response) => {
           try {
             console.log("Payment response:", response);
@@ -192,38 +203,12 @@ function App() {
             // 1. Verify payment with backend
             await verifyPayment(response);
 
-            // 2. Record course purchase
-            // const purchaseResponse = await FindUser.post(
-            //   "/purchase-course/",
-            //   { course_url: courseUrl },
-            //   {
-            //     headers: {
-            //       Authorization: `Bearer ${localStorage.getItem("access")}`,
-            //       "Content-Type": "application/json",
-            //     },
-            //   }
-            // );
-
-            // console.log("Course purchase recorded:", purchaseResponse.data);
-
-            // // Show success message before redirect
-            // alert("Payment successful! You now have access to the course.");
-            await recordCoursePurchase(courseUrl);
+            // 2. Webhook will handle the purchase recording
+            alert("Payment successful! Redirecting to course...");
             window.location.href = courseUrl;
           } catch (error) {
             console.error("Payment processing failed:", error);
-
-            if (error.response) {
-              if (error.response.status === 401) {
-                alert("Session expired. Please login again.");
-              } else if (error.response.status === 400) {
-                alert(error.response.data.error || "Invalid request");
-              } else {
-                alert("Failed to record purchase. Please contact support.");
-              }
-            } else {
-              alert("Payment verification failed. Please contact support.");
-            }
+            handlePaymentError(error);
           }
         },
         theme: { color: "#3399cc" },
@@ -243,15 +228,7 @@ function App() {
       });
     } catch (error) {
       console.error("Payment processing failed:", error);
-      let errorMessage = "Payment processing failed. Please try again.";
-
-      if (error.response) {
-        errorMessage = error.response.data?.error || errorMessage;
-      } else if (error.request) {
-        errorMessage = "No response from server. Please check your connection.";
-      }
-
-      alert(errorMessage);
+      handlePaymentError(error);
     }
   };
 
