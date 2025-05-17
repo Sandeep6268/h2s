@@ -193,22 +193,23 @@ function App() {
             await verifyPayment(response);
 
             // 2. Record course purchase
-            const purchaseResponse = await FindUser.post(
-              "/purchase-course/",
-              { course_url: courseUrl },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("access")}`,
-                  "Content-Type": "application/json",
-                },
-              }
-            );
+            // const purchaseResponse = await FindUser.post(
+            //   "/purchase-course/",
+            //   { course_url: courseUrl },
+            //   {
+            //     headers: {
+            //       Authorization: `Bearer ${localStorage.getItem("access")}`,
+            //       "Content-Type": "application/json",
+            //     },
+            //   }
+            // );
 
-            console.log("Course purchase recorded:", purchaseResponse.data);
+            // console.log("Course purchase recorded:", purchaseResponse.data);
 
-            // Show success message before redirect
-            alert("Payment successful! You now have access to the course.");
+            // // Show success message before redirect
+            // alert("Payment successful! You now have access to the course.");
             window.location.href = courseUrl;
+            await recordCoursePurchase(courseUrl);
           } catch (error) {
             console.error("Payment processing failed:", error);
 
@@ -275,6 +276,24 @@ function App() {
     } catch (error) {
       console.error("Verification error:", error);
       throw error;
+    }
+  };
+  const recordCoursePurchase = async (courseUrl) => {
+    try {
+      const purchaseResponse = await FindUser.post(
+        "/purchase-course/",
+        { course_url: courseUrl },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return purchaseResponse.data;
+    } catch (error) {
+      console.error("Purchase recording failed:", error);
+      throw new Error("Failed to record course purchase");
     }
   };
 
