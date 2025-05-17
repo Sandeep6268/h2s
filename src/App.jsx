@@ -160,42 +160,29 @@ function App() {
   // with original api
   const handlePayment = async (price, redirectUrl) => {
     try {
-      // Validate inputs
-      if (!price || price <= 0) {
-        throw new Error("Invalid price amount");
-      }
-      if (!redirectUrl) {
-        throw new Error("Missing redirect URL");
-      }
+      setPaymentStatus({
+        processing: true,
+        message: "Processing payment...",
+        showModal: true,
+      });
 
-      // Get auth token
       const token = localStorage.getItem("access");
-      if (!token) {
-        throw new Error("User not authenticated");
-      }
+      if (!token) throw new Error("Please login first");
 
-      // Create order
-      const orderResponse = await FindUser.post(
-        "/create-razorpay-order/",
-        {
-          amount: price,
-          course_url: redirectUrl,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+      // 1. Create order
+      const { data: order } = await FindUser.post(
+        "create-razorpay-order/",
+        { amount: price, course_url: redirectUrl },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Setup Razorpay options
+      // 2. Setup Razorpay options
       const options = {
         key: "rzp_live_Hs9twWPT8yzKjH",
-        amount: orderResponse.data.amount,
+        amount: order.amount,
         currency: "INR",
         name: "H2S Tech Solutions",
-        order_id: orderResponse.data.id,
+        order_id: order.id,
         description: "Course Enrollment",
         image: logo,
         prefill: {
@@ -205,9 +192,9 @@ function App() {
         },
         handler: async (response) => {
           try {
-            // Verify payment
+            // 3. Verify payment
             await FindUser.post(
-              "/verify-payment/",
+              "verify-payment/",
               {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
@@ -215,33 +202,48 @@ function App() {
                 amount: price,
                 course_url: redirectUrl,
               },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
-                },
-              }
+              { headers: { Authorization: `Bearer ${token}` } }
             );
-            window.location.href = redirectUrl;
+
+            setPaymentStatus({
+              processing: false,
+              message: "Payment successful! Redirecting...",
+              showModal: true,
+            });
+
+            setTimeout(() => {
+              window.location.href = redirectUrl;
+            }, 1500);
           } catch (error) {
-            console.error("Payment verification failed:", error);
-            alert(
-              `Payment failed: ${error.response?.data?.error || error.message}`
-            );
+            setPaymentStatus({
+              processing: false,
+              message: `Payment failed: ${
+                error.response?.data?.error || error.message
+              }`,
+              showModal: true,
+            });
           }
         },
         theme: { color: "#3399cc" },
       };
 
       const rzp = new window.Razorpay(options);
+
       rzp.on("payment.failed", (response) => {
-        alert(`Payment failed: ${response.error.description}`);
-        console.error("Payment failed:", response.error);
+        setPaymentStatus({
+          processing: false,
+          message: `Payment failed: ${response.error.description}`,
+          showModal: true,
+        });
       });
+
       rzp.open();
     } catch (error) {
-      console.error("Payment error:", error);
-      alert(`Payment error: ${error.message}`);
+      setPaymentStatus({
+        processing: false,
+        message: `Payment error: ${error.message}`,
+        showModal: true,
+      });
     }
   };
 
