@@ -160,74 +160,59 @@ function App() {
   // with original api
   const handlePayment = async (price, courseUrl) => {
     try {
-      // Get current user data
-      const user = JSON.parse(localStorage.getItem("user")) || {};
-
-      // 1. Create Razorpay order
+      // 1. Create order
       const orderResponse = await FindUser.post(
         "/create-order/",
-        {
-          amount: price,
-          notes: {
-            // Add notes to backend order creation if needed
-            course_url: courseUrl,
-            user_id: user.id,
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-            "Content-Type": "application/json",
-          },
-        }
+        { amount: price },
+        { headers: authHeader() }
       );
 
-      const order = orderResponse.data;
-
+      // 2. Initialize Razorpay
       const options = {
         key: "rzp_live_Hs9twWPT8yzKjH",
-        amount: order.amount,
+        amount: orderResponse.data.amount,
         currency: "INR",
         name: "H2S Tech Solutions",
         description: "Course Purchase",
-        order_id: order.id,
-        // Add notes here (IMPORTANT FOR WEBHOOK)
-        notes: {
-          user_id: user.id.toString(),  // Must match your user model
-          course_url: courseUrl        // e.g. "/python24"
-        },
+        order_id: orderResponse.data.id,
+        notes: { course_path: courseUrl },
         handler: async (response) => {
           try {
-            console.log("Payment response:", response);
-
-            // 1. Verify payment with backend
+            // 3. Verify payment
             await verifyPayment(response);
 
-            // 2. Webhook will handle the purchase recording
-            alert("Payment successful! Redirecting to course...");
+            // 4. Grant course access (using new endpoint)
+            await FindUser.post(
+              "/course-access/",
+              { course_path: courseUrl },
+              { headers: authHeader() }
+            );
+
+            alert("Payment successful! Course access granted.");
             window.location.href = courseUrl;
           } catch (error) {
-            console.error("Payment processing failed:", error);
+            handlePaymentError(error);
           }
-        },
-        theme: { color: "#3399cc" },
-        modal: {
-          ondismiss: () => {
-            console.log("Payment modal dismissed");
-          },
         },
       };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
-
-      rzp.on("payment.failed", (response) => {
-        console.error("Payment failed:", response.error);
-        alert(`Payment failed: ${response.error.description}`);
-      });
     } catch (error) {
-      console.error("Payment processing failed:", error);
+      handlePaymentError(error);
     }
+  };
+
+  // Helper function
+  const authHeader = () => ({
+    Authorization: `Bearer ${localStorage.getItem("access")}`,
+    "Content-Type": "application/json",
+  });
+
+  // Error handler
+  const handlePaymentError = (error) => {
+    console.error("Payment error:", error);
+    alert(error.response?.data?.error || "Payment processing failed");
   };
 
   const verifyPayment = async (response) => {
@@ -251,24 +236,6 @@ function App() {
     } catch (error) {
       console.error("Verification error:", error);
       throw error;
-    }
-  };
-  const recordCoursePurchase = async (courseUrl) => {
-    try {
-      const purchaseResponse = await FindUser.post(
-        "/purchase-course/",
-        { course_url: courseUrl },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      return purchaseResponse.data;
-    } catch (error) {
-      console.error("Purchase recording failed:", error);
-      throw new Error("Failed to record course purchase");
     }
   };
 
