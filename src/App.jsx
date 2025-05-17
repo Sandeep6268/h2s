@@ -159,53 +159,104 @@ function App() {
     }
   );
   // with original api
- 
+  const handlePayment = async (price, redirectUrl) => {
+    try {
+      // 1. First create order on your backend
+      const orderResponse = await FindUser.post("/create-razorpay-order/", {
+        amount: price,
+        course_url: redirectUrl,
+      });
 
-   const handlePayment = (price, redirectUrl) => {
-    // Get user data for prefill
-    const user = JSON.parse(localStorage.getItem("user")) || {};
+      const options = {
+        key: "rzp_live_Hs9twWPT8yzKjH",
+        amount: orderResponse.data.amount,
+        currency: "INR",
+        name: "H2S Tech Solutions",
+        order_id: orderResponse.data.id,
+        description: "Course purchasing",
+        image: logo,
+        prefill: {
+          name: user?.name || "",
+          email: user?.email || "",
+          contact: user?.phone || "",
+        },
+        handler: async (response) => {
+          try {
+            // 2. Verify payment on your backend
+            const verification = await FindUser.post("/purchase-course/", {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              amount: price,
+              course_url: redirectUrl,
+            });
 
-    const options = {
-      key: "rzp_live_Hs9twWPT8yzKjH", // Live Key
-      amount: price * 100,
-      currency: "INR",
-      name: "H2S Tech Solutions",
-      description: "Course purchasing",
-      image: logo,
-
-      // Dynamic Prefill
-      prefill: {
-        name: user.name || "",
-        email: user.email || "",
-        contact: user.phone || "",
-      },
-
-      handler: async (response) => {
-        try {
-          await FindUser.post(
-            "/purchase-course/",
-            { course_url: redirectUrl },
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("access")}`,
-              },
+            // 3. Only redirect if verification succeeds
+            if (verification.data.success) {
+              window.location.href = redirectUrl;
+            } else {
+              alert("Payment verification failed. Please contact support.");
             }
-          );
-          window.location.href = redirectUrl;
-        } catch (error) {
-          console.error("Failed to save course:", error);
-        }
-      },
-      theme: { color: "#3399cc" },
-    };
+          } catch (error) {
+            console.error("Payment verification failed:", error);
+            alert("Payment processing failed. Please contact support.");
+          }
+        },
+        theme: { color: "#3399cc" },
+      };
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error("Payment initialization failed:", error);
+      alert("Payment initialization failed. Please try again.");
+    }
   };
+
+  //  const handlePayment = (price, redirectUrl) => {
+  //   // Get user data for prefill
+  //   const user = JSON.parse(localStorage.getItem("user")) || {};
+
+  //   const options = {
+  //     key: "rzp_live_Hs9twWPT8yzKjH", // Live Key
+  //     amount: price * 100,
+  //     currency: "INR",
+  //     name: "H2S Tech Solutions",
+  //     description: "Course purchasing",
+  //     image: logo,
+
+  //     // Dynamic Prefill
+  //     prefill: {
+  //       name: user.name || "",
+  //       email: user.email || "",
+  //       contact: user.phone || "",
+  //     },
+
+  //     handler: async (response) => {
+  //       try {
+  //         await FindUser.post(
+  //           "/purchase-course/",
+  //           { course_url: redirectUrl },
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${localStorage.getItem("access")}`,
+  //             },
+  //           }
+  //         );
+  //         window.location.href = redirectUrl;
+  //       } catch (error) {
+  //         console.error("Failed to save course:", error);
+  //       }
+  //     },
+  //     theme: { color: "#3399cc" },
+  //   };
+
+  //   const rzp = new window.Razorpay(options);
+  //   rzp.open();
+  // };
   // <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
 
   // Helper function to load script dynamically
-  
 
   // with test api
   // const handlePayment = (price, redirectUrl) => {
