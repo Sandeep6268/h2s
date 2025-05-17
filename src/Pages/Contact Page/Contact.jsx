@@ -38,17 +38,13 @@ const Contact = () => {
 
     try {
       const response = await fetch(
-        "https://h2s-backend-urrt.onrender.com/api/contact/",
+        "https://h2s-backend-urrt.onrender.com/api/contact-us/",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": getCsrfToken(),
-          },
-          credentials: "include",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            first_name: formData.firstName,
-            last_name: formData.lastName,
+            first_name: formData.firstName, // Frontend: firstName → Backend: first_name
+            last_name: formData.lastName, // Frontend: lastName → Backend: last_name
             email: formData.email,
             phone: formData.phone,
             message: formData.message,
@@ -151,7 +147,8 @@ const Contact = () => {
                     Head Quarter At :-
                   </span>
                   <br />
-                  Shayam Plaza, Patwardhan marg, Just,<br />
+                  Shayam Plaza, Patwardhan marg, Just,
+                  <br />
                   behind Grace Church, Dewas, Madhya Pradesh 455001
                 </p>
               </div>
