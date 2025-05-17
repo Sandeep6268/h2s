@@ -207,7 +207,7 @@ function App() {
           try {
             // Verify payment
             await FindUser.post(
-              "/api/verify-payment/",
+              "/verify-payment/",
               {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
