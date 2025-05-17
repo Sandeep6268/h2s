@@ -153,7 +153,7 @@ const Contact = () => {
                   <br />
                   Shayam Plaza, Patwardhan marg, Just,<br />
                   behind Grace Church, Dewas, Madhya Pradesh 455001
-                </p>
+                
               </div>
             </div>
             <div
