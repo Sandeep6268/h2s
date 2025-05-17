@@ -193,8 +193,8 @@ function App() {
         order_id: order.id,
         // Add notes here (IMPORTANT FOR WEBHOOK)
         notes: {
-          course_url: courseUrl, // The course being purchased
-          user_id: user.id, // User who made the purchase
+          user_id: user.id.toString(),  // Must match your user model
+          course_url: courseUrl        // e.g. "/python24"
         },
         handler: async (response) => {
           try {
@@ -208,7 +208,6 @@ function App() {
             window.location.href = courseUrl;
           } catch (error) {
             console.error("Payment processing failed:", error);
-            handlePaymentError(error);
           }
         },
         theme: { color: "#3399cc" },
@@ -228,7 +227,6 @@ function App() {
       });
     } catch (error) {
       console.error("Payment processing failed:", error);
-      handlePaymentError(error);
     }
   };
 
