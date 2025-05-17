@@ -161,12 +161,13 @@ function App() {
   // with original api
   const handlePayment = async (price, redirectUrl) => {
     try {
-      // 1. First create order on your backend
+      // 1. Create order on backend
       const orderResponse = await FindUser.post("/create-razorpay-order/", {
         amount: price,
         course_url: redirectUrl,
       });
 
+      // 2. Open Razorpay checkout
       const options = {
         key: "rzp_live_Hs9twWPT8yzKjH",
         amount: orderResponse.data.amount,
@@ -182,8 +183,8 @@ function App() {
         },
         handler: async (response) => {
           try {
-            // 2. Verify payment on your backend
-            const verification = await FindUser.post("/purchase-course/", {
+            // 3. Verify payment on backend
+            const verification = await FindUser.post("/verify-payment/", {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
               razorpay_signature: response.razorpay_signature,
@@ -191,25 +192,41 @@ function App() {
               course_url: redirectUrl,
             });
 
-            // 3. Only redirect if verification succeeds
-            if (verification.data.success) {
+            // 4. Handle verification response
+            if (verification.data.status === "success") {
+              // Option 1: Redirect to provided URL
               window.location.href = redirectUrl;
+
+              // Option 2: Use redirect URL from backend response (if available)
+              // window.location.href = verification.data.redirect_url || redirectUrl;
             } else {
-              alert("Payment verification failed. Please contact support.");
+              alert(verification.data.message || "Payment verification failed");
             }
           } catch (error) {
-            console.error("Payment verification failed:", error);
-            alert("Payment processing failed. Please contact support.");
+            console.error("Payment verification error:", error);
+            alert(
+              `Payment verification failed: ${
+                error.response?.data?.message || error.message
+              }`
+            );
           }
         },
         theme: { color: "#3399cc" },
       };
 
       const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", (response) => {
+        alert(`Payment failed: ${response.error.description}`);
+        console.error("Payment failed:", response.error);
+      });
       rzp.open();
     } catch (error) {
-      console.error("Payment initialization failed:", error);
-      alert("Payment initialization failed. Please try again.");
+      console.error("Payment initialization error:", error);
+      alert(
+        `Payment initialization failed: ${
+          error.response?.data?.message || error.message
+        }`
+      );
     }
   };
 
