@@ -48,21 +48,23 @@ const Header = () => {
     const interval = setInterval(checkAuth, 60000);
     return () => clearInterval(interval);
   }, [user, setUser]);
-
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await FindUser.get("/my-courses/", {
+        // Change this endpoint to your new endpoint
+        const response = await FindUser.get("/user-courses/", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         });
-        const courseData = response.data;
-        if (Array.isArray(courseData)) {
-          setUserCourses(courseData);
-        } else {
-          console.error("Unexpected data format:", courseData);
-        }
+
+        // The response structure will be different now
+        const courseData = response.data.map((course) => ({
+          course_url: course.course_path,
+          purchased_at: course.access_granted_at,
+        }));
+
+        setUserCourses(courseData);
       } catch (error) {
         console.error("Failed to fetch courses:", error);
       }
@@ -72,6 +74,29 @@ const Header = () => {
       fetchCourses();
     }
   }, [isAuthenticated]);
+  // useEffect(() => {
+  //   const fetchCourses = async () => {
+  //     try {
+  //       const response = await FindUser.get("/my-courses/", {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("access")}`,
+  //         },
+  //       });
+  //       const courseData = response.data;
+  //       if (Array.isArray(courseData)) {
+  //         setUserCourses(courseData);
+  //       } else {
+  //         console.error("Unexpected data format:", courseData);
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to fetch courses:", error);
+  //     }
+  //   };
+
+  //   if (isAuthenticated) {
+  //     fetchCourses();
+  //   }
+  // }, [isAuthenticated]);
 
   const handleLogout = () => {
     setUser(null);
@@ -185,9 +210,7 @@ const Header = () => {
                       className="profile-avatar"
                       onClick={toggleProfileDropdown}
                     >
-                      <span className="avatar-circle">
-                        {getAvatarLetter()}
-                      </span>
+                      <span className="avatar-circle">{getAvatarLetter()}</span>
                     </button>
 
                     {showProfileDropdown && (
@@ -265,10 +288,7 @@ const Header = () => {
               onClick={() => setShowModal(false)}
             ></div>
             <div className="modal-content-1">
-              <button
-                className="close-btn"
-                onClick={() => setShowModal(false)}
-              >
+              <button className="close-btn" onClick={() => setShowModal(false)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
