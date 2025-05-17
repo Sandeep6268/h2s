@@ -75,11 +75,8 @@ const CoursePage = () => {
                     if (!user) {
                       navigate("/login");
                     } else {
-                      try {
-                        await handlePayment(1, "/htmlcss89");
-                      } catch (error) {
-                        console.error("Payment error:", error);
-                      }
+                       handlePayment(1, "/htmlcss89");
+                      
                     }
                   }}
                 >

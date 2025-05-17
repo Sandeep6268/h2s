@@ -159,239 +159,53 @@ function App() {
     }
   );
   // with original api
-  const handlePayment = async (price, courseUrl) => {
-    try {
-      // Show processing modal
-      setPaymentStatus({
-        processing: true,
-        message: "Preparing payment...",
-        showModal: true,
-      });
+ 
 
-      const token = localStorage.getItem("access");
-      if (!token) {
-        setPaymentStatus({
-          processing: false,
-          message: "Please login first",
-          showModal: true,
-        });
-        return;
-      }
+   const handlePayment = (price, redirectUrl) => {
+    // Get user data for prefill
+    const user = JSON.parse(localStorage.getItem("user")) || {};
 
-      // Ensure courseUrl is properly encoded
-      const encodedCourseUrl =courseUrl;
-      console.log('handle',encodedCourseUrl)
-      console.log('handle',courseUrl)
-      const response = await FindUser.post(
-        "/create-cashfree-order/",
-        {
-          amount: price,
-          course_url: encodedCourseUrl,
-          phone:
-            JSON.parse(localStorage.getItem("user"))?.phone || "9999999999",
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+    const options = {
+      key: "rzp_live_Hs9twWPT8yzKjH", // Live Key
+      amount: price * 100,
+      currency: "INR",
+      name: "H2S Tech Solutions",
+      description: "Course purchasing",
+      image: logo,
 
-      const { orderId, paymentSessionId } = response.data;
-      console.log(paymentSessionId)
+      // Dynamic Prefill
+      prefill: {
+        name: user.name || "",
+        email: user.email || "",
+        contact: user.phone || "",
+      },
 
-      if (!window.Cashfree) {
-        setPaymentStatus({
-          processing: false,
-          message: "Payment system loading. Please refresh...",
-          showModal: true,
-        });
-        return;
-      }
-
-      const cashfree = new window.Cashfree({ mode: "production" });
-      let paymentCompleted = false;
-
-      cashfree.checkout({
-        paymentSessionId,
-        redirectTarget: "_blank",
-
-        onSuccess: async (data) => {
-          try {
-            paymentCompleted = true;
-            setPaymentStatus({
-              processing: true,
-              message: "Verifying payment...",
-              showModal: true,
-            });
-
-            // First verify the payment
-            const verificationResponse = await FindUser.post(
-              "/verify-payment/",
-              { orderId, paymentId: data.paymentId },
-
-              { headers: { Authorization: `Bearer ${token}` } }
-            );
-
-            // Then record the purchase
-            await FindUser.post(
-              "/purchase-course/",
-              {
-                course_url: encodedCourseUrl,
-                payment_id: data.paymentId,
-                order_id: orderId,
+      handler: async (response) => {
+        try {
+          await FindUser.post(
+            "/purchase-course/",
+            { course_url: redirectUrl },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access")}`,
               },
-              { headers: { Authorization: `Bearer ${token}` } }
-            );
+            }
+          );
+          window.location.href = redirectUrl;
+        } catch (error) {
+          console.error("Failed to save course:", error);
+        }
+      },
+      theme: { color: "#3399cc" },
+    };
 
-            setPaymentStatus({
-              processing: false,
-              message: "Payment successful! Redirecting...",
-              showModal: true,
-            });
-
-            // Redirect with all necessary parameters
-            setTimeout(() => {
-              const redirectUrl = `/payment-status?order_id=${orderId}&payment_id=${data.paymentId}&course_url=${encodedCourseUrl}`;
-              window.location.href = redirectUrl;
-            }, 1500);
-          } catch (err) {
-            console.error("Payment verification error:", err);
-            setPaymentStatus({
-              processing: false,
-              message: "Payment verification failed. Please contact support.",
-              showModal: true,
-            });
-          }
-        },
-
-        onFailure: (data) => {
-          setPaymentStatus({
-            processing: false,
-            message: data?.message || "Payment failed",
-            showModal: true,
-          });
-          // Redirect back with failure status
-          setTimeout(() => {
-            window.location.href = `/payment-status?order_id=${orderId}&payment_status=failed`;
-          }, 1500);
-        },
-
-        onClose: () => {
-          if (!paymentCompleted) {
-            setPaymentStatus({
-              processing: false,
-              message: "Payment cancelled",
-              showModal: true,
-            });
-            // Redirect back with cancelled status
-            setTimeout(() => {
-              window.location.href = `/payment-status?order_id=${orderId}&payment_status=cancelled`;
-            }, 1500);
-          }
-        },
-      });
-    } catch (error) {
-      console.error("Payment error:", error);
-      setPaymentStatus({
-        processing: false,
-        message:
-          error.response?.data?.error || "Payment failed. Please try again.",
-        showModal: true,
-      });
-      // Redirect back with error status
-      setTimeout(() => {
-        window.location.href = `/payment-status?payment_status=error`;
-      }, 1500);
-    }
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
-  const PaymentModal = () => {
-    if (!paymentStatus.showModal) return null;
-
-    return (
-      <div className="payment-modal-overlay">
-        <div className="payment-modal">
-          {paymentStatus.processing ? (
-            <>
-              <div className="spinner"></div>
-              <p>{paymentStatus.message}</p>
-            </>
-          ) : (
-            <>
-              <h3>
-                {paymentStatus.message.includes("success")
-                  ? "Success!"
-                  : "Notice"}
-              </h3>
-              <p>{paymentStatus.message}</p>
-              <button
-                onClick={() =>
-                  setPaymentStatus((prev) => ({ ...prev, showModal: false }))
-                }
-              >
-                Close
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  //  const handlePayment = (price, redirectUrl) => {
-  //   // Get user data for prefill
-  //   const user = JSON.parse(localStorage.getItem("user")) || {};
-
-  //   const options = {
-  //     key: "rzp_live_JZumJpdNJsE2Xb", // Live Key
-  //     amount: price * 100,
-  //     currency: "INR",
-  //     name: "H2S Tech Solutions",
-  //     description: "Course purchasing",
-  //     image: logo,
-
-  //     // Dynamic Prefill
-  //     prefill: {
-  //       name: user.name || "",
-  //       email: user.email || "",
-  //       contact: user.phone || "",
-  //     },
-
-  //     handler: async (response) => {
-  //       try {
-  //         await FindUser.post(
-  //           "/purchase-course/",
-  //           { course_url: redirectUrl },
-  //           {
-  //             headers: {
-  //               Authorization: `Bearer ${localStorage.getItem("access")}`,
-  //             },
-  //           }
-  //         );
-  //         window.location.href = redirectUrl;
-  //       } catch (error) {
-  //         console.error("Failed to save course:", error);
-  //       }
-  //     },
-  //     theme: { color: "#3399cc" },
-  //   };
-
-  //   const rzp = new window.Razorpay(options);
-  //   rzp.open();
-  // };
   // <CashfreePayment price={coursePrice} redirectUrl={courseUrl} />;
 
   // Helper function to load script dynamically
-  useEffect(() => {
-    // Load Cashfree script dynamically
-    const script = document.createElement("script");
-    script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
-    script.async = true;
-    script.type = "text/javascript";
-
-    document.body.appendChild(script);
-
-    return () => {
-      // Clean up
-      document.body.removeChild(script);
-    };
-  }, []);
+  
 
   // with test api
   // const handlePayment = (price, redirectUrl) => {
