@@ -176,7 +176,7 @@ function App() {
 
       // Create order
       const orderResponse = await FindUser.post(
-        "/api/create-razorpay-order/",
+        "/create-razorpay-order/",
         {
           amount: price,
           course_url: redirectUrl,
