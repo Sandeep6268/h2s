@@ -166,7 +166,6 @@ function App() {
         "/create-order/",
         {
           amount: price,
-          course_url: courseUrl,
         },
         {
           headers: {
@@ -190,7 +189,11 @@ function App() {
         handler: async (response) => {
           try {
             console.log("Payment response:", response);
+
+            // Verify payment with backend
             await verifyPayment(response);
+
+            // Redirect to course URL on successful payment
             window.location.href = courseUrl;
           } catch (error) {
             console.error("Payment verification failed:", error);
@@ -200,27 +203,34 @@ function App() {
         theme: {
           color: "#3399cc",
         },
+        // Add these for better error handling
+        modal: {
+          ondismiss: () => {
+            console.log("Payment modal dismissed");
+            // You can add any cleanup logic here if needed
+          },
+        },
       };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
+
+      // Handle payment failure cases
+      rzp.on("payment.failed", (response) => {
+        console.error("Payment failed:", response.error);
+        alert(`Payment failed: ${response.error.description}`);
+      });
     } catch (error) {
-      console.error("Payment failed:", error);
+      console.error("Payment processing failed:", error);
+      let errorMessage = "Payment processing failed. Please try again.";
+
       if (error.response) {
-        // The request was made and the server responded with a status code
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        console.error("Response headers:", error.response.headers);
-        alert(`Payment failed: ${error.response.data.error || error.message}`);
+        errorMessage = error.response.data.error || errorMessage;
       } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received:", error.request);
-        alert("No response from server. Please check your connection.");
-      } else {
-        // Something happened in setting up the request
-        console.error("Request setup error:", error.message);
-        alert("Payment setup failed. Please try again.");
+        errorMessage = "No response from server. Please check your connection.";
       }
+
+      alert(errorMessage);
     }
   };
 
