@@ -52,9 +52,11 @@ const Footer = () => {
             <p className="address-heading">
               <span className="text-primary">Head Quarter At :-</span>
             </p>
-            <p>91Springboard, 4th Floor, Salarpuria Tower-I,</p>
+            <p>Shayam Plaza, Patwardhan marg, Just,</p> 
+            <p>behind Grace Church, Dewas, Madhya Pradesh 455001</p>
+            {/* <p>91Springboard, 4th Floor, Salarpuria Tower-I,</p>
             <p>No. 22, Hosur Road, Koramangala,</p>
-            <p>Bengaluru, Karnataka – 560095</p>
+            <p>Bengaluru, Karnataka – 560095</p> */}
           </div>
         </div>
 
