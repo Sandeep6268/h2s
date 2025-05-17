@@ -146,14 +146,14 @@ const Contact = () => {
                     />
                   </a>
                 </div>
-                < className="mt-4 text-light">
+                <p className="mt-4 text-light">
                   <span className="fw-bolder fs-4 text-white">
                     Head Quarter At :-
                   </span>
                   <br />
                   Shayam Plaza, Patwardhan marg, Just,<br />
                   behind Grace Church, Dewas, Madhya Pradesh 455001
-                
+                </p>
               </div>
             </div>
             <div
