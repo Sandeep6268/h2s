@@ -190,23 +190,47 @@ function App() {
           try {
             console.log("Payment response:", response);
 
-            // Verify payment with backend
+            // 1. First verify the payment with backend
             await verifyPayment(response);
 
-            // Redirect to course URL on successful payment
-            window.location.href = courseUrl;
-            await FindUser.post(
+            // 2. Then record the course purchase
+            const purchaseResponse = await FindUser.post(
               "/purchase-course/",
-              { course_url: redirectUrl },
+              { course_url: courseUrl }, // Using the original courseUrl parameter
               {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("access")}`,
+                  "Content-Type": "application/json",
                 },
               }
             );
+
+            console.log("Course purchase recorded:", purchaseResponse.data);
+
+            // 3. Only redirect after both operations succeed
+            window.location.href = courseUrl;
           } catch (error) {
-            console.error("Payment verification failed:", error);
-            alert("Payment verification failed. Please contact support.");
+            console.error("Payment processing failed:", error);
+
+            // More specific error messages
+            if (error.response) {
+              if (error.response.status === 401) {
+                alert("Session expired. Please login again.");
+              } else {
+                alert(
+                  `Failed to record purchase: ${
+                    error.response.data?.error || "Please contact support"
+                  }`
+                );
+              }
+            } else {
+              alert(
+                "Payment verification failed. Please contact support with your payment ID."
+              );
+            }
+
+            // Optionally: redirect to a failure page or stay on current page
+            // window.location.href = "/payment-failed";
           }
         },
         theme: {
