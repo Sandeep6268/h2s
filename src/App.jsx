@@ -160,72 +160,71 @@ function App() {
   // with original api
   const handlePayment = async (price, redirectUrl) => {
     try {
-      // 1. Create order on backend
-      const orderResponse = await FindUser.post("/create-razorpay-order/", {
-        amount: price,
-        course_url: redirectUrl,
-      });
+      // 1. Check authentication
+      const token = localStorage.getItem("access");
+      if (!token) {
+        alert("Please login to make a purchase");
+        return;
+      }
 
-      // 2. Open Razorpay checkout
+      // 2. Create order with auth header
+      const orderResponse = await FindUser.post(
+        "/create-razorpay-order/",
+        { amount: price, course_url: redirectUrl },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // 3. Setup Razorpay options
       const options = {
         key: "rzp_live_Hs9twWPT8yzKjH",
         amount: orderResponse.data.amount,
         currency: "INR",
         name: "H2S Tech Solutions",
         order_id: orderResponse.data.id,
-        description: "Course purchasing",
-        image: logo,
-        prefill: {
-          name: user?.name || "",
-          email: user?.email || "",
-          contact: user?.phone || "",
-        },
         handler: async (response) => {
           try {
-            // 3. Verify payment on backend
-            const verification = await FindUser.post("/verify-payment/", {
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              amount: price,
-              course_url: redirectUrl,
-            });
-
-            // 4. Handle verification response
-            if (verification.data.status === "success") {
-              // Option 1: Redirect to provided URL
-              window.location.href = redirectUrl;
-
-              // Option 2: Use redirect URL from backend response (if available)
-              // window.location.href = verification.data.redirect_url || redirectUrl;
-            } else {
-              alert(verification.data.message || "Payment verification failed");
-            }
-          } catch (error) {
-            console.error("Payment verification error:", error);
-            alert(
-              `Payment verification failed: ${
-                error.response?.data?.message || error.message
-              }`
+            // 4. Verify payment with auth
+            await FindUser.post(
+              "/verify-payment/",
+              {
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                amount: price,
+                course_url: redirectUrl,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }
             );
+
+            window.location.href = redirectUrl;
+          } catch (error) {
+            console.error("Payment verification failed:", error);
+            alert("Payment verification failed. Please contact support.");
           }
         },
         theme: { color: "#3399cc" },
       };
 
       const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", (response) => {
-        alert(`Payment failed: ${response.error.description}`);
-        console.error("Payment failed:", response.error);
-      });
       rzp.open();
     } catch (error) {
-      console.error("Payment initialization error:", error);
-      alert(
-        `Payment initialization failed: ${
-          error.response?.data?.message || error.message
-        }`
-      );
+      console.error("Payment error:", error);
+      if (error.response?.status === 401) {
+        alert("Session expired. Please login again.");
+        // Optionally redirect to login
+      } else {
+        alert("Payment initialization failed. Please try again.");
+      }
     }
   };
 
