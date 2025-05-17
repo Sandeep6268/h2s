@@ -188,7 +188,7 @@ function App() {
               { headers: authHeader() }
             );
 
-            alert("Payment successful! Course access granted.");
+            // alert("Payment successful! Course access granted.");
             window.location.href = courseUrl;
           } catch (error) {
             handlePaymentError(error);
@@ -231,7 +231,7 @@ function App() {
           },
         }
       );
-      console.log("Payment verified:", verification.data);
+      // console.log("Payment verified:", verification.data);
       return verification.data;
     } catch (error) {
       console.error("Verification error:", error);
