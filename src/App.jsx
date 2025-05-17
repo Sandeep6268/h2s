@@ -25,7 +25,6 @@ import "aos/dist/aos.css"; // AOS styles
 // import { Cashfree } from "@cashfreepayments/cashfree-sdk";
 import { Cashfree } from "@cashfreepayments/cashfree-sdk";
 import { useLocation } from "react-router-dom";
-import PaymentStatusPage from "./PaymentStatusPage";
 
 export function ScrollToTop() {
   const { pathname } = useLocation();
@@ -350,7 +349,6 @@ function App() {
           <Route path="/pythondjango90" element={<PyandDJ />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/payment-status" element={<PaymentStatusPage />} />
         </Routes>
       </Context.Provider>
     </BrowserRouter>
