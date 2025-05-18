@@ -170,41 +170,76 @@ function App() {
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(3px);
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       z-index: 9999;
+      font-family: 'Segoe UI', sans-serif;
     ">
       <div style="
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        text-align: center;
+        position: relative;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 20px;
       ">
+        <!-- Animated circles -->
         <div style="
-          border: 4px solid rgba(0,0,0,0.1);
-          width: 36px;
-          height: 36px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: 3px solid transparent;
+          border-top-color: #4f46e5;
           border-radius: 50%;
-          border-left-color: #09f;
           animation: spin 1s linear infinite;
-          margin: 0 auto 10px;
         "></div>
-        <p>Processing Payment...</p>
+        <div style="
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          width: 60px;
+          height: 60px;
+          border: 3px solid transparent;
+          border-top-color: #a78bfa;
+          border-radius: 50%;
+          animation: spinReverse 1.5s linear infinite;
+        "></div>
       </div>
+      
+      <h3 style="
+        color: white;
+        margin: 0;
+        font-weight: 500;
+        font-size: 1.2rem;
+      ">Processing Payment</h3>
+      
+      <p style="
+        color: #d1d5db;
+        margin-top: 8px;
+        font-size: 0.9rem;
+      ">Please wait while we connect to Razorpay</p>
+      
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes spinReverse {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(-360deg); }
+        }
+      </style>
     </div>
-    <style>
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    </style>
   `;
   
   try {
     // Show loader
     document.body.appendChild(loader);
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
 
     // 1. Create order
     const orderResponse = await FindUser.post(
@@ -261,6 +296,12 @@ function App() {
 
     const rzp = new window.Razorpay(options);
     rzp.open();
+    const removeLoader = () => {
+      if (document.body.contains(loader)) {
+        document.body.removeChild(loader);
+        document.body.style.overflow = '';
+      }
+    };
 
   } catch (error) {
     handlePaymentError(error);
