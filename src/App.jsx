@@ -159,55 +159,117 @@ function App() {
   );
   // with original api
   const handlePayment = async (price, courseUrl) => {
-    const user = JSON.parse(localStorage.getItem("user")) || {};
-    try {
-      // 1. Create order
-      const orderResponse = await FindUser.post(
-        "/create-order/",
-        { amount: price },
-        { headers: authHeader() }
-      );
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  
+  // Create loader element
+  const loader = document.createElement('div');
+  loader.innerHTML = `
+    <div style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    ">
+      <div style="
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+      ">
+        <div style="
+          border: 4px solid rgba(0,0,0,0.1);
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          border-left-color: #09f;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 10px;
+        "></div>
+        <p>Processing Payment...</p>
+      </div>
+    </div>
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  `;
+  
+  try {
+    // Show loader
+    document.body.appendChild(loader);
 
-      // 2. Initialize Razorpay
-      const options = {
-        key: "rzp_live_Hs9twWPT8yzKjH",
-        amount: orderResponse.data.amount,
-        currency: "INR",
-        name: "H2S Tech Solutions",
-        description: "Course Purchase",
-        order_id: orderResponse.data.id,
-        notes: { course_path: courseUrl },
-        prefill: {
-          name: user.name || "",
-          email: user.email || "",
-          contact: user.phone || "",
-        },
-        handler: async (response) => {
-          try {
-            // 3. Verify payment
-            await verifyPayment(response);
+    // 1. Create order
+    const orderResponse = await FindUser.post(
+      "/create-order/",
+      { amount: price },
+      { headers: authHeader() }
+    );
 
-            // 4. Grant course access (using new endpoint)
-            await FindUser.post(
-              "/course-access/",
-              { course_path: courseUrl },
-              { headers: authHeader() }
-            );
+    // 2. Initialize Razorpay
+    const options = {
+      key: "rzp_live_Hs9twWPT8yzKjH",
+      amount: orderResponse.data.amount,
+      currency: "INR",
+      name: "H2S Tech Solutions",
+      description: "Course Purchase",
+      order_id: orderResponse.data.id,
+      notes: { course_path: courseUrl },
+      prefill: {
+        name: user.name || "",
+        email: user.email || "",
+        contact: user.phone || "",
+      },
+      handler: async (response) => {
+        try {
+          // 3. Verify payment
+          await verifyPayment(response);
 
-            // alert("Payment successful! Course access granted.");
-            window.location.href = courseUrl;
-          } catch (error) {
-            handlePaymentError(error);
+          // 4. Grant course access
+          await FindUser.post(
+            "/course-access/",
+            { course_path: courseUrl },
+            { headers: authHeader() }
+          );
+
+          window.location.href = courseUrl;
+        } catch (error) {
+          handlePaymentError(error);
+        } finally {
+          // Remove loader in all cases
+          if (document.body.contains(loader)) {
+            document.body.removeChild(loader);
           }
-        },
-      };
+        }
+      },
+      modal: {
+        ondismiss: () => {
+          // Remove loader when Razorpay modal is dismissed
+          if (document.body.contains(loader)) {
+            document.body.removeChild(loader);
+          }
+        }
+      }
+    };
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      handlePaymentError(error);
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+
+  } catch (error) {
+    handlePaymentError(error);
+    // Remove loader on error
+    if (document.body.contains(loader)) {
+      document.body.removeChild(loader);
     }
-  };
+  }
+};
 
   // Helper function
   const authHeader = () => ({
