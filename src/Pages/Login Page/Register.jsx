@@ -38,7 +38,7 @@
       } catch (err) {
         console.error(err.response?.data || err);
         setIsLoading(false);
-        let errorMsg = "Registration failed. Please try again.";
+        let errorMsg = "Registration failed. Please try again and use strong password";
         
         if (err.response?.data) {
           if (err.response.data.email?.[0]?.includes("already exists")) {
