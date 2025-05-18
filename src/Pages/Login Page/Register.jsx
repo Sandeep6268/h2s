@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API from "../../api";
+import API, { FindUser } from "../../api";
 import "./Register.css";
 
 const Register = () => {
@@ -32,6 +32,11 @@ const Register = () => {
     
     try {
       const res = await API.post('users/', sanitizedData);
+
+      await FindUser.post('send-welcome-email/', {
+      email: sanitizedData.email,
+      username: sanitizedData.username
+    });
       setIsLoading(false);
       showCustomModal("success", "Registration successful!");
       setTimeout(() => navigate("/login"), 2000);
