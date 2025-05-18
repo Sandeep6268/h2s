@@ -4,7 +4,12 @@ import API from "../../api";
 import "./Register.css";
 
 const Register = () => {
-  const [data, setData] = useState({ email: "", username: "", password: "" });
+  const [data, setData] = useState({
+    email: "",
+    username: "",
+    password: "",
+    phone: "",
+  });
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("success");
   const [modalMessage, setModalMessage] = useState("");
@@ -18,23 +23,31 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     const sanitizedData = {
       ...data,
       username: data.username.replace(/\s/g, ""),
+      phone: data.phone.replace(/\D/g, ""), // Remove non-digit characters from phone
     };
-    
+
     try {
-      const res = await API.post('users/', sanitizedData);
+      const res = await API.post("users/", sanitizedData);
       setIsLoading(false);
       showCustomModal("success", "Registration successful!");
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
       console.error(err.response?.data || err);
       setIsLoading(false);
-      const errorMsg = err.response?.data?.email?.[0]?.includes("already exists") 
-        ? "Email already registered" 
-        : "Registration failed. Please try again.";
+      let errorMsg = "Registration failed. Please try again.";
+
+      if (err.response?.data) {
+        if (err.response.data.email?.[0]?.includes("already exists")) {
+          errorMsg = "Email already registered";
+        } else if (err.response.data.phone?.[0]?.includes("already exists")) {
+          errorMsg = "Phone number already registered";
+        }
+      }
+
       showCustomModal("error", errorMsg);
     }
   };
@@ -50,7 +63,7 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container" data-aos='zoom-in'>
+    <div className="register-container" data-aos="zoom-in">
       {/* Loading Spinner */}
       {isLoading && (
         <div className="loader-container">
@@ -137,7 +150,8 @@ const Register = () => {
           disabled={isLoading}
         />
         <small className="note-text">
-          <span className="note-warning">Note: </span>Don't use spaces in username
+          <span className="note-warning">Note: </span>Don't use spaces in
+          username
         </small>
 
         <label htmlFor="password">Password</label>
@@ -153,6 +167,21 @@ const Register = () => {
         <small className="note-text">
           <span className="note-warning">Note: </span>
           Password must contain '@ 1 A' and it should be strong
+        </small>
+
+        <label htmlFor="phone">Phone Number</label>
+        <input
+          type="tel"
+          name="phone"
+          placeholder="Phone Number"
+          id="phone"
+          onChange={handleChange}
+          required
+          disabled={isLoading}
+        />
+        <small className="note-text">
+          <span className="note-warning">Note: </span>
+          Please enter a valid 10-digit phone number
         </small>
 
         <button type="submit" disabled={isLoading}>
