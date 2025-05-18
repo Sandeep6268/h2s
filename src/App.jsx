@@ -159,6 +159,7 @@ function App() {
   );
   // with original api
   const handlePayment = async (price, courseUrl) => {
+    const user = JSON.parse(localStorage.getItem("user")) || {};
     try {
       // 1. Create order
       const orderResponse = await FindUser.post(
@@ -176,6 +177,11 @@ function App() {
         description: "Course Purchase",
         order_id: orderResponse.data.id,
         notes: { course_path: courseUrl },
+        prefill: {
+          name: user.name || "",
+          email: user.email || "",
+          contact: user.phone || "",
+        },
         handler: async (response) => {
           try {
             // 3. Verify payment
@@ -216,6 +222,7 @@ function App() {
   };
 
   const verifyPayment = async (response) => {
+    const user = JSON.parse(localStorage.getItem("user")) || {};
     try {
       const verification = await FindUser.post(
         "/verify-payment/",
