@@ -239,7 +239,6 @@ function App() {
   try {
     // Show loader
     document.body.appendChild(loader);
-    document.body.style.overflow = 'hidden'; // Prevent scrolling
 
     // 1. Create order
     const orderResponse = await FindUser.post(
@@ -299,7 +298,6 @@ function App() {
     const removeLoader = () => {
       if (document.body.contains(loader)) {
         document.body.removeChild(loader);
-        document.body.style.overflow = '';
       }
     };
 
