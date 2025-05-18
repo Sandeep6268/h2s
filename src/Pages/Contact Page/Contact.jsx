@@ -147,9 +147,11 @@ const Contact = () => {
                     Head Quarter At :-
                   </span>
                   <br />
-                  Shayam Plaza, Patwardhan marg, Just,
+                  91Springboard, 4th Floor, Salarpuria Tower-I,
                   <br />
-                  behind Grace Church, Dewas, Madhya Pradesh 455001
+                  No. 22, Hosur Road, Koramangala,
+                  <br />
+                  Bengaluru, Karnataka – 560095
                 </p>
               </div>
             </div>

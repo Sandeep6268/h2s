@@ -19,7 +19,9 @@ h1 {
   background: black;
   /* height: 500px; */
 }
-
+.com-img-height{
+  border-radius: 10px !important;
+}
 .comp-img-1 {
   background: url(../../../images/thumb1.jpeg) no-repeat center;
   background-size: cover;
