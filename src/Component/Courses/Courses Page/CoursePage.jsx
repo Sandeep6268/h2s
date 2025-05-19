@@ -75,12 +75,12 @@ const CoursePage = () => {
                     if (!user) {
                       navigate("/login");
                     } else {
-                       handlePayment(49, "/htmlcss89");
+                       handlePayment(1, "/htmlcss89");
                       
                     }
                   }}
                 >
-                  Pay ₹49
+                  Pay ₹1
                 </button>
               </div>
             </div>
