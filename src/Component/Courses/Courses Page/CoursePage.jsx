@@ -176,11 +176,11 @@ const CoursePage = () => {
                     if (!user) {
                       navigate("/login");
                     } else {
-                      handlePayment(129, "/python24");
+                      handlePayment(2, "/python24");
                     }
                   }}
                 >
-                  Pay ₹129
+                  Pay ₹2
                 </button>
               </div>
             </div>
